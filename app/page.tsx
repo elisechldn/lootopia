@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Image from "next/image";
 
 export default function Home() {
@@ -62,4 +63,8 @@ export default function Home() {
       </main>
     </div>
   );
+=======
+export default function Home() {
+  return <div></div>;
+>>>>>>> 84a2d09 (reset pages)
 }
