@@ -1,3 +1,4 @@
+import Navbar from "@/components/layout/Navbar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -14,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Lootopia",
-  description: "Make fun with AR games",
+  description: "Créez des chasses au trésor interactives avec la réalité augmentée",
 };
 
 export default function RootLayout({
@@ -24,7 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Navbar />
+        {children}
+      </body>
     </html>
   );
 }
