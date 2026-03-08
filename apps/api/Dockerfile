@@ -21,4 +21,7 @@ FROM node:24-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/ .
+
+EXPOSE 8000
+
 CMD ["node", "apps/api/dist/src/main"]
