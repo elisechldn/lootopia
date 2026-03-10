@@ -14,7 +14,7 @@ async function main() {
     update: {},
     create: {
       email: 'jeremy.sananikone@lootopia.io',
-      password: '$2a$10$99WlQKWJVzFTcfVPGwa.rOicZtrwUrZNkDpVtNoyCPX8yqSrgbXQu',
+      password: '$2a$10$99WlQKWJVzFTcfVPGwa.rOicZtrwUrZNkDpVtNoyCPX8yqSrgbXQu', // lol
       username: 'jeremy',
       firstname: 'Jérémy',
       lastname: 'Sananikone',
