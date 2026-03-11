@@ -1,0 +1,14 @@
+model User {
+  id             Int       @id @default(autoincrement())
+  username       String
+  firstname      String
+  lastname       String
+  email          String    @unique
+  password       String
+  profilePicture String?
+  lastConnection DateTime?
+  country        String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  roles          Role[]
+}
