@@ -384,7 +384,9 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Role: 'Role',
+  Hunt: 'Hunt',
+  Participation: 'Participation',
+  Step: 'Step',
   User: 'User'
 } as const
 
@@ -401,81 +403,229 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "role" | "user"
+    modelProps: "hunt" | "participation" | "step" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    Role: {
-      payload: Prisma.$RolePayload<ExtArgs>
-      fields: Prisma.RoleFieldRefs
+    Hunt: {
+      payload: Prisma.$HuntPayload<ExtArgs>
+      fields: Prisma.HuntFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.RoleFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload> | null
+          args: Prisma.HuntFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.RoleFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
+          args: Prisma.HuntFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload>
         }
         findFirst: {
-          args: Prisma.RoleFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload> | null
+          args: Prisma.HuntFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.RoleFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
+          args: Prisma.HuntFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload>
         }
         findMany: {
-          args: Prisma.RoleFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>[]
+          args: Prisma.HuntFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload>[]
         }
         create: {
-          args: Prisma.RoleCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
+          args: Prisma.HuntCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload>
         }
         createMany: {
-          args: Prisma.RoleCreateManyArgs<ExtArgs>
+          args: Prisma.HuntCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.RoleCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>[]
+          args: Prisma.HuntCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload>[]
         }
         delete: {
-          args: Prisma.RoleDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
+          args: Prisma.HuntDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload>
         }
         update: {
-          args: Prisma.RoleUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
+          args: Prisma.HuntUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload>
         }
         deleteMany: {
-          args: Prisma.RoleDeleteManyArgs<ExtArgs>
+          args: Prisma.HuntDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.RoleUpdateManyArgs<ExtArgs>
+          args: Prisma.HuntUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.RoleUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>[]
+          args: Prisma.HuntUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload>[]
         }
         upsert: {
-          args: Prisma.RoleUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
+          args: Prisma.HuntUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HuntPayload>
         }
         aggregate: {
-          args: Prisma.RoleAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateRole>
+          args: Prisma.HuntAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHunt>
         }
         groupBy: {
-          args: Prisma.RoleGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RoleGroupByOutputType>[]
+          args: Prisma.HuntGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HuntGroupByOutputType>[]
         }
         count: {
-          args: Prisma.RoleCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RoleCountAggregateOutputType> | number
+          args: Prisma.HuntCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HuntCountAggregateOutputType> | number
+        }
+      }
+    }
+    Participation: {
+      payload: Prisma.$ParticipationPayload<ExtArgs>
+      fields: Prisma.ParticipationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ParticipationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ParticipationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        findFirst: {
+          args: Prisma.ParticipationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ParticipationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        findMany: {
+          args: Prisma.ParticipationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>[]
+        }
+        create: {
+          args: Prisma.ParticipationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        createMany: {
+          args: Prisma.ParticipationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ParticipationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>[]
+        }
+        delete: {
+          args: Prisma.ParticipationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        update: {
+          args: Prisma.ParticipationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        deleteMany: {
+          args: Prisma.ParticipationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ParticipationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ParticipationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>[]
+        }
+        upsert: {
+          args: Prisma.ParticipationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        aggregate: {
+          args: Prisma.ParticipationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateParticipation>
+        }
+        groupBy: {
+          args: Prisma.ParticipationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ParticipationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ParticipationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ParticipationCountAggregateOutputType> | number
+        }
+      }
+    }
+    Step: {
+      payload: Prisma.$StepPayload<ExtArgs>
+      fields: Prisma.StepFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StepFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StepFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
+        }
+        findFirst: {
+          args: Prisma.StepFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StepFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
+        }
+        findMany: {
+          args: Prisma.StepFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>[]
+        }
+        create: {
+          args: Prisma.StepCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
+        }
+        createMany: {
+          args: Prisma.StepCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StepCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>[]
+        }
+        delete: {
+          args: Prisma.StepDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
+        }
+        update: {
+          args: Prisma.StepUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
+        }
+        deleteMany: {
+          args: Prisma.StepDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StepUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StepUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>[]
+        }
+        upsert: {
+          args: Prisma.StepUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
+        }
+        aggregate: {
+          args: Prisma.StepAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStep>
+        }
+        groupBy: {
+          args: Prisma.StepGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StepGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StepCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StepCountAggregateOutputType> | number
         }
       }
     }
@@ -592,12 +742,61 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const RoleScalarFieldEnum = {
+export const HuntScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  title: 'title',
+  shortDescription: 'shortDescription',
+  description: 'description',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  location: 'location',
+  radius: 'radius',
+  difficulty: 'difficulty',
+  status: 'status',
+  rewardType: 'rewardType',
+  rewardValue: 'rewardValue',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  refUser: 'refUser'
 } as const
 
-export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
+export type HuntScalarFieldEnum = (typeof HuntScalarFieldEnum)[keyof typeof HuntScalarFieldEnum]
+
+
+export const ParticipationScalarFieldEnum = {
+  id: 'id',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  totalPoints: 'totalPoints',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  refUser: 'refUser',
+  refHunt: 'refHunt',
+  currentStep: 'currentStep'
+} as const
+
+export type ParticipationScalarFieldEnum = (typeof ParticipationScalarFieldEnum)[keyof typeof ParticipationScalarFieldEnum]
+
+
+export const StepScalarFieldEnum = {
+  id: 'id',
+  orderNumber: 'orderNumber',
+  title: 'title',
+  clue: 'clue',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  radius: 'radius',
+  actionType: 'actionType',
+  arMarker: 'arMarker',
+  arContent: 'arContent',
+  qrCode: 'qrCode',
+  points: 'points',
+  createdAt: 'createdAt',
+  refHunt: 'refHunt'
+} as const
+
+export type StepScalarFieldEnum = (typeof StepScalarFieldEnum)[keyof typeof StepScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -607,7 +806,8 @@ export const UserScalarFieldEnum = {
   lastname: 'lastname',
   email: 'email',
   password: 'password',
-  profilePicture: 'profilePicture',
+  role: 'role',
+  picture: 'picture',
   lastConnection: 'lastConnection',
   country: 'country',
   createdAt: 'createdAt',
@@ -690,6 +890,34 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'HuntStatus'
+ */
+export type EnumHuntStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HuntStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'HuntStatus[]'
+ */
+export type ListEnumHuntStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HuntStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ParticipationStatus'
+ */
+export type EnumParticipationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ParticipationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ParticipationStatus[]'
+ */
+export type ListEnumParticipationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ParticipationStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -700,6 +928,34 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ActionType'
+ */
+export type EnumActionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActionType'>
+    
+
+
+/**
+ * Reference to a field of type 'ActionType[]'
+ */
+export type ListEnumActionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActionType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Role'
+ */
+export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+    
+
+
+/**
+ * Reference to a field of type 'Role[]'
+ */
+export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
     
 
 /**
@@ -797,7 +1053,9 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
-  role?: Prisma.RoleOmit
+  hunt?: Prisma.HuntOmit
+  participation?: Prisma.ParticipationOmit
+  step?: Prisma.StepOmit
   user?: Prisma.UserOmit
 }
 
