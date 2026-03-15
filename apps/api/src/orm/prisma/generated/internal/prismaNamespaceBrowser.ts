@@ -51,7 +51,9 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Role: 'Role',
+  Hunt: 'Hunt',
+  Participation: 'Participation',
+  Step: 'Step',
   User: 'User'
 } as const
 
@@ -71,12 +73,61 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const RoleScalarFieldEnum = {
+export const HuntScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  title: 'title',
+  shortDescription: 'shortDescription',
+  description: 'description',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  location: 'location',
+  radius: 'radius',
+  difficulty: 'difficulty',
+  status: 'status',
+  rewardType: 'rewardType',
+  rewardValue: 'rewardValue',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  refUser: 'refUser'
 } as const
 
-export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
+export type HuntScalarFieldEnum = (typeof HuntScalarFieldEnum)[keyof typeof HuntScalarFieldEnum]
+
+
+export const ParticipationScalarFieldEnum = {
+  id: 'id',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  totalPoints: 'totalPoints',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  refUser: 'refUser',
+  refHunt: 'refHunt',
+  currentStep: 'currentStep'
+} as const
+
+export type ParticipationScalarFieldEnum = (typeof ParticipationScalarFieldEnum)[keyof typeof ParticipationScalarFieldEnum]
+
+
+export const StepScalarFieldEnum = {
+  id: 'id',
+  orderNumber: 'orderNumber',
+  title: 'title',
+  clue: 'clue',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  radius: 'radius',
+  actionType: 'actionType',
+  arMarker: 'arMarker',
+  arContent: 'arContent',
+  qrCode: 'qrCode',
+  points: 'points',
+  createdAt: 'createdAt',
+  refHunt: 'refHunt'
+} as const
+
+export type StepScalarFieldEnum = (typeof StepScalarFieldEnum)[keyof typeof StepScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -86,7 +137,8 @@ export const UserScalarFieldEnum = {
   lastname: 'lastname',
   email: 'email',
   password: 'password',
-  profilePicture: 'profilePicture',
+  role: 'role',
+  picture: 'picture',
   lastConnection: 'lastConnection',
   country: 'country',
   createdAt: 'createdAt',

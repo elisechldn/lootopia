@@ -3,6 +3,18 @@
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 
+interface User {
+    sub: number;
+    email: string;
+    firstname?: string;
+    lastname?: string;
+    role: string;
+}
+
+interface Props {
+    user: User | null;
+}
+
 const navItems = [
     {
         label: "Chasse au Trésor",
@@ -47,7 +59,7 @@ const navItems = [
     },
 ];
 
-export default function PartnerSidebar() {
+export default function PartnerSidebar({ user }: Props) {
     const pathname = usePathname();
 
     return (
@@ -100,8 +112,12 @@ export default function PartnerSidebar() {
                         </svg>
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">John Partner</p>
-                        <p className="text-xs text-gray-400 truncate">partner@email.com</p>
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                            {user ? `${user.firstname ?? ''} ${user.lastname ?? ''}`.trim() || user.email : 'Partenaire'}
+                        </p>
+                        <p className="text-xs text-gray-400 truncate">
+                            {user?.email ?? ''}
+                        </p>
                     </div>
                     <button className="text-gray-400 hover:text-gray-600">
                         <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">

@@ -1,0 +1,26 @@
+model Participation {
+  id          Int                 @id @default(autoincrement())
+  startTime   DateTime            @default(now())
+  endTime     DateTime?
+  totalPoints Int                 @default(0)
+  status      ParticipationStatus @default(IN_PROGRESS)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  refUser Int
+  user    User @relation(fields: [refUser], references: [id], onDelete: Cascade)
+
+  refHunt Int
+  hunt    Hunt @relation(fields: [refHunt], references: [id], onDelete: Cascade)
+
+  currentStep Int?
+  step        Step? @relation(fields: [currentStep], references: [id], onDelete: SetNull)
+
+  @@unique([refUser, refHunt])
+}
+
+enum ParticipationStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}

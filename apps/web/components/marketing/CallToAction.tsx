@@ -19,7 +19,7 @@ export default function CallToAction() {
                         Télécharger l'application
                     </Link>
                     <Link
-                        href="/auth/register?role=partner"
+                        href="/dashboard"
                         className="inline-flex items-center justify-center gap-2 border border-gray-600 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:border-gray-400 hover:bg-gray-800 active:scale-[0.98] transition-all"
                     >
                         Portail des partenaires

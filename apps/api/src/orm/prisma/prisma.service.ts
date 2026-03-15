@@ -13,19 +13,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     this.prisma = new PrismaClient({ adapter });
   }
 
-  get user() {
-    return this.prisma.user;
-  }
+  get user() { return this.prisma.user; }
+  get hunt() { return this.prisma.hunt; }
+  get step() { return this.prisma.step; }
+  get participation() { return this.prisma.participation; }
 
-  get role() {
-    return this.prisma.role;
-  }
-
-  async onModuleInit() {
-    await this.prisma.$connect();
-  }
-
-  async onModuleDestroy() {
-    await this.prisma.$disconnect();
-  }
+  async onModuleInit() { await this.prisma.$connect(); }
+  async onModuleDestroy() { await this.prisma.$disconnect(); }
 }

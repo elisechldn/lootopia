@@ -1,5 +1,0 @@
-model Role {
-  id Int @default(autoincrement()) @id
-  name String
-  users User[]
-}
