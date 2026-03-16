@@ -1,0 +1,26 @@
+model Hunt {
+  id               Int             @id @default(autoincrement())
+  title            String
+  shortDescription String?
+  description      String?
+  startDate        DateTime?
+  endDate          DateTime?
+  location         String?
+  radius           Int             @default(5000)
+  difficulty       String?         @default("Intermédiaire")
+  status           HuntStatus      @default(DRAFT)
+  rewardType       String?         @default("DISCOUNT_CODE")
+  rewardValue      String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  refUser          Int
+  user             User            @relation(fields: [refUser], references: [id], onDelete: Cascade)
+  steps            Step[]
+  participations   Participation[]
+}
+
+enum HuntStatus {
+  DRAFT
+  ACTIVE
+  FINISHED
+}

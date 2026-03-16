@@ -5,6 +5,16 @@ import { TransformInterceptor } from './shared/interceptors/transform.intercepto
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalInterceptors(new TransformInterceptor());
+
+  app.enableCors({
+    origin: [
+      'http://localhost:3000', // web
+      'http://localhost:3001', // pwa (si différent)
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  });
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

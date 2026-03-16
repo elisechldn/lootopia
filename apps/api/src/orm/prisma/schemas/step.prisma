@@ -1,0 +1,27 @@
+model Step {
+  id             Int             @id @default(autoincrement())
+  orderNumber    Int
+  title          String
+  clue           String?
+  latitude       Float?
+  longitude      Float?
+  radius         Int             @default(50)
+  actionType     ActionType      @default(GPS)
+  arMarker       String?
+  arContent      String?
+  qrCode         String?
+  points         Int             @default(0)
+  createdAt      DateTime        @default(now())
+  refHunt        Int
+  hunt           Hunt            @relation(fields: [refHunt], references: [id], onDelete: Cascade)
+  participations Participation[]
+
+  @@unique([refHunt, orderNumber])
+}
+
+enum ActionType {
+  GPS
+  QR_CODE
+  AR
+  RIDDLE
+}
