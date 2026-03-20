@@ -1,3 +1,7 @@
 export function HuntMap() {
-    //return ();
+    return (
+        <div>
+            <p>HOLA HuntMap</p>
+        </div>
+    );
 }
