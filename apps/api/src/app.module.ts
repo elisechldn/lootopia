@@ -5,10 +5,11 @@ import { PrismaService } from './orm/prisma/prisma.service';
 import { UsersModule } from './users/users.module';
 import {HuntsModule} from "./hunts/hunts.module";
 import {AuthModule} from "./auth/auth.module";
+import { StatsController } from './stats/stats.controller';
 
 @Module({
   imports: [ConfigModule.forRoot(), UsersModule, PrismaModule, HuntsModule, AuthModule],
-  controllers: [],
+  controllers: [StatsController],
   providers: [PrismaService],
 })
 
