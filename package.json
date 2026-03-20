@@ -17,6 +17,15 @@
   "engines": {
     "node": ">=18"
   },
+  "overrides": {
+    "@hono/node-server": "^1.19.10",
+    "hono": "^4.12.7",
+    "ajv": "^8.18.0",
+    "lodash": "^4.17.22",
+    "file-type": "^21.3.2",
+    "next": "^16.2.0",
+    "@types/pg": "8.11.10"
+  },
   "packageManager": "npm@11.8.0",
   "workspaces": [
     "apps/*",
