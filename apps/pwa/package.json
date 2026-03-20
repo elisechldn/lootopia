@@ -1,5 +1,5 @@
 {
-  "name": "docs",
+  "name": "pwa",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@repo/ui": "*",
+    "locar": "^0.1.8",
     "next": "16.1.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "three": "^0.183.2",
     "web-push": "^3.6.7"
   },
   "devDependencies": {
@@ -24,6 +26,7 @@
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
+    "@types/three": "^0.183.1",
     "@types/web-push": "^3.6.4",
     "eslint": "^9.39.1",
     "typescript": "5.9.2"
