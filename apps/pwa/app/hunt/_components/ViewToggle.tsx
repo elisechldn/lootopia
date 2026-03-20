@@ -1,3 +1,5 @@
+'use client'
+
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { List, Map } from "lucide-react";
 import { HuntMap } from "./HuntMap";
