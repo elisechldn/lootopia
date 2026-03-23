@@ -2,7 +2,7 @@
 // npm install --save-dev prisma dotenv
 import 'dotenv/config';
 import { defineConfig } from 'prisma/config';
-
+console.log('Prisma config loaded with DATABASE_URL:', process.env['DATABASE_URL']);
 export default defineConfig({
   schema: 'src/orm/prisma/schemas',
   migrations: {
