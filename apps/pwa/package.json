@@ -18,21 +18,30 @@
     "locar": "^0.1.8",
     "lucide-react": "^0.577.0",
     "next": "16.1.5",
+    "next-themes": "^0.4.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "shadcn": "^4.1.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
     "three": "^0.183.2",
-    "web-push": "^3.6.7"
+    "tw-animate-css": "^1.4.0",
+    "web-push": "^3.6.7",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/types": "*",
     "@repo/typescript-config": "*",
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@types/three": "^0.183.1",
     "@types/web-push": "^3.6.4",
     "eslint": "^9.39.1",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
     "typescript": "5.9.2"
   }
 }
