@@ -1,13 +1,40 @@
-import ARScene from '../../components/ar/ARScene'
+'use client';
 
-const FAKE_GPS = process.env.NEXT_PUBLIC_AR_FAKE_GPS === 'true'
+import {useEffect} from "react";
 
-export default function ARPage() {
-  return (
-    <ARScene
-      useFakeGps={FAKE_GPS}
-      fakeLon={2.3488}
-      fakeLat={48.8534}
-    />
-  )
+/**
+ * Just for testing
+ */
+export default function Page() {
+
+    const handleCLick = () => {
+        if (!("geolocation" in navigator)) throw new Error('Pas de géolocalisation');
+
+        /// Vérifier l'état de la permission AVANT de demander
+        navigator.permissions.query({ name: "geolocation" }).then(result => {
+
+            console.log("Permission state:", result.state); // "granted" | "denied" | "prompt"
+        });
+
+        const options = {
+            enableHighAccuracy: true,
+            timeout: Infinity,
+            maximumAge: 0,
+        };
+
+        const success = (e: GeolocationPosition) => {
+            console.log('SUCCESS ==> ', e);
+        };
+
+        const error = (err: GeolocationPositionError) => {
+            console.log('ERROR ==> ', err);
+        };
+
+        const currentPosition = navigator.geolocation.getCurrentPosition(success, error, options);
+    }
+
+
+    return <div className={'w-full'}>
+        <button className={'p-10 bg-violet-500 rounded-3xl '} onClick={handleCLick}>GEOLOCALISATION</button>
+    </div>
 }

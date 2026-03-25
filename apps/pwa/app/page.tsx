@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { subscribeUser, unsubscribeUser, sendNotification } from './actions'
+import { redirect, RedirectType } from 'next/navigation'
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = '='.repeat((4- (base64String.length % 4)) % 4)
@@ -133,6 +134,9 @@ function InstallPrompt() {
 }
  
 export default function Page() {
+
+  redirect('/hunts/11');
+
   return (
     <div>
       <PushNotificationManager />
