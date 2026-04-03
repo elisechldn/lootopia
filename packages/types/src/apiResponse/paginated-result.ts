@@ -6,8 +6,12 @@ export interface PaginationMeta {
 }
 
 export interface PaginatedResult<T> {
-  data: T[];
+  data: T[] | T;
   total: number;
   page: number;
   pageSize: number;
+}
+
+export interface SingleResult<T> {
+  data: T;
 }
