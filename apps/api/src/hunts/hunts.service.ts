@@ -1,112 +1,211 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
+import { Prisma, HuntStatus } from '@repo/types';
 import { PrismaService } from '../orm/prisma/prisma.service';
 import { CreateHuntDto } from './dto/create-hunt.dto';
-import {HuntStatus} from "../orm/prisma/generated/enums";
 
 @Injectable()
 export class HuntsService {
-    constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-    async findOne(id: number) {
-        return this.prisma.hunt.findUnique({
-            where: { id },
-            include: {
-                _count: { select: { participations: true } },
-                steps: {
-                    orderBy: { orderNumber: 'asc' as const },
-                },
-            },
+  async findOne(id: number) {
+    const hunt = await this.prisma.hunt.findUnique({
+      where: { id },
+      include: {
+        _count: { select: { participations: true } },
+        steps: {
+          orderBy: { orderNumber: 'asc' as const },
+        },
+      },
+    });
+
+    if (!hunt) return null;
+
+    // Project lat/lon from PostGIS geography for each step
+    const stepCoords = await this.prisma.$queryRaw<
+      Array<{ id: number; latitude: number | null; longitude: number | null }>
+    >(
+      Prisma.sql`
+        SELECT
+          id,
+          ST_Y("location"::geometry) AS latitude,
+          ST_X("location"::geometry) AS longitude
+        FROM "Step"
+        WHERE "refHunt" = ${id}
+      `,
+    );
+
+    const coordsMap = new Map(stepCoords.map((c) => [c.id, c]));
+    const stepsWithCoords = hunt.steps.map((s) => ({
+      ...s,
+      latitude: coordsMap.get(s.id)?.latitude ?? null,
+      longitude: coordsMap.get(s.id)?.longitude ?? null,
+    }));
+
+    return { ...hunt, steps: stepsWithCoords };
+  }
+
+  async findByPartner(userId: number | null) {
+    return this.prisma.hunt.findMany({
+      where: userId ? { refUser: userId } : undefined,
+      include: {
+        _count: { select: { participations: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async findNearby(lat: number, lon: number, searchRadius = 20000): Promise<unknown[]> {
+    return this.prisma.$queryRaw(
+      Prisma.sql`
+                SELECT
+                    id, title, "shortDescription",
+                    "rewardType", "rewardValue", radius,
+                    "startDate", "endDate", "createdAt",
+                    ST_Y("locationCenter"::geometry) AS latitude,
+                    ST_X("locationCenter"::geometry) AS longitude,
+                    ST_Distance(
+                        "locationCenter",
+                        ST_MakePoint(${lon}, ${lat})::geography
+                    ) AS distance
+                FROM "Hunt"
+                WHERE status = 'ACTIVE'
+                  AND "locationCenter" IS NOT NULL
+                  AND ST_DWithin(
+                      "locationCenter",
+                      ST_MakePoint(${lon}, ${lat})::geography,
+                      ${searchRadius}
+                  )
+                ORDER BY distance
+            `,
+    );
+  }
+
+  async stats(userId: number | null) {
+    const where = userId ? { refUser: userId } : {};
+    const huntWhere = userId ? { hunt: { refUser: userId } } : {};
+
+    const [total, active, finished] = await Promise.all([
+      this.prisma.hunt.count({ where }),
+      this.prisma.hunt.count({
+        where: { ...where, status: 'ACTIVE' as HuntStatus },
+      }),
+      this.prisma.hunt.count({
+        where: { ...where, status: 'FINISHED' as HuntStatus },
+      }),
+    ]);
+    const players = await this.prisma.participation.count({ where: huntWhere });
+    return { total, active, finished, players };
+  }
+
+  async create(dto: CreateHuntDto) {
+    if (!dto.title) throw new BadRequestException('Le titre est obligatoire');
+    if (!dto.refUser) throw new BadRequestException('refUser est obligatoire');
+
+    const hunt = await this.prisma.hunt.create({
+      data: {
+        title: dto.title,
+        shortDescription: dto.shortDescription ?? null,
+        description: dto.description ?? null,
+        startDate: dto.startDate ? new Date(dto.startDate) : null,
+        endDate: dto.endDate ? new Date(dto.endDate) : null,
+        radius: dto.radius ?? 5000,
+        status: (dto.status ?? 'DRAFT') as HuntStatus,
+        rewardType: dto.rewardType ?? 'DISCOUNT_CODE',
+        rewardValue: dto.rewardValue ?? null,
+        refUser: Number(dto.refUser),
+      },
+    });
+
+    if (dto.locationLat != null && dto.locationLon != null) {
+      await this.prisma.$executeRaw(
+        Prisma.sql`
+                    UPDATE "Hunt"
+                    SET "locationCenter" = ST_MakePoint(${dto.locationLon}, ${dto.locationLat})::geography
+                    WHERE id = ${hunt.id}
+                `,
+      );
+    }
+
+    return hunt;
+  }
+
+  async update(id: number, dto: Partial<CreateHuntDto>) {
+    const hunt = await this.prisma.hunt.update({
+      where: { id },
+      data: {
+        ...(dto.title && { title: dto.title }),
+        ...(dto.shortDescription !== undefined && {
+          shortDescription: dto.shortDescription,
+        }),
+        ...(dto.description !== undefined && { description: dto.description }),
+        ...(dto.startDate !== undefined && {
+          startDate: dto.startDate ? new Date(dto.startDate) : null,
+        }),
+        ...(dto.endDate !== undefined && {
+          endDate: dto.endDate ? new Date(dto.endDate) : null,
+        }),
+        ...(dto.radius !== undefined && { radius: dto.radius }),
+        ...(dto.status && { status: dto.status as HuntStatus }),
+        ...(dto.rewardType && { rewardType: dto.rewardType }),
+        ...(dto.rewardValue !== undefined && { rewardValue: dto.rewardValue }),
+      },
+    });
+
+    if (dto.locationLat != null && dto.locationLon != null) {
+      await this.prisma.$executeRaw(
+        Prisma.sql`
+                    UPDATE "Hunt"
+                    SET "locationCenter" = ST_MakePoint(${dto.locationLon}, ${dto.locationLat})::geography
+                    WHERE id = ${hunt.id}
+                `,
+      );
+    }
+
+    return hunt;
+  }
+
+  async remove(id: number) {
+    return this.prisma.hunt.delete({ where: { id } });
+  }
+
+  async createSteps(huntId: number, steps: Array<Record<string, unknown>>) {
+    await this.prisma.step.deleteMany({ where: { refHunt: huntId } });
+
+    const created = await this.prisma.step.createMany({
+      data: steps.map((s, i) => ({
+        refHunt: huntId,
+        orderNumber: Number(s.orderNumber ?? i + 1),
+        title: String(s.title || `Étape ${i + 1}`),
+        radius: Number(s.radius ?? 50),
+        actionType: String(s.actionType ?? 'QR_CODE') as never,
+        arMarkerUrl: s.arMarkerUrl ? String(s.arMarkerUrl) : null,
+        arContent: s.arContent ? String(s.arContent) : null,
+        qrCodeValue: s.qrCodeValue ? String(s.qrCodeValue) : null,
+        points: Number(s.points ?? 0),
+      })),
+    });
+
+    // Inject PostGIS coordinates for steps that provide lat/lon
+    for (const s of steps) {
+      if (s.latitude != null && s.longitude != null) {
+        const step = await this.prisma.step.findFirst({
+          where: {
+            refHunt: huntId,
+            orderNumber: Number(s.orderNumber),
+          },
         });
+        if (step) {
+          await this.prisma.$executeRaw(
+            Prisma.sql`
+              UPDATE "Step"
+              SET "location" = ST_MakePoint(${Number(s.longitude)}, ${Number(s.latitude)})::geography
+              WHERE id = ${step.id}
+            `,
+          );
+        }
+      }
     }
 
-    async findByPartner(userId: number | null) {
-        return this.prisma.hunt.findMany({
-            where: userId ? { refUser: userId } : undefined,
-            include: {
-                _count: { select: { participations: true } },
-            },
-            orderBy: { createdAt: 'desc' },
-        });
-    }
-
-    async stats(userId: number | null) {
-        const where = userId ? { refUser: userId } : {};
-        const huntWhere = userId ? { hunt: { refUser: userId } } : {};
-
-        const [total, active, finished] = await Promise.all([
-            this.prisma.hunt.count({ where }),
-            this.prisma.hunt.count({ where: { ...where, status: 'ACTIVE' as HuntStatus } }),
-            this.prisma.hunt.count({ where: { ...where, status: 'FINISHED' as HuntStatus } }),
-        ]);
-        const players = await this.prisma.participation.count({ where: huntWhere });
-        return { total, active, finished, players };
-    }
-
-    async create(dto: CreateHuntDto) {
-        if (!dto.title) throw new BadRequestException('Le titre est obligatoire');
-        if (!dto.refUser) throw new BadRequestException('refUser est obligatoire');
-
-        return this.prisma.hunt.create({
-            data: {
-                title: dto.title,
-                shortDescription: dto.shortDescription ?? null,
-                description: dto.description ?? null,
-                startDate: dto.startDate ? new Date(dto.startDate) : null,
-                endDate: dto.endDate ? new Date(dto.endDate) : null,
-                location: dto.location ?? null,
-                radius: dto.radius ?? 5000,
-                difficulty: dto.difficulty ?? 'Intermédiaire',
-                status: (dto.status ?? 'DRAFT') as HuntStatus,
-                rewardType: dto.rewardType ?? 'DISCOUNT_CODE',
-                rewardValue: dto.rewardValue ?? null,
-                refUser: Number(dto.refUser),
-            },
-        });
-    }
-
-    async update(id: number, dto: Partial<CreateHuntDto>) {
-        return this.prisma.hunt.update({
-            where: { id },
-            data: {
-                ...(dto.title && { title: dto.title }),
-                ...(dto.description !== undefined && { description: dto.description }),
-                ...(dto.startDate !== undefined && {
-                    startDate: dto.startDate ? new Date(dto.startDate) : null,
-                }),
-                ...(dto.endDate !== undefined && {
-                    endDate: dto.endDate ? new Date(dto.endDate) : null,
-                }),
-                ...(dto.location !== undefined && { location: dto.location }),
-                ...(dto.status && { status: dto.status as HuntStatus }),
-                ...(dto.rewardType && { rewardType: dto.rewardType }),
-                ...(dto.rewardValue !== undefined && { rewardValue: dto.rewardValue }),
-            },
-        });
-    }
-
-    async remove(id: number) {
-        return this.prisma.hunt.delete({ where: { id } });
-    }
-
-    async createSteps(huntId: number, steps: Array<Record<string, unknown>>) {
-        await this.prisma.step.deleteMany({ where: { refHunt: huntId } });
-
-        return this.prisma.step.createMany({
-            data: steps.map((s, i) => ({
-                refHunt: huntId,
-                orderNumber: Number(s.orderNumber ?? i + 1),
-                title: String(s.title || `Étape ${i + 1}`),
-                clue: s.clue ? String(s.clue) : null,
-                latitude: s.latitude != null ? Number(s.latitude) : null,
-                longitude: s.longitude != null ? Number(s.longitude) : null,
-                radius: Number(s.radius ?? 50),
-                actionType: String(s.actionType ?? 'QR_CODE') as never,
-                arMarker: s.arMarker ? String(s.arMarker) : null,
-                arContent: s.arContent ? String(s.arContent) : null,
-                qrCode: s.qrCode ? String(s.qrCode) : null,
-                points: Number(s.points ?? 0),
-            })),
-        });
-    }
-
+    return created;
+  }
 }
