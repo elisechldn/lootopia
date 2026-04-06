@@ -36,13 +36,16 @@ export function useDeviceOrientationControls({
     refs.current.controls = controls
 
     controls.on('deviceorientationerror', (e: { type?: string }) => {
-      if (e?.type === 'PERMISSION_REQUIRED') onPermissionRequired()
+      console.error("deviceorientationerror");
+      if (e?.type === 'PERMISSION_REQUIRED') onPermissionRequired();
     })
 
     controls.on('deviceorientationgranted', (ev: { target: { connect: () => void } }) => {
+      console.log("deviceorientationgranted");
       onPermissionGranted()
       ev.target.connect()
     })
+
 
     controls.init()
   }, [refs, onPermissionRequired, onPermissionGranted])

@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 type UseARSceneOptions = {
   canvasRef: RefObject<HTMLCanvasElement | null>
   videoRef: RefObject<HTMLVideoElement | null>
+  onItemHit?: (name: string) => void
 }
 
 export type UseARSceneReturn = {
@@ -20,9 +21,10 @@ export type UseARSceneReturn = {
   refs: RefObject<ARRefs>
 }
 
-export function useARScene({ canvasRef, videoRef }: UseARSceneOptions): UseARSceneReturn {
+export function useARScene({ canvasRef, videoRef, onItemHit }: UseARSceneOptions): UseARSceneReturn {
   const [needsOrientationPermission, setNeedsOrientationPermission] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const onItemHitRef = useRef(onItemHit)
 
   const refs = useRef<ARRefs>({
     renderer: null,
@@ -33,13 +35,12 @@ export function useARScene({ canvasRef, videoRef }: UseARSceneOptions): UseARSce
     controls: null,
   })
 
+  // Hooks use
   const threeSetup = useThreeSetup({ canvasRef, videoRef, refs })
-
   const locar = useLocar({
     refs,
     onError: useCallback((msg: string) => setError(msg), []),
   })
-
   const orientationControls = useDeviceOrientationControls({
     refs,
     onPermissionRequired: useCallback(() => setNeedsOrientationPermission(true), []),
@@ -84,13 +85,16 @@ export function useARScene({ canvasRef, videoRef }: UseARSceneOptions): UseARSce
 
       renderer.setAnimationLoop(() => {
         controls.update()
+        // console.log("camera.quaternion -> ", camera.quaternion);
         console.log("setAnimationLoop")
         const intersects = clickHandler.raycast(camera, scene)
         const first = intersects[0]
         if (first) {
-          console.log('raycast hit:', first.object)
-          const obj = first.object as unknown as { properties?: { name?: string } }
-          if (obj.properties?.name) toast(obj.properties.name)
+          const obj = first.object as unknown as { properties: { name: string } }
+          if (obj.properties?.name) {
+            toast(obj.properties.name)
+            onItemHitRef.current?.(obj.properties.name)
+          }
         }
 
         renderer.render(scene, camera)

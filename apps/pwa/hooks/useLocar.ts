@@ -34,7 +34,7 @@ export function useLocar({ refs, onError }: UseLocarOptions): UseLocarReturn {
       onCoordsUpdate: (coords) => setCoords(coords),
     })
 
-    await locar.startGps()
+    await locar.startGps();
 
     if (signal.aborted) {
       locar.stopGps()
