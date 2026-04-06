@@ -36,6 +36,15 @@ export const ParticipationStatus = {
 export type ParticipationStatus = (typeof ParticipationStatus)[keyof typeof ParticipationStatus]
 
 
+export const ProgressStatus = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  SKIPPED: 'SKIPPED'
+} as const
+
+export type ProgressStatus = (typeof ProgressStatus)[keyof typeof ProgressStatus]
+
+
 export const ActionType = {
   GPS: 'GPS',
   QR_CODE: 'QR_CODE',

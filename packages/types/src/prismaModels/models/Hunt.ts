@@ -45,9 +45,8 @@ export type HuntMinAggregateOutputType = {
   description: string | null
   startDate: Date | null
   endDate: Date | null
-  location: string | null
   radius: number | null
-  difficulty: string | null
+  coverImage: string | null
   status: $Enums.HuntStatus | null
   rewardType: string | null
   rewardValue: string | null
@@ -63,9 +62,8 @@ export type HuntMaxAggregateOutputType = {
   description: string | null
   startDate: Date | null
   endDate: Date | null
-  location: string | null
   radius: number | null
-  difficulty: string | null
+  coverImage: string | null
   status: $Enums.HuntStatus | null
   rewardType: string | null
   rewardValue: string | null
@@ -81,9 +79,8 @@ export type HuntCountAggregateOutputType = {
   description: number
   startDate: number
   endDate: number
-  location: number
   radius: number
-  difficulty: number
+  coverImage: number
   status: number
   rewardType: number
   rewardValue: number
@@ -113,9 +110,8 @@ export type HuntMinAggregateInputType = {
   description?: true
   startDate?: true
   endDate?: true
-  location?: true
   radius?: true
-  difficulty?: true
+  coverImage?: true
   status?: true
   rewardType?: true
   rewardValue?: true
@@ -131,9 +127,8 @@ export type HuntMaxAggregateInputType = {
   description?: true
   startDate?: true
   endDate?: true
-  location?: true
   radius?: true
-  difficulty?: true
+  coverImage?: true
   status?: true
   rewardType?: true
   rewardValue?: true
@@ -149,9 +144,8 @@ export type HuntCountAggregateInputType = {
   description?: true
   startDate?: true
   endDate?: true
-  location?: true
   radius?: true
-  difficulty?: true
+  coverImage?: true
   status?: true
   rewardType?: true
   rewardValue?: true
@@ -254,9 +248,8 @@ export type HuntGroupByOutputType = {
   description: string | null
   startDate: Date | null
   endDate: Date | null
-  location: string | null
   radius: number
-  difficulty: string | null
+  coverImage: string | null
   status: $Enums.HuntStatus
   rewardType: string | null
   rewardValue: string | null
@@ -295,9 +288,8 @@ export type HuntWhereInput = {
   description?: Prisma.StringNullableFilter<"Hunt"> | string | null
   startDate?: Prisma.DateTimeNullableFilter<"Hunt"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Hunt"> | Date | string | null
-  location?: Prisma.StringNullableFilter<"Hunt"> | string | null
   radius?: Prisma.IntFilter<"Hunt"> | number
-  difficulty?: Prisma.StringNullableFilter<"Hunt"> | string | null
+  coverImage?: Prisma.StringNullableFilter<"Hunt"> | string | null
   status?: Prisma.EnumHuntStatusFilter<"Hunt"> | $Enums.HuntStatus
   rewardType?: Prisma.StringNullableFilter<"Hunt"> | string | null
   rewardValue?: Prisma.StringNullableFilter<"Hunt"> | string | null
@@ -316,9 +308,8 @@ export type HuntOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  location?: Prisma.SortOrderInput | Prisma.SortOrder
   radius?: Prisma.SortOrder
-  difficulty?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   rewardType?: Prisma.SortOrderInput | Prisma.SortOrder
   rewardValue?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -340,9 +331,8 @@ export type HuntWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Hunt"> | string | null
   startDate?: Prisma.DateTimeNullableFilter<"Hunt"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Hunt"> | Date | string | null
-  location?: Prisma.StringNullableFilter<"Hunt"> | string | null
   radius?: Prisma.IntFilter<"Hunt"> | number
-  difficulty?: Prisma.StringNullableFilter<"Hunt"> | string | null
+  coverImage?: Prisma.StringNullableFilter<"Hunt"> | string | null
   status?: Prisma.EnumHuntStatusFilter<"Hunt"> | $Enums.HuntStatus
   rewardType?: Prisma.StringNullableFilter<"Hunt"> | string | null
   rewardValue?: Prisma.StringNullableFilter<"Hunt"> | string | null
@@ -361,9 +351,8 @@ export type HuntOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  location?: Prisma.SortOrderInput | Prisma.SortOrder
   radius?: Prisma.SortOrder
-  difficulty?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   rewardType?: Prisma.SortOrderInput | Prisma.SortOrder
   rewardValue?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -387,9 +376,8 @@ export type HuntScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Hunt"> | string | null
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Hunt"> | Date | string | null
   endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Hunt"> | Date | string | null
-  location?: Prisma.StringNullableWithAggregatesFilter<"Hunt"> | string | null
   radius?: Prisma.IntWithAggregatesFilter<"Hunt"> | number
-  difficulty?: Prisma.StringNullableWithAggregatesFilter<"Hunt"> | string | null
+  coverImage?: Prisma.StringNullableWithAggregatesFilter<"Hunt"> | string | null
   status?: Prisma.EnumHuntStatusWithAggregatesFilter<"Hunt"> | $Enums.HuntStatus
   rewardType?: Prisma.StringNullableWithAggregatesFilter<"Hunt"> | string | null
   rewardValue?: Prisma.StringNullableWithAggregatesFilter<"Hunt"> | string | null
@@ -404,9 +392,8 @@ export type HuntCreateInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -424,9 +411,8 @@ export type HuntUncheckedCreateInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -443,9 +429,8 @@ export type HuntUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -463,9 +448,8 @@ export type HuntUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -483,9 +467,8 @@ export type HuntCreateManyInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -500,9 +483,8 @@ export type HuntUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -517,9 +499,8 @@ export type HuntUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -535,9 +516,8 @@ export type HuntCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
-  location?: Prisma.SortOrder
   radius?: Prisma.SortOrder
-  difficulty?: Prisma.SortOrder
+  coverImage?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rewardType?: Prisma.SortOrder
   rewardValue?: Prisma.SortOrder
@@ -559,9 +539,8 @@ export type HuntMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
-  location?: Prisma.SortOrder
   radius?: Prisma.SortOrder
-  difficulty?: Prisma.SortOrder
+  coverImage?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rewardType?: Prisma.SortOrder
   rewardValue?: Prisma.SortOrder
@@ -577,9 +556,8 @@ export type HuntMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
-  location?: Prisma.SortOrder
   radius?: Prisma.SortOrder
-  difficulty?: Prisma.SortOrder
+  coverImage?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rewardType?: Prisma.SortOrder
   rewardValue?: Prisma.SortOrder
@@ -609,10 +587,6 @@ export type HuntOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
@@ -621,20 +595,8 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EnumHuntStatusFieldUpdateOperationsInput = {
   set?: $Enums.HuntStatus
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type HuntCreateNestedOneWithoutParticipationsInput = {
@@ -713,9 +675,8 @@ export type HuntCreateWithoutParticipationsInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -732,9 +693,8 @@ export type HuntUncheckedCreateWithoutParticipationsInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -766,9 +726,8 @@ export type HuntUpdateWithoutParticipationsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -785,9 +744,8 @@ export type HuntUncheckedUpdateWithoutParticipationsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -803,9 +761,8 @@ export type HuntCreateWithoutStepsInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -822,9 +779,8 @@ export type HuntUncheckedCreateWithoutStepsInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -856,9 +812,8 @@ export type HuntUpdateWithoutStepsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -875,9 +830,8 @@ export type HuntUncheckedUpdateWithoutStepsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -893,9 +847,8 @@ export type HuntCreateWithoutUserInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -912,9 +865,8 @@ export type HuntUncheckedCreateWithoutUserInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -960,9 +912,8 @@ export type HuntScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"Hunt"> | string | null
   startDate?: Prisma.DateTimeNullableFilter<"Hunt"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Hunt"> | Date | string | null
-  location?: Prisma.StringNullableFilter<"Hunt"> | string | null
   radius?: Prisma.IntFilter<"Hunt"> | number
-  difficulty?: Prisma.StringNullableFilter<"Hunt"> | string | null
+  coverImage?: Prisma.StringNullableFilter<"Hunt"> | string | null
   status?: Prisma.EnumHuntStatusFilter<"Hunt"> | $Enums.HuntStatus
   rewardType?: Prisma.StringNullableFilter<"Hunt"> | string | null
   rewardValue?: Prisma.StringNullableFilter<"Hunt"> | string | null
@@ -978,9 +929,8 @@ export type HuntCreateManyUserInput = {
   description?: string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
-  location?: string | null
   radius?: number
-  difficulty?: string | null
+  coverImage?: string | null
   status?: $Enums.HuntStatus
   rewardType?: string | null
   rewardValue?: string | null
@@ -994,9 +944,8 @@ export type HuntUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1013,9 +962,8 @@ export type HuntUncheckedUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1032,9 +980,8 @@ export type HuntUncheckedUpdateManyWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHuntStatusFieldUpdateOperationsInput | $Enums.HuntStatus
   rewardType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rewardValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1089,9 +1036,8 @@ export type HuntSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   description?: boolean
   startDate?: boolean
   endDate?: boolean
-  location?: boolean
   radius?: boolean
-  difficulty?: boolean
+  coverImage?: boolean
   status?: boolean
   rewardType?: boolean
   rewardValue?: boolean
@@ -1111,9 +1057,8 @@ export type HuntSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   description?: boolean
   startDate?: boolean
   endDate?: boolean
-  location?: boolean
   radius?: boolean
-  difficulty?: boolean
+  coverImage?: boolean
   status?: boolean
   rewardType?: boolean
   rewardValue?: boolean
@@ -1130,9 +1075,8 @@ export type HuntSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   description?: boolean
   startDate?: boolean
   endDate?: boolean
-  location?: boolean
   radius?: boolean
-  difficulty?: boolean
+  coverImage?: boolean
   status?: boolean
   rewardType?: boolean
   rewardValue?: boolean
@@ -1149,9 +1093,8 @@ export type HuntSelectScalar = {
   description?: boolean
   startDate?: boolean
   endDate?: boolean
-  location?: boolean
   radius?: boolean
-  difficulty?: boolean
+  coverImage?: boolean
   status?: boolean
   rewardType?: boolean
   rewardValue?: boolean
@@ -1160,7 +1103,7 @@ export type HuntSelectScalar = {
   refUser?: boolean
 }
 
-export type HuntOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "shortDescription" | "description" | "startDate" | "endDate" | "location" | "radius" | "difficulty" | "status" | "rewardType" | "rewardValue" | "createdAt" | "updatedAt" | "refUser", ExtArgs["result"]["hunt"]>
+export type HuntOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "shortDescription" | "description" | "startDate" | "endDate" | "radius" | "coverImage" | "status" | "rewardType" | "rewardValue" | "createdAt" | "updatedAt" | "refUser", ExtArgs["result"]["hunt"]>
 export type HuntInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   steps?: boolean | Prisma.Hunt$stepsArgs<ExtArgs>
@@ -1188,9 +1131,8 @@ export type $HuntPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     description: string | null
     startDate: Date | null
     endDate: Date | null
-    location: string | null
     radius: number
-    difficulty: string | null
+    coverImage: string | null
     status: $Enums.HuntStatus
     rewardType: string | null
     rewardValue: string | null
@@ -1629,9 +1571,8 @@ export interface HuntFieldRefs {
   readonly description: Prisma.FieldRef<"Hunt", 'String'>
   readonly startDate: Prisma.FieldRef<"Hunt", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Hunt", 'DateTime'>
-  readonly location: Prisma.FieldRef<"Hunt", 'String'>
   readonly radius: Prisma.FieldRef<"Hunt", 'Int'>
-  readonly difficulty: Prisma.FieldRef<"Hunt", 'String'>
+  readonly coverImage: Prisma.FieldRef<"Hunt", 'String'>
   readonly status: Prisma.FieldRef<"Hunt", 'HuntStatus'>
   readonly rewardType: Prisma.FieldRef<"Hunt", 'String'>
   readonly rewardValue: Prisma.FieldRef<"Hunt", 'String'>

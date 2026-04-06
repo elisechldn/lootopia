@@ -29,8 +29,8 @@ export * from "./enums.js"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Hunts
- * const hunts = await prisma.hunt.findMany()
+ * // Fetch zero or more ClueUsages
+ * const clueUsages = await prisma.clueUsage.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -39,6 +39,16 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
+/**
+ * Model ClueUsage
+ * 
+ */
+export type ClueUsage = Prisma.ClueUsageModel
+/**
+ * Model Clue
+ * 
+ */
+export type Clue = Prisma.ClueModel
 /**
  * Model Hunt
  * 
@@ -49,6 +59,11 @@ export type Hunt = Prisma.HuntModel
  * 
  */
 export type Participation = Prisma.ParticipationModel
+/**
+ * Model Progress
+ * 
+ */
+export type Progress = Prisma.ProgressModel
 /**
  * Model Step
  * 

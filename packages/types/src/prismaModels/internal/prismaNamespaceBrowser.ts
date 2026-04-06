@@ -51,8 +51,11 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  ClueUsage: 'ClueUsage',
+  Clue: 'Clue',
   Hunt: 'Hunt',
   Participation: 'Participation',
+  Progress: 'Progress',
   Step: 'Step',
   User: 'User'
 } as const
@@ -73,6 +76,29 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ClueUsageScalarFieldEnum = {
+  id: 'id',
+  usedAt: 'usedAt',
+  refProgress: 'refProgress',
+  refClue: 'refClue'
+} as const
+
+export type ClueUsageScalarFieldEnum = (typeof ClueUsageScalarFieldEnum)[keyof typeof ClueUsageScalarFieldEnum]
+
+
+export const ClueScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  penaltyCost: 'penaltyCost',
+  orderNumber: 'orderNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  refStep: 'refStep'
+} as const
+
+export type ClueScalarFieldEnum = (typeof ClueScalarFieldEnum)[keyof typeof ClueScalarFieldEnum]
+
+
 export const HuntScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -80,9 +106,8 @@ export const HuntScalarFieldEnum = {
   description: 'description',
   startDate: 'startDate',
   endDate: 'endDate',
-  location: 'location',
   radius: 'radius',
-  difficulty: 'difficulty',
+  coverImage: 'coverImage',
   status: 'status',
   rewardType: 'rewardType',
   rewardValue: 'rewardValue',
@@ -103,27 +128,39 @@ export const ParticipationScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   refUser: 'refUser',
-  refHunt: 'refHunt',
-  currentStep: 'currentStep'
+  refHunt: 'refHunt'
 } as const
 
 export type ParticipationScalarFieldEnum = (typeof ParticipationScalarFieldEnum)[keyof typeof ParticipationScalarFieldEnum]
+
+
+export const ProgressScalarFieldEnum = {
+  id: 'id',
+  statut: 'statut',
+  totalPoints: 'totalPoints',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  refParticipation: 'refParticipation',
+  refStep: 'refStep'
+} as const
+
+export type ProgressScalarFieldEnum = (typeof ProgressScalarFieldEnum)[keyof typeof ProgressScalarFieldEnum]
 
 
 export const StepScalarFieldEnum = {
   id: 'id',
   orderNumber: 'orderNumber',
   title: 'title',
-  clue: 'clue',
-  latitude: 'latitude',
-  longitude: 'longitude',
   radius: 'radius',
   actionType: 'actionType',
-  arMarker: 'arMarker',
+  arMarkerUrl: 'arMarkerUrl',
   arContent: 'arContent',
-  qrCode: 'qrCode',
+  qrCodeValue: 'qrCodeValue',
   points: 'points',
   createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   refHunt: 'refHunt'
 } as const
 
@@ -136,9 +173,9 @@ export const UserScalarFieldEnum = {
   firstname: 'firstname',
   lastname: 'lastname',
   email: 'email',
-  password: 'password',
+  passwordHash: 'passwordHash',
   role: 'role',
-  picture: 'picture',
+  profilePicture: 'profilePicture',
   lastConnection: 'lastConnection',
   country: 'country',
   createdAt: 'createdAt',

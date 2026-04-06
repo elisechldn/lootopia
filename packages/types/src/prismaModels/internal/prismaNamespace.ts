@@ -384,8 +384,11 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  ClueUsage: 'ClueUsage',
+  Clue: 'Clue',
   Hunt: 'Hunt',
   Participation: 'Participation',
+  Progress: 'Progress',
   Step: 'Step',
   User: 'User'
 } as const
@@ -403,10 +406,158 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hunt" | "participation" | "step" | "user"
+    modelProps: "clueUsage" | "clue" | "hunt" | "participation" | "progress" | "step" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    ClueUsage: {
+      payload: Prisma.$ClueUsagePayload<ExtArgs>
+      fields: Prisma.ClueUsageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ClueUsageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ClueUsageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload>
+        }
+        findFirst: {
+          args: Prisma.ClueUsageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ClueUsageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload>
+        }
+        findMany: {
+          args: Prisma.ClueUsageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload>[]
+        }
+        create: {
+          args: Prisma.ClueUsageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload>
+        }
+        createMany: {
+          args: Prisma.ClueUsageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ClueUsageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload>[]
+        }
+        delete: {
+          args: Prisma.ClueUsageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload>
+        }
+        update: {
+          args: Prisma.ClueUsageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload>
+        }
+        deleteMany: {
+          args: Prisma.ClueUsageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ClueUsageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ClueUsageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload>[]
+        }
+        upsert: {
+          args: Prisma.ClueUsageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClueUsagePayload>
+        }
+        aggregate: {
+          args: Prisma.ClueUsageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateClueUsage>
+        }
+        groupBy: {
+          args: Prisma.ClueUsageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClueUsageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ClueUsageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClueUsageCountAggregateOutputType> | number
+        }
+      }
+    }
+    Clue: {
+      payload: Prisma.$CluePayload<ExtArgs>
+      fields: Prisma.ClueFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ClueFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ClueFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload>
+        }
+        findFirst: {
+          args: Prisma.ClueFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ClueFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload>
+        }
+        findMany: {
+          args: Prisma.ClueFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload>[]
+        }
+        create: {
+          args: Prisma.ClueCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload>
+        }
+        createMany: {
+          args: Prisma.ClueCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ClueCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload>[]
+        }
+        delete: {
+          args: Prisma.ClueDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload>
+        }
+        update: {
+          args: Prisma.ClueUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload>
+        }
+        deleteMany: {
+          args: Prisma.ClueDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ClueUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ClueUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload>[]
+        }
+        upsert: {
+          args: Prisma.ClueUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CluePayload>
+        }
+        aggregate: {
+          args: Prisma.ClueAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateClue>
+        }
+        groupBy: {
+          args: Prisma.ClueGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClueGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ClueCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClueCountAggregateOutputType> | number
+        }
+      }
+    }
     Hunt: {
       payload: Prisma.$HuntPayload<ExtArgs>
       fields: Prisma.HuntFieldRefs
@@ -552,6 +703,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ParticipationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ParticipationCountAggregateOutputType> | number
+        }
+      }
+    }
+    Progress: {
+      payload: Prisma.$ProgressPayload<ExtArgs>
+      fields: Prisma.ProgressFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProgressFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProgressFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload>
+        }
+        findFirst: {
+          args: Prisma.ProgressFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProgressFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload>
+        }
+        findMany: {
+          args: Prisma.ProgressFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload>[]
+        }
+        create: {
+          args: Prisma.ProgressCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload>
+        }
+        createMany: {
+          args: Prisma.ProgressCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProgressCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload>[]
+        }
+        delete: {
+          args: Prisma.ProgressDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload>
+        }
+        update: {
+          args: Prisma.ProgressUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProgressDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProgressUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProgressUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProgressUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressPayload>
+        }
+        aggregate: {
+          args: Prisma.ProgressAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProgress>
+        }
+        groupBy: {
+          args: Prisma.ProgressGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProgressGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProgressCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProgressCountAggregateOutputType> | number
         }
       }
     }
@@ -742,6 +967,29 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ClueUsageScalarFieldEnum = {
+  id: 'id',
+  usedAt: 'usedAt',
+  refProgress: 'refProgress',
+  refClue: 'refClue'
+} as const
+
+export type ClueUsageScalarFieldEnum = (typeof ClueUsageScalarFieldEnum)[keyof typeof ClueUsageScalarFieldEnum]
+
+
+export const ClueScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  penaltyCost: 'penaltyCost',
+  orderNumber: 'orderNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  refStep: 'refStep'
+} as const
+
+export type ClueScalarFieldEnum = (typeof ClueScalarFieldEnum)[keyof typeof ClueScalarFieldEnum]
+
+
 export const HuntScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -749,9 +997,8 @@ export const HuntScalarFieldEnum = {
   description: 'description',
   startDate: 'startDate',
   endDate: 'endDate',
-  location: 'location',
   radius: 'radius',
-  difficulty: 'difficulty',
+  coverImage: 'coverImage',
   status: 'status',
   rewardType: 'rewardType',
   rewardValue: 'rewardValue',
@@ -772,27 +1019,39 @@ export const ParticipationScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   refUser: 'refUser',
-  refHunt: 'refHunt',
-  currentStep: 'currentStep'
+  refHunt: 'refHunt'
 } as const
 
 export type ParticipationScalarFieldEnum = (typeof ParticipationScalarFieldEnum)[keyof typeof ParticipationScalarFieldEnum]
+
+
+export const ProgressScalarFieldEnum = {
+  id: 'id',
+  statut: 'statut',
+  totalPoints: 'totalPoints',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  refParticipation: 'refParticipation',
+  refStep: 'refStep'
+} as const
+
+export type ProgressScalarFieldEnum = (typeof ProgressScalarFieldEnum)[keyof typeof ProgressScalarFieldEnum]
 
 
 export const StepScalarFieldEnum = {
   id: 'id',
   orderNumber: 'orderNumber',
   title: 'title',
-  clue: 'clue',
-  latitude: 'latitude',
-  longitude: 'longitude',
   radius: 'radius',
   actionType: 'actionType',
-  arMarker: 'arMarker',
+  arMarkerUrl: 'arMarkerUrl',
   arContent: 'arContent',
-  qrCode: 'qrCode',
+  qrCodeValue: 'qrCodeValue',
   points: 'points',
   createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   refHunt: 'refHunt'
 } as const
 
@@ -805,9 +1064,9 @@ export const UserScalarFieldEnum = {
   firstname: 'firstname',
   lastname: 'lastname',
   email: 'email',
-  password: 'password',
+  passwordHash: 'passwordHash',
   role: 'role',
-  picture: 'picture',
+  profilePicture: 'profilePicture',
   lastConnection: 'lastConnection',
   country: 'country',
   createdAt: 'createdAt',
@@ -862,20 +1121,6 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'String'
- */
-export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-    
-
-
-/**
- * Reference to a field of type 'String[]'
- */
-export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
-
-
-/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -886,6 +1131,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'String'
+ */
+export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+    
+
+
+/**
+ * Reference to a field of type 'String[]'
+ */
+export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
     
 
 
@@ -918,16 +1177,16 @@ export type ListEnumParticipationStatusFieldRefInput<$PrismaModel> = FieldRefInp
 
 
 /**
- * Reference to a field of type 'Float'
+ * Reference to a field of type 'ProgressStatus'
  */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+export type EnumProgressStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProgressStatus'>
     
 
 
 /**
- * Reference to a field of type 'Float[]'
+ * Reference to a field of type 'ProgressStatus[]'
  */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+export type ListEnumProgressStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProgressStatus[]'>
     
 
 
@@ -956,6 +1215,20 @@ export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'Role[]'
  */
 export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1053,8 +1326,11 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  clueUsage?: Prisma.ClueUsageOmit
+  clue?: Prisma.ClueOmit
   hunt?: Prisma.HuntOmit
   participation?: Prisma.ParticipationOmit
+  progress?: Prisma.ProgressOmit
   step?: Prisma.StepOmit
   user?: Prisma.UserOmit
 }

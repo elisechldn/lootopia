@@ -31,7 +31,6 @@ export type ParticipationAvgAggregateOutputType = {
   totalPoints: number | null
   refUser: number | null
   refHunt: number | null
-  currentStep: number | null
 }
 
 export type ParticipationSumAggregateOutputType = {
@@ -39,7 +38,6 @@ export type ParticipationSumAggregateOutputType = {
   totalPoints: number | null
   refUser: number | null
   refHunt: number | null
-  currentStep: number | null
 }
 
 export type ParticipationMinAggregateOutputType = {
@@ -52,7 +50,6 @@ export type ParticipationMinAggregateOutputType = {
   updatedAt: Date | null
   refUser: number | null
   refHunt: number | null
-  currentStep: number | null
 }
 
 export type ParticipationMaxAggregateOutputType = {
@@ -65,7 +62,6 @@ export type ParticipationMaxAggregateOutputType = {
   updatedAt: Date | null
   refUser: number | null
   refHunt: number | null
-  currentStep: number | null
 }
 
 export type ParticipationCountAggregateOutputType = {
@@ -78,7 +74,6 @@ export type ParticipationCountAggregateOutputType = {
   updatedAt: number
   refUser: number
   refHunt: number
-  currentStep: number
   _all: number
 }
 
@@ -88,7 +83,6 @@ export type ParticipationAvgAggregateInputType = {
   totalPoints?: true
   refUser?: true
   refHunt?: true
-  currentStep?: true
 }
 
 export type ParticipationSumAggregateInputType = {
@@ -96,7 +90,6 @@ export type ParticipationSumAggregateInputType = {
   totalPoints?: true
   refUser?: true
   refHunt?: true
-  currentStep?: true
 }
 
 export type ParticipationMinAggregateInputType = {
@@ -109,7 +102,6 @@ export type ParticipationMinAggregateInputType = {
   updatedAt?: true
   refUser?: true
   refHunt?: true
-  currentStep?: true
 }
 
 export type ParticipationMaxAggregateInputType = {
@@ -122,7 +114,6 @@ export type ParticipationMaxAggregateInputType = {
   updatedAt?: true
   refUser?: true
   refHunt?: true
-  currentStep?: true
 }
 
 export type ParticipationCountAggregateInputType = {
@@ -135,7 +126,6 @@ export type ParticipationCountAggregateInputType = {
   updatedAt?: true
   refUser?: true
   refHunt?: true
-  currentStep?: true
   _all?: true
 }
 
@@ -235,7 +225,6 @@ export type ParticipationGroupByOutputType = {
   updatedAt: Date
   refUser: number
   refHunt: number
-  currentStep: number | null
   _count: ParticipationCountAggregateOutputType | null
   _avg: ParticipationAvgAggregateOutputType | null
   _sum: ParticipationSumAggregateOutputType | null
@@ -271,10 +260,9 @@ export type ParticipationWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   refUser?: Prisma.IntFilter<"Participation"> | number
   refHunt?: Prisma.IntFilter<"Participation"> | number
-  currentStep?: Prisma.IntNullableFilter<"Participation"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   hunt?: Prisma.XOR<Prisma.HuntScalarRelationFilter, Prisma.HuntWhereInput>
-  step?: Prisma.XOR<Prisma.StepNullableScalarRelationFilter, Prisma.StepWhereInput> | null
+  progresses?: Prisma.ProgressListRelationFilter
 }
 
 export type ParticipationOrderByWithRelationInput = {
@@ -287,10 +275,9 @@ export type ParticipationOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   refUser?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
-  currentStep?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   hunt?: Prisma.HuntOrderByWithRelationInput
-  step?: Prisma.StepOrderByWithRelationInput
+  progresses?: Prisma.ProgressOrderByRelationAggregateInput
 }
 
 export type ParticipationWhereUniqueInput = Prisma.AtLeast<{
@@ -307,10 +294,9 @@ export type ParticipationWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   refUser?: Prisma.IntFilter<"Participation"> | number
   refHunt?: Prisma.IntFilter<"Participation"> | number
-  currentStep?: Prisma.IntNullableFilter<"Participation"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   hunt?: Prisma.XOR<Prisma.HuntScalarRelationFilter, Prisma.HuntWhereInput>
-  step?: Prisma.XOR<Prisma.StepNullableScalarRelationFilter, Prisma.StepWhereInput> | null
+  progresses?: Prisma.ProgressListRelationFilter
 }, "id" | "refUser_refHunt">
 
 export type ParticipationOrderByWithAggregationInput = {
@@ -323,7 +309,6 @@ export type ParticipationOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   refUser?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
-  currentStep?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ParticipationCountOrderByAggregateInput
   _avg?: Prisma.ParticipationAvgOrderByAggregateInput
   _max?: Prisma.ParticipationMaxOrderByAggregateInput
@@ -344,7 +329,6 @@ export type ParticipationScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Participation"> | Date | string
   refUser?: Prisma.IntWithAggregatesFilter<"Participation"> | number
   refHunt?: Prisma.IntWithAggregatesFilter<"Participation"> | number
-  currentStep?: Prisma.IntNullableWithAggregatesFilter<"Participation"> | number | null
 }
 
 export type ParticipationCreateInput = {
@@ -356,7 +340,7 @@ export type ParticipationCreateInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutParticipationsInput
   hunt: Prisma.HuntCreateNestedOneWithoutParticipationsInput
-  step?: Prisma.StepCreateNestedOneWithoutParticipationsInput
+  progresses?: Prisma.ProgressCreateNestedManyWithoutParticipationInput
 }
 
 export type ParticipationUncheckedCreateInput = {
@@ -369,7 +353,7 @@ export type ParticipationUncheckedCreateInput = {
   updatedAt?: Date | string
   refUser: number
   refHunt: number
-  currentStep?: number | null
+  progresses?: Prisma.ProgressUncheckedCreateNestedManyWithoutParticipationInput
 }
 
 export type ParticipationUpdateInput = {
@@ -381,7 +365,7 @@ export type ParticipationUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
   hunt?: Prisma.HuntUpdateOneRequiredWithoutParticipationsNestedInput
-  step?: Prisma.StepUpdateOneWithoutParticipationsNestedInput
+  progresses?: Prisma.ProgressUpdateManyWithoutParticipationNestedInput
 }
 
 export type ParticipationUncheckedUpdateInput = {
@@ -394,7 +378,7 @@ export type ParticipationUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refUser?: Prisma.IntFieldUpdateOperationsInput | number
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
-  currentStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  progresses?: Prisma.ProgressUncheckedUpdateManyWithoutParticipationNestedInput
 }
 
 export type ParticipationCreateManyInput = {
@@ -407,7 +391,6 @@ export type ParticipationCreateManyInput = {
   updatedAt?: Date | string
   refUser: number
   refHunt: number
-  currentStep?: number | null
 }
 
 export type ParticipationUpdateManyMutationInput = {
@@ -429,7 +412,6 @@ export type ParticipationUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refUser?: Prisma.IntFieldUpdateOperationsInput | number
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
-  currentStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type ParticipationListRelationFilter = {
@@ -457,7 +439,6 @@ export type ParticipationCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   refUser?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
-  currentStep?: Prisma.SortOrder
 }
 
 export type ParticipationAvgOrderByAggregateInput = {
@@ -465,7 +446,6 @@ export type ParticipationAvgOrderByAggregateInput = {
   totalPoints?: Prisma.SortOrder
   refUser?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
-  currentStep?: Prisma.SortOrder
 }
 
 export type ParticipationMaxOrderByAggregateInput = {
@@ -478,7 +458,6 @@ export type ParticipationMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   refUser?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
-  currentStep?: Prisma.SortOrder
 }
 
 export type ParticipationMinOrderByAggregateInput = {
@@ -491,7 +470,6 @@ export type ParticipationMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   refUser?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
-  currentStep?: Prisma.SortOrder
 }
 
 export type ParticipationSumOrderByAggregateInput = {
@@ -499,7 +477,11 @@ export type ParticipationSumOrderByAggregateInput = {
   totalPoints?: Prisma.SortOrder
   refUser?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
-  currentStep?: Prisma.SortOrder
+}
+
+export type ParticipationScalarRelationFilter = {
+  is?: Prisma.ParticipationWhereInput
+  isNot?: Prisma.ParticipationWhereInput
 }
 
 export type ParticipationCreateNestedManyWithoutHuntInput = {
@@ -548,54 +530,18 @@ export type EnumParticipationStatusFieldUpdateOperationsInput = {
   set?: $Enums.ParticipationStatus
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type ParticipationCreateNestedOneWithoutProgressesInput = {
+  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutProgressesInput, Prisma.ParticipationUncheckedCreateWithoutProgressesInput>
+  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutProgressesInput
+  connect?: Prisma.ParticipationWhereUniqueInput
 }
 
-export type ParticipationCreateNestedManyWithoutStepInput = {
-  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutStepInput, Prisma.ParticipationUncheckedCreateWithoutStepInput> | Prisma.ParticipationCreateWithoutStepInput[] | Prisma.ParticipationUncheckedCreateWithoutStepInput[]
-  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutStepInput | Prisma.ParticipationCreateOrConnectWithoutStepInput[]
-  createMany?: Prisma.ParticipationCreateManyStepInputEnvelope
-  connect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-}
-
-export type ParticipationUncheckedCreateNestedManyWithoutStepInput = {
-  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutStepInput, Prisma.ParticipationUncheckedCreateWithoutStepInput> | Prisma.ParticipationCreateWithoutStepInput[] | Prisma.ParticipationUncheckedCreateWithoutStepInput[]
-  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutStepInput | Prisma.ParticipationCreateOrConnectWithoutStepInput[]
-  createMany?: Prisma.ParticipationCreateManyStepInputEnvelope
-  connect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-}
-
-export type ParticipationUpdateManyWithoutStepNestedInput = {
-  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutStepInput, Prisma.ParticipationUncheckedCreateWithoutStepInput> | Prisma.ParticipationCreateWithoutStepInput[] | Prisma.ParticipationUncheckedCreateWithoutStepInput[]
-  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutStepInput | Prisma.ParticipationCreateOrConnectWithoutStepInput[]
-  upsert?: Prisma.ParticipationUpsertWithWhereUniqueWithoutStepInput | Prisma.ParticipationUpsertWithWhereUniqueWithoutStepInput[]
-  createMany?: Prisma.ParticipationCreateManyStepInputEnvelope
-  set?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-  disconnect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-  delete?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-  connect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-  update?: Prisma.ParticipationUpdateWithWhereUniqueWithoutStepInput | Prisma.ParticipationUpdateWithWhereUniqueWithoutStepInput[]
-  updateMany?: Prisma.ParticipationUpdateManyWithWhereWithoutStepInput | Prisma.ParticipationUpdateManyWithWhereWithoutStepInput[]
-  deleteMany?: Prisma.ParticipationScalarWhereInput | Prisma.ParticipationScalarWhereInput[]
-}
-
-export type ParticipationUncheckedUpdateManyWithoutStepNestedInput = {
-  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutStepInput, Prisma.ParticipationUncheckedCreateWithoutStepInput> | Prisma.ParticipationCreateWithoutStepInput[] | Prisma.ParticipationUncheckedCreateWithoutStepInput[]
-  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutStepInput | Prisma.ParticipationCreateOrConnectWithoutStepInput[]
-  upsert?: Prisma.ParticipationUpsertWithWhereUniqueWithoutStepInput | Prisma.ParticipationUpsertWithWhereUniqueWithoutStepInput[]
-  createMany?: Prisma.ParticipationCreateManyStepInputEnvelope
-  set?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-  disconnect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-  delete?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-  connect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
-  update?: Prisma.ParticipationUpdateWithWhereUniqueWithoutStepInput | Prisma.ParticipationUpdateWithWhereUniqueWithoutStepInput[]
-  updateMany?: Prisma.ParticipationUpdateManyWithWhereWithoutStepInput | Prisma.ParticipationUpdateManyWithWhereWithoutStepInput[]
-  deleteMany?: Prisma.ParticipationScalarWhereInput | Prisma.ParticipationScalarWhereInput[]
+export type ParticipationUpdateOneRequiredWithoutProgressesNestedInput = {
+  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutProgressesInput, Prisma.ParticipationUncheckedCreateWithoutProgressesInput>
+  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutProgressesInput
+  upsert?: Prisma.ParticipationUpsertWithoutProgressesInput
+  connect?: Prisma.ParticipationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ParticipationUpdateToOneWithWhereWithoutProgressesInput, Prisma.ParticipationUpdateWithoutProgressesInput>, Prisma.ParticipationUncheckedUpdateWithoutProgressesInput>
 }
 
 export type ParticipationCreateNestedManyWithoutUserInput = {
@@ -648,7 +594,7 @@ export type ParticipationCreateWithoutHuntInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutParticipationsInput
-  step?: Prisma.StepCreateNestedOneWithoutParticipationsInput
+  progresses?: Prisma.ProgressCreateNestedManyWithoutParticipationInput
 }
 
 export type ParticipationUncheckedCreateWithoutHuntInput = {
@@ -660,7 +606,7 @@ export type ParticipationUncheckedCreateWithoutHuntInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refUser: number
-  currentStep?: number | null
+  progresses?: Prisma.ProgressUncheckedCreateNestedManyWithoutParticipationInput
 }
 
 export type ParticipationCreateOrConnectWithoutHuntInput = {
@@ -702,10 +648,9 @@ export type ParticipationScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   refUser?: Prisma.IntFilter<"Participation"> | number
   refHunt?: Prisma.IntFilter<"Participation"> | number
-  currentStep?: Prisma.IntNullableFilter<"Participation"> | number | null
 }
 
-export type ParticipationCreateWithoutStepInput = {
+export type ParticipationCreateWithoutProgressesInput = {
   startTime?: Date | string
   endTime?: Date | string | null
   totalPoints?: number
@@ -716,7 +661,7 @@ export type ParticipationCreateWithoutStepInput = {
   hunt: Prisma.HuntCreateNestedOneWithoutParticipationsInput
 }
 
-export type ParticipationUncheckedCreateWithoutStepInput = {
+export type ParticipationUncheckedCreateWithoutProgressesInput = {
   id?: number
   startTime?: Date | string
   endTime?: Date | string | null
@@ -728,30 +673,43 @@ export type ParticipationUncheckedCreateWithoutStepInput = {
   refHunt: number
 }
 
-export type ParticipationCreateOrConnectWithoutStepInput = {
+export type ParticipationCreateOrConnectWithoutProgressesInput = {
   where: Prisma.ParticipationWhereUniqueInput
-  create: Prisma.XOR<Prisma.ParticipationCreateWithoutStepInput, Prisma.ParticipationUncheckedCreateWithoutStepInput>
+  create: Prisma.XOR<Prisma.ParticipationCreateWithoutProgressesInput, Prisma.ParticipationUncheckedCreateWithoutProgressesInput>
 }
 
-export type ParticipationCreateManyStepInputEnvelope = {
-  data: Prisma.ParticipationCreateManyStepInput | Prisma.ParticipationCreateManyStepInput[]
-  skipDuplicates?: boolean
+export type ParticipationUpsertWithoutProgressesInput = {
+  update: Prisma.XOR<Prisma.ParticipationUpdateWithoutProgressesInput, Prisma.ParticipationUncheckedUpdateWithoutProgressesInput>
+  create: Prisma.XOR<Prisma.ParticipationCreateWithoutProgressesInput, Prisma.ParticipationUncheckedCreateWithoutProgressesInput>
+  where?: Prisma.ParticipationWhereInput
 }
 
-export type ParticipationUpsertWithWhereUniqueWithoutStepInput = {
-  where: Prisma.ParticipationWhereUniqueInput
-  update: Prisma.XOR<Prisma.ParticipationUpdateWithoutStepInput, Prisma.ParticipationUncheckedUpdateWithoutStepInput>
-  create: Prisma.XOR<Prisma.ParticipationCreateWithoutStepInput, Prisma.ParticipationUncheckedCreateWithoutStepInput>
+export type ParticipationUpdateToOneWithWhereWithoutProgressesInput = {
+  where?: Prisma.ParticipationWhereInput
+  data: Prisma.XOR<Prisma.ParticipationUpdateWithoutProgressesInput, Prisma.ParticipationUncheckedUpdateWithoutProgressesInput>
 }
 
-export type ParticipationUpdateWithWhereUniqueWithoutStepInput = {
-  where: Prisma.ParticipationWhereUniqueInput
-  data: Prisma.XOR<Prisma.ParticipationUpdateWithoutStepInput, Prisma.ParticipationUncheckedUpdateWithoutStepInput>
+export type ParticipationUpdateWithoutProgressesInput = {
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
+  hunt?: Prisma.HuntUpdateOneRequiredWithoutParticipationsNestedInput
 }
 
-export type ParticipationUpdateManyWithWhereWithoutStepInput = {
-  where: Prisma.ParticipationScalarWhereInput
-  data: Prisma.XOR<Prisma.ParticipationUpdateManyMutationInput, Prisma.ParticipationUncheckedUpdateManyWithoutStepInput>
+export type ParticipationUncheckedUpdateWithoutProgressesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refUser?: Prisma.IntFieldUpdateOperationsInput | number
+  refHunt?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ParticipationCreateWithoutUserInput = {
@@ -762,7 +720,7 @@ export type ParticipationCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hunt: Prisma.HuntCreateNestedOneWithoutParticipationsInput
-  step?: Prisma.StepCreateNestedOneWithoutParticipationsInput
+  progresses?: Prisma.ProgressCreateNestedManyWithoutParticipationInput
 }
 
 export type ParticipationUncheckedCreateWithoutUserInput = {
@@ -774,7 +732,7 @@ export type ParticipationUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
-  currentStep?: number | null
+  progresses?: Prisma.ProgressUncheckedCreateNestedManyWithoutParticipationInput
 }
 
 export type ParticipationCreateOrConnectWithoutUserInput = {
@@ -812,7 +770,6 @@ export type ParticipationCreateManyHuntInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refUser: number
-  currentStep?: number | null
 }
 
 export type ParticipationUpdateWithoutHuntInput = {
@@ -823,7 +780,7 @@ export type ParticipationUpdateWithoutHuntInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
-  step?: Prisma.StepUpdateOneWithoutParticipationsNestedInput
+  progresses?: Prisma.ProgressUpdateManyWithoutParticipationNestedInput
 }
 
 export type ParticipationUncheckedUpdateWithoutHuntInput = {
@@ -835,7 +792,7 @@ export type ParticipationUncheckedUpdateWithoutHuntInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refUser?: Prisma.IntFieldUpdateOperationsInput | number
-  currentStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  progresses?: Prisma.ProgressUncheckedUpdateManyWithoutParticipationNestedInput
 }
 
 export type ParticipationUncheckedUpdateManyWithoutHuntInput = {
@@ -847,54 +804,6 @@ export type ParticipationUncheckedUpdateManyWithoutHuntInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refUser?: Prisma.IntFieldUpdateOperationsInput | number
-  currentStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type ParticipationCreateManyStepInput = {
-  id?: number
-  startTime?: Date | string
-  endTime?: Date | string | null
-  totalPoints?: number
-  status?: $Enums.ParticipationStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  refUser: number
-  refHunt: number
-}
-
-export type ParticipationUpdateWithoutStepInput = {
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
-  hunt?: Prisma.HuntUpdateOneRequiredWithoutParticipationsNestedInput
-}
-
-export type ParticipationUncheckedUpdateWithoutStepInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  refUser?: Prisma.IntFieldUpdateOperationsInput | number
-  refHunt?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
-export type ParticipationUncheckedUpdateManyWithoutStepInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  refUser?: Prisma.IntFieldUpdateOperationsInput | number
-  refHunt?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ParticipationCreateManyUserInput = {
@@ -906,7 +815,6 @@ export type ParticipationCreateManyUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
-  currentStep?: number | null
 }
 
 export type ParticipationUpdateWithoutUserInput = {
@@ -917,7 +825,7 @@ export type ParticipationUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hunt?: Prisma.HuntUpdateOneRequiredWithoutParticipationsNestedInput
-  step?: Prisma.StepUpdateOneWithoutParticipationsNestedInput
+  progresses?: Prisma.ProgressUpdateManyWithoutParticipationNestedInput
 }
 
 export type ParticipationUncheckedUpdateWithoutUserInput = {
@@ -929,7 +837,7 @@ export type ParticipationUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
-  currentStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  progresses?: Prisma.ProgressUncheckedUpdateManyWithoutParticipationNestedInput
 }
 
 export type ParticipationUncheckedUpdateManyWithoutUserInput = {
@@ -941,9 +849,37 @@ export type ParticipationUncheckedUpdateManyWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
-  currentStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
+
+/**
+ * Count Type ParticipationCountOutputType
+ */
+
+export type ParticipationCountOutputType = {
+  progresses: number
+}
+
+export type ParticipationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  progresses?: boolean | ParticipationCountOutputTypeCountProgressesArgs
+}
+
+/**
+ * ParticipationCountOutputType without action
+ */
+export type ParticipationCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ParticipationCountOutputType
+   */
+  select?: Prisma.ParticipationCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ParticipationCountOutputType without action
+ */
+export type ParticipationCountOutputTypeCountProgressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgressWhereInput
+}
 
 
 export type ParticipationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -956,10 +892,10 @@ export type ParticipationSelect<ExtArgs extends runtime.Types.Extensions.Interna
   updatedAt?: boolean
   refUser?: boolean
   refHunt?: boolean
-  currentStep?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
-  step?: boolean | Prisma.Participation$stepArgs<ExtArgs>
+  progresses?: boolean | Prisma.Participation$progressesArgs<ExtArgs>
+  _count?: boolean | Prisma.ParticipationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
 
 export type ParticipationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -972,10 +908,8 @@ export type ParticipationSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   updatedAt?: boolean
   refUser?: boolean
   refHunt?: boolean
-  currentStep?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
-  step?: boolean | Prisma.Participation$stepArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
 
 export type ParticipationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -988,10 +922,8 @@ export type ParticipationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   updatedAt?: boolean
   refUser?: boolean
   refHunt?: boolean
-  currentStep?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
-  step?: boolean | Prisma.Participation$stepArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
 
 export type ParticipationSelectScalar = {
@@ -1004,24 +936,22 @@ export type ParticipationSelectScalar = {
   updatedAt?: boolean
   refUser?: boolean
   refHunt?: boolean
-  currentStep?: boolean
 }
 
-export type ParticipationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "startTime" | "endTime" | "totalPoints" | "status" | "createdAt" | "updatedAt" | "refUser" | "refHunt" | "currentStep", ExtArgs["result"]["participation"]>
+export type ParticipationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "startTime" | "endTime" | "totalPoints" | "status" | "createdAt" | "updatedAt" | "refUser" | "refHunt", ExtArgs["result"]["participation"]>
 export type ParticipationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
-  step?: boolean | Prisma.Participation$stepArgs<ExtArgs>
+  progresses?: boolean | Prisma.Participation$progressesArgs<ExtArgs>
+  _count?: boolean | Prisma.ParticipationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ParticipationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
-  step?: boolean | Prisma.Participation$stepArgs<ExtArgs>
 }
 export type ParticipationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
-  step?: boolean | Prisma.Participation$stepArgs<ExtArgs>
 }
 
 export type $ParticipationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1029,7 +959,7 @@ export type $ParticipationPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     hunt: Prisma.$HuntPayload<ExtArgs>
-    step: Prisma.$StepPayload<ExtArgs> | null
+    progresses: Prisma.$ProgressPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1041,7 +971,6 @@ export type $ParticipationPayload<ExtArgs extends runtime.Types.Extensions.Inter
     updatedAt: Date
     refUser: number
     refHunt: number
-    currentStep: number | null
   }, ExtArgs["result"]["participation"]>
   composites: {}
 }
@@ -1438,7 +1367,7 @@ export interface Prisma__ParticipationClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   hunt<T extends Prisma.HuntDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HuntDefaultArgs<ExtArgs>>): Prisma.Prisma__HuntClient<runtime.Types.Result.GetResult<Prisma.$HuntPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  step<T extends Prisma.Participation$stepArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participation$stepArgs<ExtArgs>>): Prisma.Prisma__StepClient<runtime.Types.Result.GetResult<Prisma.$StepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  progresses<T extends Prisma.Participation$progressesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participation$progressesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1477,7 +1406,6 @@ export interface ParticipationFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"Participation", 'DateTime'>
   readonly refUser: Prisma.FieldRef<"Participation", 'Int'>
   readonly refHunt: Prisma.FieldRef<"Participation", 'Int'>
-  readonly currentStep: Prisma.FieldRef<"Participation", 'Int'>
 }
     
 
@@ -1874,22 +1802,27 @@ export type ParticipationDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
- * Participation.step
+ * Participation.progresses
  */
-export type Participation$stepArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Participation$progressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Step
+   * Select specific fields to fetch from the Progress
    */
-  select?: Prisma.StepSelect<ExtArgs> | null
+  select?: Prisma.ProgressSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Step
+   * Omit specific fields from the Progress
    */
-  omit?: Prisma.StepOmit<ExtArgs> | null
+  omit?: Prisma.ProgressOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.StepInclude<ExtArgs> | null
-  where?: Prisma.StepWhereInput
+  include?: Prisma.ProgressInclude<ExtArgs> | null
+  where?: Prisma.ProgressWhereInput
+  orderBy?: Prisma.ProgressOrderByWithRelationInput | Prisma.ProgressOrderByWithRelationInput[]
+  cursor?: Prisma.ProgressWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgressScalarFieldEnum | Prisma.ProgressScalarFieldEnum[]
 }
 
 /**

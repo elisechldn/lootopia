@@ -8,8 +8,11 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/ClueUsage.js'
+export type * from './models/Clue.js'
 export type * from './models/Hunt.js'
 export type * from './models/Participation.js'
+export type * from './models/Progress.js'
 export type * from './models/Step.js'
 export type * from './models/User.js'
 export type * from './commonInputTypes.js'
