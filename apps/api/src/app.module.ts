@@ -3,13 +3,20 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './orm/prisma/prisma.module';
 import { PrismaService } from './orm/prisma/prisma.service';
 import { UsersModule } from './users/users.module';
-import {HuntsModule} from "./hunts/hunts.module";
-import {AuthModule} from "./auth/auth.module";
+import { HuntsModule } from './hunts/hunts.module';
+import { AuthModule } from './auth/auth.module';
+import { ParticipationsModule } from './participations/participations.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), UsersModule, PrismaModule, HuntsModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot(),
+    UsersModule,
+    PrismaModule,
+    HuntsModule,
+    AuthModule,
+    ParticipationsModule,
+  ],
   controllers: [],
   providers: [PrismaService],
 })
-
 export class AppModule {}
