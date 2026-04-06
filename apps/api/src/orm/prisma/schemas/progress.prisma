@@ -1,0 +1,25 @@
+model Progress {
+  id           Int            @id @default(autoincrement())
+  statut       ProgressStatus @default(IN_PROGRESS)
+  totalPoints  Int            @default(0)
+  startedAt    DateTime       @default(now())
+  completedAt  DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  refParticipation Int
+  participation    Participation @relation(fields: [refParticipation], references: [id], onDelete: Cascade)
+
+  refStep Int
+  step    Step @relation(fields: [refStep], references: [id], onDelete: Cascade)
+
+  clueUsages ClueUsage[]
+
+  @@unique([refParticipation, refStep])
+}
+
+enum ProgressStatus {
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
+}
