@@ -1,7 +1,6 @@
-import { Briefcase, Clock, Award, CircleDot } from "lucide-react";
+import { Briefcase, Clock, Award } from "lucide-react";
 import HuntHero from "../../../components/hunt/HuntHero";
 import HuntInfoSection from "../../../components/hunt/HuntInfoSection";
-import DifficultyStars from "../../../components/hunt/DifficultyStars";
 import PlayButton from "../../../components/hunt/PlayButton";
 import { getHuntById } from "../../../services/hunt.service";
 
@@ -20,11 +19,11 @@ function formatDuration(startDate: Date | string | null, endDate: Date | string 
 export default async function HuntOnBoardingPage({ params }: { params: Promise<{ id: string }> }) {
 
   const { id } = await params;
-  const { data: hunt } = await getHuntById(1);
+  const { data: hunt } = await getHuntById(Number(id));
 
   return (
     <main className="flex flex-col min-h-screen bg-background">
-      <HuntHero title={hunt.title} />
+      <HuntHero title={hunt.title} imageUrl={hunt.coverImage!}/>
 
       <div className="flex flex-col flex-1 px-4">
         <hr className="border-border" />
@@ -33,10 +32,6 @@ export default async function HuntOnBoardingPage({ params }: { params: Promise<{
           <p className="text-center leading-relaxed">
             {hunt.description ?? hunt.shortDescription ?? "—"}
           </p>
-        </HuntInfoSection>
-
-        <HuntInfoSection icon={CircleDot} label="Difficulté">
-          <DifficultyStars difficulty={hunt.difficulty} />
         </HuntInfoSection>
 
         <HuntInfoSection icon={Clock} label="Temps">
@@ -49,7 +44,7 @@ export default async function HuntOnBoardingPage({ params }: { params: Promise<{
           </p>
         </HuntInfoSection>
 
-        <div className="mt-auto py-6">
+        <div className="mt-auto pt-6 pb-safe" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
           <PlayButton huntId={id} />
         </div>
       </div>
