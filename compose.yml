@@ -16,7 +16,6 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      # - ./sql:/docker-entrypoint-initdb.d
       - lootopia-data:/var/lib/postgresql/data
     networks:
       - lootopia-network
