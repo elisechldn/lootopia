@@ -1,18 +1,23 @@
 "use client";
 
 import type { HuntGetPayload, SingleResult } from "@repo/types";
-import { use, useRef } from "react";
-import { useARStore } from '@/store/arStore'
+import { use } from "react";
 
 type HuntWithSteps = HuntGetPayload<{
     include: { steps: true };
 }>;
 
-export function HuntOverlay({ hunt }: { hunt: Promise<SingleResult<HuntWithSteps>> }) {
-    const coords = useARStore((s) => s.coords);
+type Props = {
+    hunt: Promise<SingleResult<HuntWithSteps>>;
+    stepId?: number;
+};
+
+export function HuntOverlay({ hunt, stepId }: Props) {
     const { data } = use(hunt);
-    console.log("data ==> ", data)
-    const currentStep = data.steps[0]; // step 1 (orderNumber 1 est déjà trié par l'API)
+
+    const currentStep = stepId
+        ? data.steps.find((s) => s.id === stepId)
+        : data.steps[0];
 
     if (!currentStep) return null;
 
@@ -30,20 +35,13 @@ export function HuntOverlay({ hunt }: { hunt: Promise<SingleResult<HuntWithSteps
                 maxWidth: "260px",
             }}
         >
-
-            <div style={{ fontWeight: "bold"}}><p>{data.title}</p>
+            <div style={{ fontWeight: "bold" }}>
+                <p>{data.title}</p>
                 Étape {currentStep.orderNumber} — {currentStep.title}
             </div>
-            <div style={{ opacity: 0.85 }}>{currentStep.clue}</div>
-            <div style={{ opacity: 0.85 }}>Lat : {currentStep.latitude}</div>
-            <div style={{ opacity: 0.85 }}>Lon : {currentStep.longitude}</div>
-            <div style={{ opacity: 0.85 }}>
-                <div style={{ fontWeight: "bold"}}>
-                    Position actuelle
-                </div>
-                <div>Lat : {coords?.lat || 'null'}</div>
-                <div>Lon : {coords?.long || 'null'}</div>
-            </div>
+            {currentStep.clue && (
+                <div style={{ opacity: 0.85, marginTop: 4 }}>{currentStep.clue}</div>
+            )}
         </div>
     );
 }

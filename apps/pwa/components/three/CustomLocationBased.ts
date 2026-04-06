@@ -36,7 +36,7 @@ export class CustomLocationBased extends LocAR.LocationBased {
       // Évite le jitter des objets AR causé par la fluctuation GPS à l'arrêt.
       // En dessous de cette distance, la position caméra n'est PAS mise à jour.
       // Note : le premier update passe toujours (initialise l'origine du monde).
-      gpsMinDistance: 5,
+      gpsMinDistance: 10,
 
       // gpsMinAccuracy : précision maximale acceptée en mètres (rayon d'incertitude).
       // Un reading avec accuracy > cette valeur est rejeté silencieusement — gpsupdate
@@ -80,9 +80,7 @@ export class CustomLocationBased extends LocAR.LocationBased {
     this.onGpsUpdate((ev: GpsUpdateEvent) => {
       const { longitude, latitude, accuracy } = ev.position.coords;
       const { distMoved } = ev;
-      console.log("longitude => ", longitude)
       this.longitude = longitude;
-      console.log("latitude => ", latitude)
       this.latitude = latitude;
       this.distMoved = distMoved;
       this.accuracy = accuracy;

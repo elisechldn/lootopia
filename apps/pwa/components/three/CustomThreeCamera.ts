@@ -6,7 +6,7 @@ export class CustomThreeCamera extends THREE.PerspectiveCamera {
       80,                                    // fov
       window.innerWidth / window.innerHeight, // aspect
       0.001,                                 // near
-      150                                  // far
+      500                                  // far
     )
   }
 
