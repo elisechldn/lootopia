@@ -11,10 +11,10 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Block desktop browsers — allow /not-mobile through (already excluded in matcher)
-  const ua = request.headers.get('user-agent') ?? '';
-  if (isDesktop(ua)) {
-    return NextResponse.redirect(new URL('/not-mobile', request.url));
-  }
+  // const ua = request.headers.get('user-agent') ?? '';
+  // if (isDesktop(ua)) {
+  //   return NextResponse.redirect(new URL('/not-mobile', request.url));
+  // }
 
   const token = request.cookies.get('auth_token')?.value;
   const isPublic = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
