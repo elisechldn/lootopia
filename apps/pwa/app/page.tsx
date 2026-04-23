@@ -1,146 +1,94 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { subscribeUser, unsubscribeUser, sendNotification } from './actions'
-import { redirect, RedirectType } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Loader2 }   from 'lucide-react';
+import TopBar        from '@/components/ui/TobBar/TopBar';
+import TabNavigation from '@/components/ui/TabNavigation/TabNavigation';
+import ViewToggle    from '@/components/hunt/ViewToggle';
+import { HuntList }  from '@/components/hunt/HuntList';
+import { HuntMap }      from '@/components/hunt/HuntMap';
+import { useUserStore } from '@/store/userStore';
+import { getNearbyHunts, type NearbyHunt } from '@/services/hunt.service';
 
-function urlBase64ToUint8Array(base64String: string) {
-  const padding = '='.repeat((4- (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
-  const rawData = window.atob(base64)
-  const outputArray = new Uint8Array(rawData.length)
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const { user } = useUserStore();
 
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i)
-  }
-  return outputArray
-} 
+  const initialView = searchParams.get('view') === 'map' ? 'map' : 'list';
+  const [view, setView] = useState<'list' | 'map'>(initialView);
+  const [hunts, setHunts] = useState<NearbyHunt[]>([]);
+  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
+  const [status, setStatus] = useState<'loading' | 'geoerror' | 'ready'>('loading');
 
-function PushNotificationManager() {
-  const [isSupported, setIsSupported] = useState(false)
-  const [subscription, setSubscription] = useState<PushSubscription | null>(
-    null
-  )
-  const [message, setMessage] = useState('')
- 
   useEffect(() => {
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      setIsSupported(true)
-      registerServiceWorker()
+    if (!navigator.geolocation) {
+      setStatus('geoerror');
+      return;
     }
-  }, [])
- 
-  async function registerServiceWorker() {
-    const registration = await navigator.serviceWorker.register('/sw.js', {
-      scope: '/',
-      updateViaCache: 'none',
-    })
-    const sub = await registration.pushManager.getSubscription()
-    setSubscription(sub)
-  }
- 
-  async function subscribeToPush() {
-    const registration = await navigator.serviceWorker.ready
-    const sub = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(
-        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!
-      ),
-    })
-    setSubscription(sub)
-    const serializedSub = JSON.parse(JSON.stringify(sub))
-    await subscribeUser(serializedSub)
-  }
- 
-  async function unsubscribeFromPush() {
-    await subscription?.unsubscribe()
-    setSubscription(null)
-    await unsubscribeUser()
-  }
- 
-  async function sendTestNotification() {
-    if (subscription) {
-      await sendNotification(message)
-      setMessage('')
-    }
-  }
- 
-  if (!isSupported) {
-    return <p>Push notifications are not supported in this browser.</p>
-  }
- 
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude }) },
+      () => {
+        // Géolocalisation refusée ou échouée — on charge quand même sans filtre de proximité
+        setStatus('geoerror');
+      },
+      { timeout: 8000 },
+    );
+  }, []);
+
+  useEffect(() => {
+    console.log("COORDS UPDATE")
+    if (!coords) return;
+    getNearbyHunts(coords.lat, coords.lon).then((h) => {
+      setHunts(h);
+      setStatus('ready');
+    });
+  }, [coords]);
+
+  const greeting = user ? `Bonjour ${user.firstname} !` : '';
+
   return (
-    <div>
-      <h3>Push Notifications</h3>
-      {subscription ? (
-        <>
-          <p>You are subscribed to push notifications.</p>
-          <button onClick={unsubscribeFromPush}>Unsubscribe</button>
-          <input
-            type="text"
-            placeholder="Enter notification message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+    <div className="flex flex-col h-screen">
+      <TopBar greeting={greeting} />
+
+      {/* Offset du TopBar fixé */}
+      <div className="flex flex-col flex-1 overflow-hidden pt-14">
+        {/* Toggle Liste / Carte */}
+        <div className="px-4 py-2 border-b border-border flex items-center justify-between">
+          <ViewToggle value={view} onChange={setView} />
+          {status === 'geoerror' && (
+            <span className="text-xs text-muted-foreground">
+              Géolocalisation indisponible
+            </span>
+          )}
+        </div>
+
+        {/* Contenu principal */}
+        {status === 'loading' ? (
+          <div className="flex-1 flex items-center justify-center gap-2 text-muted-foreground">
+            <Loader2 size={20} className="animate-spin" />
+            <span className="text-sm">Localisation en cours…</span>
+          </div>
+        ) : view === 'list' ? (
+          <HuntList hunts={hunts} />
+        ) : (
+          <HuntMap
+            hunts={hunts}
+            center={coords ?? { lat: 48.8566, lon: 2.3522 }}
           />
-          <button onClick={sendTestNotification}>Send Test</button>
-        </>
-      ) : (
-        <>
-          <p>You are not subscribed to push notifications.</p>
-          <button onClick={subscribeToPush}>Subscribe</button>
-        </>
-      )}
+        )}
+      </div>
+
+      <TabNavigation />
     </div>
-  )
+  );
 }
 
-function InstallPrompt() {
-  const [isIOS, setIsIOS] = useState(false)
-  const [isStandalone, setIsStandalone] = useState(false)
- 
-  useEffect(() => {
-    setIsIOS(
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
-    )
- 
-    setIsStandalone(window.matchMedia('(display-mode: standalone)').matches)
-  }, [])
- 
-  if (isStandalone) {
-    return null // Don't show install button if already installed
-  }
- 
+export default function HomePage() {
   return (
-    <div>
-      <h3>Install App</h3>
-      <button>Add to Home Screen</button>
-      {isIOS && (
-        <p>
-          To install this app on your iOS device, tap the share button
-          <span role="img" aria-label="share icon">
-            {' '}
-            ⎋{' '}
-          </span>
-          and then "Add to Home Screen"
-          <span role="img" aria-label="plus icon">
-            {' '}
-            ➕{' '}
-          </span>
-          .
-        </p>
-      )}
-    </div>
-  )
-}
- 
-export default function Page() {
-
-  redirect('/hunts/11');
-
-  return (
-    <div>
-      <PushNotificationManager />
-      <InstallPrompt />
-    </div>
-  )
+    <Suspense>
+      <HomeContent />
+    </Suspense>
+  );
 }
