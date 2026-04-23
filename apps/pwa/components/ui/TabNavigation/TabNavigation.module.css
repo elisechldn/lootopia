@@ -35,15 +35,11 @@
 
 .icon {
   display: block;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  background: currentColor;
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 .tab.active .icon {
-  opacity: 0.9;
+  opacity: 1;
 }
 
 .label {
