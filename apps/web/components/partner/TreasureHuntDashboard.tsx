@@ -166,7 +166,7 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
                             className="pl-9 text-sm border-gray-200"
                         />
                     </div>
-                    <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
+                    <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v!); setPage(1); }}>
                         <SelectTrigger className="w-40 text-sm">
                             <SelectValue placeholder="Statut" />
                         </SelectTrigger>
