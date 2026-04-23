@@ -22,9 +22,6 @@ RUN npm ci
 # Stage 3 — builder
 # Compile l'application Next.js en mode production (output: standalone).
 # Repart des node_modules du stage installer et des sources extraites par pruner.
-# Les modèles Prisma générés sont copiés manuellement car turbo prune ne les
-# inclut pas dans out/full (apps/api n'est pas une dépendance déclarée de web),
-# alors que @repo/types les importe via un chemin relatif.
 FROM node:24-bookworm-slim AS builder
 WORKDIR /app
 ARG NEXT_PUBLIC_API_URL
@@ -48,23 +45,4 @@ COPY --from=builder /app/apps/web/public/ apps/web/public/
 EXPOSE 3000
 
 CMD ["node", "apps/web/server.js"]
-
-
-# # -------- BUILD --------
-# FROM node:24-bookworm-slim AS build
-# WORKDIR /app
-# COPY package*.json ./
-# RUN npm ci
-# COPY . .
-# RUN npm run build
-
-# # -------- PRODUCTION--------
-# FROM node:24-bookworm-slim AS production
-# WORKDIR /app
-# ENV NODE_ENV=production
-# COPY --from=build /app/.next/standalone/ ./
-# COPY --from=build /app/.next/static/ ./.next/static/
-# COPY --from=build /app/public ./public
-# EXPOSE 3000
-# CMD ["node", "server.js"]
 
