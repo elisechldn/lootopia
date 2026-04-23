@@ -8,7 +8,7 @@ import { useUserStore } from '@/store/userStore';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { setAuth } = useUserStore();
+  const { setUser } = useUserStore();
   const [form, setForm] = useState({
     firstname: '',
     lastname: '',
@@ -37,7 +37,7 @@ export default function RegisterPage() {
         email: form.email,
         password: form.password,
       });
-      setAuth(res.user, res.access_token);
+      setUser(res.user)
       router.replace('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de l\'inscription');
