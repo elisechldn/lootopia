@@ -57,6 +57,26 @@ services:
       - lootopia-network
     restart: unless-stopped
 
+  pwa:
+    container_name: lootopia_pwa
+    build:
+      context: .
+      dockerfile: apps/pwa/Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=/api
+        - API_URL=http://api:8000
+    ports:
+      - "3001:3001"
+    environment:
+      - API_URL=http://api:8000
+      - HOSTNAME=0.0.0.0
+      - PORT=3001
+    depends_on:
+      - api
+    networks:
+      - lootopia-network
+    restart: unless-stopped
+
   pgadmin:
     container_name: lootopia_pgadmin
     image: dpage/pgadmin4
