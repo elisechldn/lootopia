@@ -16,7 +16,6 @@ RUN turbo prune web --docker
 FROM node:24-bookworm-slim AS installer
 WORKDIR /app
 COPY --from=pruner /app/out/json .
-COPY --from=pruner /app/out/package-lock.json ./package-lock.json
 COPY --from=pruner /app/turbo.json ./turbo.json
 RUN npm ci
 
@@ -28,12 +27,10 @@ RUN npm ci
 # alors que @repo/types les importe via un chemin relatif.
 FROM node:24-bookworm-slim AS builder
 WORKDIR /app
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 COPY --from=installer /app/ .
 COPY --from=pruner /app/out/full .
-# @repo/types importe les modèles Prisma générés depuis apps/api via chemin relatif.
-# turbo prune ne les inclut pas dans out/full (apps/api n'est pas une dépendance de web),
-# donc on les copie explicitement depuis le stage pruner où COPY . . les a capturés.
-COPY --from=pruner /app/apps/api/src/orm/prisma/generated ./apps/api/src/orm/prisma/generated
 RUN npm run build
 
 # Stage 4 — runner
@@ -45,8 +42,8 @@ FROM node:24-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/apps/web/.next/standalone/ .
-COPY --from=builder /app/apps/web/.next/static/ .next/static/
-COPY --from=builder /app/apps/web/public/ public/
+COPY --from=builder /app/apps/web/.next/static/ apps/web/.next/static/
+COPY --from=builder /app/apps/web/public/ apps/web/public/
 
 EXPOSE 3000
 
