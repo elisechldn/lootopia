@@ -2,8 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { type UserInfos } from '@/store/userStore';
-
-const API_URL = process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from '@/lib/api';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
