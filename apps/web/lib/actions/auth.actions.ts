@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { apiLogin, apiRegister } from '@/lib/auth';
+import { apiLogin, apiRegister, apiRefreshToken, getSession } from '@/lib/auth';
 
 const cookieOptions = {
     httpOnly: true,
@@ -54,4 +54,14 @@ export async function registerAction(_prevState: unknown, formData: FormData) {
 export async function logoutAction() {
     (await cookies()).delete('auth_token');
     redirect('/login');
+}
+
+export async function refreshTokenAction() {
+    try {
+        const { access_token } = await apiRefreshToken();
+        if (access_token == '') return; 
+        (await cookies()).set('auth_token', access_token, cookieOptions);
+    } catch {
+        (await cookies()).delete('auth_token');
+    }
 }

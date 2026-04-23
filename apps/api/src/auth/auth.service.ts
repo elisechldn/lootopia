@@ -68,4 +68,11 @@ export class AuthService {
             },
         };
     }
+
+    async refreshToken(userId: number) {
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
+        if (!user) throw new UnauthorizedException('Utilisateur non trouvé');
+
+        return this.signToken(user);
+    }
 }

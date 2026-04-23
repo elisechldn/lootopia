@@ -22,4 +22,10 @@ export class AuthController {
     login(@Body() body: { email: string; password: string }) {
         return this.authService.login(body.email, body.password);
     }
+
+    @Post('refresh')
+    @HttpCode(200)
+    refresh(@Body() body: { userId: number }) {
+        return this.authService.refreshToken(body.userId);
+    }
 }
