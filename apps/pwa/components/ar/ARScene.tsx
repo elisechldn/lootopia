@@ -12,11 +12,9 @@ import { HuntOverlay } from "@/components/ar/HuntOverlay";
 import Toaster from "@/components/ui/Toaster";
 import { validateStep } from "@/services/participation.service";
 
-type StepWithCoords = HuntGetPayload<{
-  include: { steps: true };
-}>['steps'][number] & {
-  latitude: number | null;
-  longitude: number | null;
+type StepWithCoords = HuntGetPayload<{ include: { steps: true }; }>['steps'][number] & {
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 type HuntWithSteps = Omit<HuntGetPayload<{ include: { steps: true } }>, 'steps'> & {
