@@ -16,16 +16,12 @@ export const metadata: Metadata = {
     description: "La solution de gestion parcours interactifs en réalité augmentée",
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
-    children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="fr" className={cn("font-sans", geist.variable)}>
-        <body className={`${geistSans.variable} font-sans antialiased`}>
-        {children}
-        </body>
+            <body className={`${geistSans.variable} font-sans antialiased`}>
+                {children}
+            </body>
         </html>
     );
 }
