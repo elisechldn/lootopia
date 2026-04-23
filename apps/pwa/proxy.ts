@@ -7,7 +7,7 @@ function isDesktop(userAgent: string): boolean {
   return !/android|iphone|ipad|ipod|mobile|tablet/i.test(userAgent);
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Block desktop browsers — allow /not-mobile through (already excluded in matcher)
