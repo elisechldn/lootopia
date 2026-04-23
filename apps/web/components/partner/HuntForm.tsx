@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import StepsTab from "./StepsTab";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { Hunt, Step } from "./types";
+import HuntMap from "@/components/partner/HuntMap";
 
 type Tab = "metadata" | "steps";
 type Status = "DRAFT" | "ACTIVE" | "FINISHED";
@@ -30,14 +31,11 @@ export default function HuntForm({ initialData }: Props) {
             points: s.points,
         })) ?? []
     );
-
     const isEditing = !!initialData;
     const router = useRouter();
     const user = useAuthStore((s) => s.user);
     const [activeTab, setActiveTab] = useState<Tab>("metadata");
-    const [status, setStatus] = useState<Status>(
-        (initialData?.status as Status) ?? "DRAFT"
-    );
+    const [status, setStatus] = useState<Status>((initialData?.status as Status) ?? "DRAFT");
     const [tags, setTags] = useState<string[]>(["futuriste", "Historique", "Piraterie"]);
     const [tagInput, setTagInput] = useState("");
     const [coverImage, setCoverImage] = useState<string | null>(null);
@@ -46,13 +44,12 @@ export default function HuntForm({ initialData }: Props) {
         title: initialData?.title ?? "",
         shortDescription: initialData?.shortDescription ?? "",
         fullDescription: initialData?.description ?? "",
-        startDate: initialData?.startDate
-            ? new Date(initialData.startDate).toISOString().split("T")[0] : "",
-        endDate: initialData?.endDate
-            ? new Date(initialData.endDate).toISOString().split("T")[0] : "",
-        country: initialData?.location?.split(", ")[1] ?? "France",
-        city: initialData?.location?.split(", ")[0] ?? "",
-        difficulty: initialData?.difficulty ?? "Intermédiaire",
+        startDate: initialData?.startDate ? new Date(initialData.startDate).toISOString().split("T")[0] : "",
+        endDate: initialData?.endDate ? new Date(initialData.endDate).toISOString().split("T")[0] : "",
+        locationCenter: initialData?.latitude && initialData?.longitude ? `${initialData?.latitude} ${initialData?.longitude}` : null,
+        // country: initialData?.location?.split(", ")[1] ?? "France",
+        // city: initialData?.location?.split(", ")[0] ?? "",
+        // difficulty: initialData?.difficulty ?? "Intermédiaire",
         rewardType: initialData?.rewardType ?? "DISCOUNT_CODE",
         rewardValue: initialData?.rewardValue ?? "",
     });
@@ -76,15 +73,18 @@ export default function HuntForm({ initialData }: Props) {
     const handleSave = async (nextStatus?: Status) => {
         setError(null);
         setSaving(true);
-
+        if (!form.locationCenter) throw new Error('Hunt must have a defined location center');
+        const coords = form.locationCenter.split(' ');
         const payload = {
             title: form.title || "Sans titre",
             shortDescription: form.shortDescription || null,
             description: form.fullDescription || null,
             startDate: form.startDate || null,
             endDate: form.endDate || null,
-            location: form.city ? `${form.city}, ${form.country}` : null,
-            difficulty: form.difficulty,
+            locationLat: coords[0],
+            locationLon: coords[1],
+            // location: form.city ? `${form.city}, ${form.country}` : null,
+            // difficulty: form.difficulty,
             status: nextStatus ?? status,
             rewardType: form.rewardType,
             rewardValue: form.rewardValue || null,
@@ -122,7 +122,7 @@ export default function HuntForm({ initialData }: Props) {
 
             router.push("/dashboard");
         } catch {
-            setError("Impossible de contacter le serveur");
+            setError(`Impossible de contacter le serveur`);
         } finally {
             setSaving(false);
         }
@@ -277,18 +277,18 @@ export default function HuntForm({ initialData }: Props) {
                         </h3>
                         <div className="h-0.5 bg-gray-200 mb-4" />
                         <div className="grid grid-cols-3 gap-4">
-                            <div>
-                                <label className="block text-xs text-gray-500 mb-1 flex items-center gap-1">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                    Durée estimée
-                                </label>
-                                <input value={form.estimatedDuration}
-                                       onChange={(e) => set("estimatedDuration", e.target.value)}
-                                       placeholder="Durée approximative..."
-                                       className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                            </div>
+                            {/*<div>*/}
+                            {/*    <label className="block text-xs text-gray-500 mb-1 flex items-center gap-1">*/}
+                            {/*        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">*/}
+                            {/*            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>*/}
+                            {/*        </svg>*/}
+                            {/*        Durée estimée*/}
+                            {/*    </label>*/}
+                            {/*    <input value={form.estimatedDuration}*/}
+                            {/*           onChange={(e) => set("estimatedDuration", e.target.value)}*/}
+                            {/*           placeholder="Durée approximative..."*/}
+                            {/*           className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />*/}
+                            {/*</div>*/}
                             <div>
                                 <label className="block text-xs text-gray-500 mb-1 flex items-center gap-1">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">
@@ -324,46 +324,54 @@ export default function HuntForm({ initialData }: Props) {
                             Lieu
                         </h3>
                         <div className="h-0.5 bg-gray-200 mb-4" />
-                        <div className="grid grid-cols-3 gap-4">
-                            <div>
-                                <label className="block text-xs text-gray-500 mb-1 flex items-center gap-1">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                                    </svg>
-                                    Pays
-                                </label>
-                                <input value={form.country} onChange={(e) => set("country", e.target.value)}
-                                       className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                            </div>
-                            <div>
-                                <label className="block text-xs text-gray-500 mb-1 flex items-center gap-1">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                                    </svg>
-                                    Ville
-                                </label>
-                                <input value={form.city} onChange={(e) => set("city", e.target.value)}
-                                       placeholder="Paris"
-                                       className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                            </div>
-                            <div>
-                                <label className="block text-xs text-gray-500 mb-1 flex items-center gap-1">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
-                                    </svg>
-                                    Difficulté estimée
-                                </label>
-                                <select value={form.difficulty} onChange={(e) => set("difficulty", e.target.value)}
-                                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
-                                    <option>Facile</option>
-                                    <option>Intermédiaire</option>
-                                    <option>Difficile</option>
-                                    <option>Expert</option>
-                                </select>
-                            </div>
-                        </div>
+                        <HuntMap
+                            locationCenter={form.locationCenter}
+                            radius={5}
+                            onChange={(lat, lng) => {
+                                const value = `${lat} ${lng}`;
+                                set('locationCenter', value);
+                            }}
+                        />
+                        {/*<div className="grid grid-cols-3 gap-4">*/}
+                        {/*    <div>*/}
+                        {/*        <label className="block text-xs text-gray-500 mb-1 flex items-center gap-1">*/}
+                        {/*            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">*/}
+                        {/*                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>*/}
+                        {/*                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>*/}
+                        {/*            </svg>*/}
+                        {/*            Pays*/}
+                        {/*        </label>*/}
+                        {/*        <input value={form.country} onChange={(e) => set("country", e.target.value)}*/}
+                        {/*               className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />*/}
+                        {/*    </div>*/}
+                        {/*    <div>*/}
+                        {/*        <label className="block text-xs text-gray-500 mb-1 flex items-center gap-1">*/}
+                        {/*            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">*/}
+                        {/*                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>*/}
+                        {/*                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>*/}
+                        {/*            </svg>*/}
+                        {/*            Ville*/}
+                        {/*        </label>*/}
+                        {/*        <input value={form.city} onChange={(e) => set("city", e.target.value)}*/}
+                        {/*               placeholder="Paris"*/}
+                        {/*               className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />*/}
+                        {/*    </div>*/}
+                        {/*    <div>*/}
+                        {/*        <label className="block text-xs text-gray-500 mb-1 flex items-center gap-1">*/}
+                        {/*            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">*/}
+                        {/*                <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>*/}
+                        {/*            </svg>*/}
+                        {/*            Difficulté estimée*/}
+                        {/*        </label>*/}
+                        {/*        <select value={form.difficulty} onChange={(e) => set("difficulty", e.target.value)}*/}
+                        {/*                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">*/}
+                        {/*            <option>Facile</option>*/}
+                        {/*            <option>Intermédiaire</option>*/}
+                        {/*            <option>Difficile</option>*/}
+                        {/*            <option>Expert</option>*/}
+                        {/*        </select>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
                     </div>
 
                     {/* Tags */}
