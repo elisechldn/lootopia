@@ -8,40 +8,67 @@ export class HuntsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOne(id: number) {
-    const hunt = await this.prisma.hunt.findUnique({
-      where: { id },
-      include: {
-        _count: { select: { participations: true } },
-        steps: {
-          orderBy: { orderNumber: 'asc' as const },
-        },
-      },
-    });
-
-    if (!hunt) return null;
-
-    // Project lat/lon from PostGIS geography for each step
-    const stepCoords = await this.prisma.$queryRaw<
-      Array<{ id: number; latitude: number | null; longitude: number | null }>
-    >(
+    // Une seule requête : agrège le hunt, ses coordonnées projetées,
+    // le _count des participations et la liste des steps (avec leurs
+    // coordonnées) via json_build_object / json_agg côté Postgres.
+    const rows = await this.prisma.$queryRaw<Array<{ hunt: unknown | null }>>(
       Prisma.sql`
-        SELECT
-          id,
-          ST_Y("location"::geometry) AS latitude,
-          ST_X("location"::geometry) AS longitude
-        FROM "Step"
-        WHERE "refHunt" = ${id}
+        SELECT json_build_object(
+          'id', h.id,
+          'title', h.title,
+          'shortDescription', h."shortDescription",
+          'description', h.description,
+          'startDate', h."startDate",
+          'endDate', h."endDate",
+          'radius', h.radius,
+          'coverImage', h."coverImage",
+          'status', h.status,
+          'rewardType', h."rewardType",
+          'rewardValue', h."rewardValue",
+          'createdAt', h."createdAt",
+          'updatedAt', h."updatedAt",
+          'refUser', h."refUser",
+          'latitude', ST_Y(h."locationCenter"::geometry),
+          'longitude', ST_X(h."locationCenter"::geometry),
+          '_count', json_build_object(
+            'participations', (
+              SELECT COUNT(*)::int
+              FROM "Participation" p
+              WHERE p."refHunt" = h.id
+            )
+          ),
+          'steps', COALESCE(
+            (
+              SELECT json_agg(
+                json_build_object(
+                  'id', s.id,
+                  'orderNumber', s."orderNumber",
+                  'title', s.title,
+                  'radius', s.radius,
+                  'actionType', s."actionType",
+                  'arMarkerUrl', s."arMarkerUrl",
+                  'arContent', s."arContent",
+                  'qrCodeValue', s."qrCodeValue",
+                  'points', s.points,
+                  'createdAt', s."createdAt",
+                  'updatedAt', s."updatedAt",
+                  'refHunt', s."refHunt",
+                  'latitude', ST_Y(s.location::geometry),
+                  'longitude', ST_X(s.location::geometry)
+                ) ORDER BY s."orderNumber" ASC
+              )
+              FROM "Step" s
+              WHERE s."refHunt" = h.id
+            ),
+            '[]'::json
+          )
+        ) AS hunt
+        FROM "Hunt" h
+        WHERE h.id = ${id}
       `,
     );
 
-    const coordsMap = new Map(stepCoords.map((c) => [c.id, c]));
-    const stepsWithCoords = hunt.steps.map((s) => ({
-      ...s,
-      latitude: coordsMap.get(s.id)?.latitude ?? null,
-      longitude: coordsMap.get(s.id)?.longitude ?? null,
-    }));
-
-    return { ...hunt, steps: stepsWithCoords };
+    return rows[0]?.hunt ?? null;
   }
 
   async findByPartner(userId: number | null) {
