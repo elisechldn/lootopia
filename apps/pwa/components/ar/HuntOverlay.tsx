@@ -15,9 +15,7 @@ type Props = {
 export function HuntOverlay({ hunt, stepId }: Props) {
     const { data } = use(hunt);
 
-    const currentStep = stepId
-        ? data.steps.find((s) => s.id === stepId)
-        : data.steps[0];
+    const currentStep = stepId ? data.steps.find((s) => s.id === stepId) : data.steps[0];
 
     if (!currentStep) return null;
 
@@ -39,9 +37,6 @@ export function HuntOverlay({ hunt, stepId }: Props) {
                 <p>{data.title}</p>
                 Étape {currentStep.orderNumber} — {currentStep.title}
             </div>
-            {currentStep.clue && (
-                <div style={{ opacity: 0.85, marginTop: 4 }}>{currentStep.clue}</div>
-            )}
         </div>
     );
 }
