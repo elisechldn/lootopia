@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { apiLogin, apiRegister, apiRefreshToken, getSession } from '@/lib/auth';
+import { apiLogin, apiRegister, apiRefreshToken } from '@/lib/auth';
 
 const cookieOptions = {
     httpOnly: true,

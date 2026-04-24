@@ -1,4 +1,3 @@
-import { access } from 'fs';
 import { cookies } from 'next/headers';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
@@ -9,7 +8,7 @@ export async function getSession() {
     try {
         // Décode sans vérifier (la vérif se fait côté API)
         const payload = JSON.parse(atob(token.split('.')[1]!));
-        return payload as { sub: number; email: string; role: string };
+        return payload as { sub: number; email: string; role: string ; exp: number };
     } catch {
         return null;
     }
