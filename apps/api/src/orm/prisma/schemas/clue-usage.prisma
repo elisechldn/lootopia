@@ -1,0 +1,12 @@
+model ClueUsage {
+  id     Int      @id @default(autoincrement())
+  usedAt DateTime @default(now())
+
+  refProgress Int
+  progress    Progress @relation(fields: [refProgress], references: [id], onDelete: Cascade)
+
+  refClue Int
+  clue    Clue @relation(fields: [refClue], references: [id], onDelete: Cascade)
+
+  @@unique([refProgress, refClue])
+}

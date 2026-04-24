@@ -13,8 +13,7 @@ model Participation {
   refHunt Int
   hunt    Hunt @relation(fields: [refHunt], references: [id], onDelete: Cascade)
 
-  currentStep Int?
-  step        Step? @relation(fields: [currentStep], references: [id], onDelete: SetNull)
+  progresses Progress[]
 
   @@unique([refUser, refHunt])
 }

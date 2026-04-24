@@ -54,7 +54,7 @@ export default function HuntRouteMap({ steps }: Props) {
         positions.length > 1
             ? positions.reduce((acc, pos, i) => {
                 if (i === 0) return 0;
-                return acc + haversineDistance(positions[i - 1], pos);
+                return acc + haversineDistance(positions[i - 1]!, pos);
             }, 0)
             : 0;
 

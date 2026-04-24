@@ -1,13 +1,13 @@
 import { cookies } from 'next/headers';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+const API_URL = process.env.API_URL ?? 'http://localhost:8000';
 
 export async function getSession() {
     const token = (await cookies()).get('auth_token')?.value;
     if (!token) return null;
     try {
         // Décode sans vérifier (la vérif se fait côté API)
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        const payload = JSON.parse(atob(token.split('.')[1]!));
         return payload as { sub: number; email: string; role: string };
     } catch {
         return null;
@@ -15,6 +15,7 @@ export async function getSession() {
 }
 
 export async function apiLogin(email: string, password: string) {
+    console.log("API_URL --> ", API_URL)
     const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

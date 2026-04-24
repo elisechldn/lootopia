@@ -3,7 +3,7 @@ import { Hunt, HuntStats } from "@/components/partner/types";
 
 async function getHunts(): Promise<Hunt[]> {
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/hunts`,
+        `${process.env.API_URL}/hunts`,
         { cache: 'no-store' }
     );
     if (!res.ok) return [];
@@ -13,7 +13,7 @@ async function getHunts(): Promise<Hunt[]> {
 
 async function getStats(): Promise<HuntStats> {
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/hunts/stats`,
+        `${process.env.API_URL}/hunts/stats`,
         { cache: 'no-store' }
     );
     if (!res.ok) return { total: 0, active: 0, finished: 0, players: 0 };

@@ -6,7 +6,7 @@ export default function NotMobilePage() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         padding: '24px',
         textAlign: 'center',
         fontFamily: 'sans-serif',
