@@ -6,7 +6,11 @@ FROM node:24-bookworm-slim AS pruner
 WORKDIR /app
 RUN npm install -g turbo
 COPY . .
-RUN turbo prune api --docker
+RUN turbo prune api --docker && \
+    npm install -g prisma && \
+    npm install dotenv && \
+    cd apps/api && \
+    npx prisma generate
 
 # Stage 2 — installer
 # Installe les dépendances npm en mode CI (reproductible, sans mise à jour
@@ -40,6 +44,8 @@ FROM node:24-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/ .
+RUN apt-get update -y && \
+    apt-get install -y openssl
 
 EXPOSE 8000
 
