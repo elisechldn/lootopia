@@ -15,7 +15,7 @@ export default async function EditHuntPage({ params }: { params: Promise<{ id: s
 
     if (!hunt) {
         return (
-            <div className="p-8 text-sm text-gray-500">
+            <div className="p-8 text-sm text-muted-foreground">
                 Chasse introuvable.
             </div>
         );

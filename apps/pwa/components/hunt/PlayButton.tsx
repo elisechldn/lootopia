@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Play } from 'lucide-react';
-import { Button }        from '@/components/ui/Button';
+import { Button }        from '@/components/ui/button';
 import { useUserStore }  from '@/store/userStore';
 import { startHunt } from '@/services/participation.service';
 
@@ -56,7 +56,7 @@ export default function PlayButton({ huntId }: PlayButtonProps) {
         className={[
           'w-full p-10 text-base font-bold uppercase tracking-widest flex items-center gap-2',
           alreadyStarted
-            ? 'border-2 border-primary bg-white text-primary hover:bg-primary/5'
+            ? 'border-2 border-primary bg-card text-primary hover:bg-primary/5'
             : '',
         ]
           .filter(Boolean)

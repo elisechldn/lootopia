@@ -41,6 +41,12 @@ export class HuntsController {
     );
   }
 
+  @Get('analytics')
+  analytics(@Query('userId') userId?: string) {
+    const id = userId ? Number(userId) : null;
+    return this.huntsService.analytics(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.huntsService.findOne(Number(id));
