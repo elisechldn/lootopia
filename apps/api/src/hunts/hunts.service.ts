@@ -124,6 +124,62 @@ export class HuntsService {
     return { total, active, finished, players };
   }
 
+  async analytics(userId: number | null) {
+    const hunts = await this.prisma.hunt.findMany({
+      where: userId ? { refUser: userId } : undefined,
+      include: {
+        _count: { select: { participations: true } },
+        participations: {
+          select: {
+            status: true,
+            totalPoints: true,
+            startTime: true,
+            endTime: true,
+            progresses: {
+              select: {
+                totalPoints: true,
+                statut: true,
+                clueUsages: { select: { id: true } },
+              },
+            },
+          },
+        },
+        steps: { select: { id: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return hunts.map((hunt) => {
+      const completed = hunt.participations.filter(p => p.status === 'COMPLETED');
+      const inProgress = hunt.participations.filter(p => p.status === 'IN_PROGRESS');
+
+      const avgDuration = completed.length > 0
+          ? completed.reduce((sum, p) => {
+        if (!p.endTime) return sum;
+        const diff = p.endTime.getTime() - p.startTime.getTime();
+        if (diff <= 0) return sum; // ← ignorer les durées incohérentes
+        return sum + diff;
+      }, 0) / completed.length / 1000 / 60
+          : null;
+
+      const totalClueUsages = hunt.participations.reduce((sum, p) =>
+          sum + p.progresses.reduce((s, pr) => s + pr.clueUsages.length, 0), 0
+      );
+
+      return {
+        id: hunt.id,
+        title: hunt.title,
+        status: hunt.status,
+        totalParticipants: hunt._count.participations,
+        completedCount: completed.length,
+        inProgressCount: inProgress.length,
+        avgDurationMinutes: avgDuration ? Math.round(avgDuration) : null,
+        totalClueUsages,
+        stepsCount: hunt.steps.length,
+      };
+    });
+  }
+
   async create(dto: CreateHuntDto) {
     if (!dto.title) throw new BadRequestException('Le titre est obligatoire');
     if (!dto.refUser) throw new BadRequestException('refUser est obligatoire');

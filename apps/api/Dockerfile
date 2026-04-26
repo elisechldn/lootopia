@@ -1,22 +1,16 @@
 # Stage 1 — pruner
 # Analyse le monorepo Turborepo et extrait uniquement les fichiers nécessaires
-# à l'app "api" (package.json, lockfile, sources). Cela évite de copier
-# l'intégralité du monorepo dans les stages suivants.
+# à l'app "api" (package.json, lockfile, sources).
 FROM node:24-bookworm-slim AS pruner
 WORKDIR /app
 RUN npm install -g turbo
 COPY . .
-RUN turbo prune api --docker && \
-    npm install -g prisma && \
-    npm install dotenv && \
-    cd apps/api && \
-    npx prisma generate
+RUN turbo prune api --docker
 
 # Stage 2 — installer
 # Installe les dépendances npm en mode CI (reproductible, sans mise à jour
-# du lockfile) à partir des manifestes extraits par le stage pruner.
-# Séparer l'installation des dépendances de la compilation permet de mettre
-# en cache cette couche tant que les dépendances ne changent pas.
+# du lockfile). Prisma est inclus dans les devDependencies et sera installé
+# par npm ci — pas besoin de l'installer globalement.
 FROM node:24-bookworm-slim AS installer
 WORKDIR /app
 COPY --from=pruner /app/out/json/ .
@@ -25,21 +19,18 @@ COPY --from=pruner /app/turbo.json ./turbo.json
 RUN npm ci
 
 # Stage 3 — builder
-# Compile le code source TypeScript de l'API en JavaScript (dist/).
-# Repart des node_modules installés par le stage installer et ajoute
-# les sources complètes extraites par le stage pruner.
-# @repo/types est buildé explicitement en premier pour garantir que
-# packages/types/dist/ existe avant que turbo compile l'API.
+# Compile le code TypeScript et génère le client Prisma.
+# prisma generate s'exécute ici car il a accès aux sources complètes
+# et aux node_modules installés.
 FROM node:24-bookworm-slim AS builder
 WORKDIR /app
 COPY --from=installer /app/ .
 COPY --from=pruner /app/out/full/ .
+RUN cd apps/api && npx prisma generate
 RUN npm run build
 
 # Stage 4 — runner
-# Image finale de production : ne contient que le build compilé et les
-# node_modules. Les outils de dev (turbo, sources TS, etc.) sont absents,
-# ce qui réduit la taille de l'image et la surface d'attaque.
+# Image finale de production : build compilé et node_modules uniquement.
 FROM node:24-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production

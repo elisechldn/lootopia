@@ -93,6 +93,31 @@ export class ParticipationsService {
     });
   }
 
+  async findByPartner(partnerId: number | null) {
+    return this.prisma.participation.findMany({
+      where: partnerId ? { hunt: { refUser: partnerId } } : undefined,
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            email: true,
+          },
+        },
+        hunt: {
+          select: {
+            id: true,
+            title: true,
+            rewardType: true,
+            rewardValue: true,
+          },
+        },
+      },
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
   async findOne(id: number) {
     const participation = await this.prisma.participation.findUnique({
       where: { id },

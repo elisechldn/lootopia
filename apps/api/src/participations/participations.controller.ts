@@ -20,6 +20,13 @@ export class ParticipationsController {
         return this.participationsService.findByUser(Number(userId));
     }
 
+    // GET /participations/partner?partnerId= — joueurs des chasses d'un partenaire
+    @Get('partner')
+    findByPartner(@Query('partnerId') partnerId?: string) {
+        const id = partnerId ? Number(partnerId) : null;
+        return this.participationsService.findByPartner(id);
+    }
+
     // GET /participations/:id — détail d'une participation
     @Get(':id')
     findOne(@Param('id') id: string) {

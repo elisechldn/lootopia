@@ -27,7 +27,7 @@ function StatusBadge({ status }: { status: Hunt["status"] }) {
     const mapped = mapStatus(status);
     const variants = {
         Active: "bg-green-50 text-green-700 border-green-200",
-        Inactive: "bg-gray-50 text-gray-500 border-gray-200",
+        Inactive: "bg-muted/50 text-muted-foreground border-border",
         Brouillon: "bg-yellow-50 text-yellow-700 border-yellow-200",
     };
     return (
@@ -39,12 +39,12 @@ function StatusBadge({ status }: { status: Hunt["status"] }) {
 
 function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
     return (
-        <div className="bg-white border border-gray-100 rounded-xl px-5 py-4 flex items-center justify-between">
+        <div className="bg-card border border-border rounded-xl px-5 py-4 flex items-center justify-between">
             <div>
-                <p className="text-xs text-gray-500 mb-1">{label}</p>
-                <p className="text-2xl font-bold text-gray-900">{value.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground mb-1">{label}</p>
+                <p className="text-2xl font-bold text-foreground">{value.toLocaleString()}</p>
             </div>
-            <div className="text-gray-400">{icon}</div>
+            <div className="text-muted-foreground/70">{icon}</div>
         </div>
     );
 }
@@ -97,7 +97,7 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
                         </div>
                         <DialogDescription>
                             Êtes-vous sûr de vouloir supprimer{" "}
-                            <span className="font-medium text-gray-700">
+                            <span className="font-medium text-foreground/80">
                                 &quot;{huntToDelete?.title}&quot;
                             </span>{" "}
                             ? Cette action est irréversible et supprimera également toutes
@@ -118,8 +118,8 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
             {/* Header */}
             <div className="flex items-start justify-between mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Chasse au trésor</h1>
-                    <p className="text-sm text-gray-500 mt-0.5">Gérez vos expériences de chasse au trésor</p>
+                    <h1 className="text-2xl font-bold text-foreground">Chasse au trésor</h1>
+                    <p className="text-sm text-muted-foreground mt-0.5">Gérez vos expériences de chasse au trésor</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <Button variant="outline" size="sm" className="gap-2">
@@ -127,7 +127,7 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
                         Export
                     </Button>
                     <Link href="/dashboard/hunts/new">
-                        <Button size="sm" className="gap-2 bg-gray-900 hover:bg-gray-800">
+                        <Button size="sm" className="gap-2">
                             <Plus className="w-4 h-4" />
                             Create Hunt
                         </Button>
@@ -152,18 +152,18 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
             </div>
 
             {/* Filters */}
-            <div className="bg-white border border-gray-100 rounded-xl px-5 py-4 mb-4">
+            <div className="bg-card border border-border rounded-xl px-5 py-4 mb-4">
                 <div className="flex items-center gap-3">
                     <div className="relative flex-1 max-w-xs">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
-                             className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                             className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/70">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
                         </svg>
                         <Input
                             placeholder="Recherche de chasses..."
                             value={search}
                             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                            className="pl-9 text-sm border-gray-200"
+                            className="pl-9 text-sm border-border"
                         />
                     </div>
                     <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v!); setPage(1); }}>
@@ -181,9 +181,9 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
             </div>
 
             {/* Table */}
-            <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
-                <div className="px-5 py-4 border-b border-gray-50">
-                    <h2 className="text-sm font-semibold text-gray-900">Liste des parcours</h2>
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+                <div className="px-5 py-4 border-b border-border">
+                    <h2 className="text-sm font-semibold text-foreground">Liste des parcours</h2>
                 </div>
                 <Table>
                     <TableHeader>
@@ -199,7 +199,7 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
                     <TableBody>
                         {paginated.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={6} className="text-center py-10 text-sm text-gray-400">
+                                <TableCell colSpan={6} className="text-center py-10 text-sm text-muted-foreground/70">
                                     Aucun parcours trouvé
                                 </TableCell>
                             </TableRow>
@@ -212,8 +212,8 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
                                                 {hunt.title.slice(0, 2).toUpperCase()}
                                             </div>
                                             <div className="min-w-0">
-                                                <p className="text-sm font-medium text-gray-900 truncate">{hunt.title}</p>
-                                                <p className="text-xs text-gray-400 mt-0.5 truncate">
+                                                <p className="text-sm font-medium text-foreground truncate">{hunt.title}</p>
+                                                <p className="text-xs text-muted-foreground/70 mt-0.5 truncate">
                                                     {hunt.shortDescription ?? hunt.description ?? ""}
                                                 </p>
                                             </div>
@@ -222,25 +222,25 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
                                     <TableCell className="py-4 px-5">
                                         <StatusBadge status={hunt.status} />
                                     </TableCell>
-                                    <TableCell className="py-4 px-5 text-sm text-gray-700">
+                                    <TableCell className="py-4 px-5 text-sm text-foreground/80">
                                         {hunt._count.participations}
                                     </TableCell>
-                                    <TableCell className="py-4 px-5 text-sm text-gray-500">
+                                    <TableCell className="py-4 px-5 text-sm text-muted-foreground">
                                         {new Date(hunt.createdAt).toLocaleDateString("fr-FR")}
                                     </TableCell>
-                                    <TableCell className="py-4 px-5 text-sm text-gray-500">
+                                    <TableCell className="py-4 px-5 text-sm text-muted-foreground">
                                         {new Date(hunt.updatedAt).toLocaleDateString("fr-FR")}
                                     </TableCell>
                                     <TableCell className="py-4 px-5">
                                         <div className="flex items-center gap-2">
-                                            <Button variant="ghost" size="icon" className="w-8 h-8 text-gray-400 hover:text-gray-700"
+                                            <Button variant="ghost" size="icon" className="w-8 h-8 text-muted-foreground/70 hover:text-foreground/80"
                                                     onClick={() => router.push(`/dashboard/hunts/${hunt.id}/edit`)}>
                                                 <Pencil className="w-4 h-4" />
                                             </Button>
-                                            <Button variant="ghost" size="icon" className="w-8 h-8 text-gray-400 hover:text-gray-700">
+                                            <Button variant="ghost" size="icon" className="w-8 h-8 text-muted-foreground/70 hover:text-foreground/80">
                                                 <Eye className="w-4 h-4" />
                                             </Button>
-                                            <Button variant="ghost" size="icon" className="w-8 h-8 text-gray-400 hover:text-red-500"
+                                            <Button variant="ghost" size="icon" className="w-8 h-8 text-muted-foreground/70 hover:text-red-500"
                                                     onClick={() => setHuntToDelete(hunt)}>
                                                 <Trash2 className="w-4 h-4" />
                                             </Button>
@@ -253,7 +253,7 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
                 </Table>
 
                 {totalPages > 1 && (
-                    <div className="px-5 py-4 border-t border-gray-50 flex items-center justify-end gap-1">
+                    <div className="px-5 py-4 border-t border-border flex items-center justify-end gap-1">
                         <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
                             Précédent
                         </Button>

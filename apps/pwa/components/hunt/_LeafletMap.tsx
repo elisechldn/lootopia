@@ -49,7 +49,7 @@ export default function LeafletMap({ hunts, center }: Props) {
               <div className="min-w-[160px]">
                 <p className="font-semibold text-sm">{hunt.title}</p>
                 {hunt.shortDescription && (
-                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
                     {hunt.shortDescription}
                   </p>
                 )}
