@@ -128,6 +128,7 @@ export class ParticipationsService {
     });
     if (!participation)
       throw new NotFoundException('Participation introuvable');
+    console.log("PARTICI => ", participation)
     return participation;
   }
 

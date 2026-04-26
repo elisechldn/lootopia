@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 import { HuntsModule } from './hunts/hunts.module';
 import { AuthModule } from './auth/auth.module';
 import { ParticipationsModule } from './participations/participations.module';
+import { StorageModule } from './storage/storage.module';
+import { FilesModule } from './storage/files/files.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { ParticipationsModule } from './participations/participations.module';
     HuntsModule,
     AuthModule,
     ParticipationsModule,
+    StorageModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [PrismaService],

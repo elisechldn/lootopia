@@ -12,5 +12,6 @@ export class CreateHuntDto {
   status?: HuntStatus;
   rewardType?: string;
   rewardValue?: string;
+  coverImage?: string | null;
   refUser: number;
 }

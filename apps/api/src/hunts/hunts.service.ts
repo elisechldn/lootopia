@@ -195,6 +195,7 @@ export class HuntsService {
         status: (dto.status ?? 'DRAFT') as HuntStatus,
         rewardType: dto.rewardType ?? 'DISCOUNT_CODE',
         rewardValue: dto.rewardValue ?? null,
+        coverImage: dto.coverImage ?? null,
         refUser: Number(dto.refUser),
       },
     });
@@ -231,6 +232,7 @@ export class HuntsService {
         ...(dto.status && { status: dto.status as HuntStatus }),
         ...(dto.rewardType && { rewardType: dto.rewardType }),
         ...(dto.rewardValue !== undefined && { rewardValue: dto.rewardValue }),
+        ...(dto.coverImage !== undefined && { coverImage: dto.coverImage }),
       },
     });
 
