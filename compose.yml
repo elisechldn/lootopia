@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - lootopia-data:/var/lib/postgresql/data
+      - lootopia-data:/var/lib/postgresql
     networks:
       - lootopia-network
     restart: unless-stopped
