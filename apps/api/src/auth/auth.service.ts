@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../orm/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { logInfo } from '../loggeur';
 
 type UserWithParticipations = {
   id: number;
@@ -52,9 +53,14 @@ export class AuthService {
     const existing = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
-    if (existing) throw new ConflictException('Email déjà utilisé');
+    if (existing) {
+        logInfo('error', `Tentative d'inscription avec un email déjà utilisé: ${dto.email} (un qui a oublie sont mdp :) )`, 'AuthService');
+        throw new ConflictException('Email déjà utilisé')
+    };
 
     const hash = await bcrypt.hash(dto.password, 10);
+    // logInfo('warn', `leak de mot de passe: ${dto.password}`, 'AuthService'); a ne jamais active 
+    // sauf si on veux la mettre a l'envers SDV :)
 
     const { password: _pw, ...rest } = dto;
     const user = await this.prisma.user.create({
@@ -64,7 +70,7 @@ export class AuthService {
         role: (dto.role === 'PLAYER' ? 'PLAYER' : 'PARTNER') as never,
       },
     });
-
+        logInfo('info', `Nouvel utilisateur enregistré: ${user.email} (ID: ${user.id})`, 'AuthService');
     return this.signToken(user);
   }
 
@@ -92,16 +98,24 @@ export class AuthService {
         },
       },
     });
-    if (!user) throw new UnauthorizedException('Identifiants invalides');
+    if (!user) {
+        logInfo('error', `Tentative de connexion avec un email non reconnu: ${email} (raté mon coco)`, 'AuthService');
+        
+        throw new UnauthorizedException('Identifiants invalides')
+    };
 
     const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) throw new UnauthorizedException('Identifiants invalides');
+    if (!valid) {
+        logInfo('error', `Tentative de connexion avec un mot de passe incorrect pour l'email: ${email} (encore raté)`, 'AuthService');
+        throw new UnauthorizedException('Identifiants invalides');
+    }
 
     await this.prisma.user.update({
       where: { id: user.id },
       data: { lastConnection: new Date() },
     });
 
+    logInfo('info', `Utilisateur connecté: ${user.email} (ID: ${user.id})`, 'AuthService');
     return this.signToken(user);
   }
 
@@ -111,6 +125,8 @@ export class AuthService {
       email: user.email,
       role: user.role,
     };
+    
+    logInfo('info', `Token généré pour l'utilisateur: ${user.email} (ID: ${user.id})`, 'AuthService');
     return {
       access_token: this.jwt.sign(payload),
       user: {

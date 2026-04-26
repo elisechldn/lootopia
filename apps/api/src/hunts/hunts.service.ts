@@ -1,8 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { Prisma, HuntStatus } from '@repo/types';
 import { PrismaService } from '../orm/prisma/prisma.service';
 import { CreateHuntDto } from './dto/create-hunt.dto';
-
+import { logInfo } from '../loggeur';
 @Injectable()
 export class HuntsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -67,7 +67,7 @@ export class HuntsService {
         WHERE h.id = ${id}
       `,
     );
-
+    logInfo('info', `Récupération de la chasse ${id}`, 'HuntsService');
     return rows[0]?.hunt ?? null;
   }
 
@@ -78,6 +78,9 @@ export class HuntsService {
         _count: { select: { participations: true } },
       },
       orderBy: { createdAt: 'desc' },
+    }).then((hunts) => {
+        logInfo('info', `Récupération des chasses pour le partenaire ${userId ?? 'tous les utilisateurs (soit pas relou)'} avec ${hunts.length} chasses`, 'HuntsService');
+        return hunts;
     });
   }
 
@@ -121,12 +124,18 @@ export class HuntsService {
       }),
     ]);
     const players = await this.prisma.participation.count({ where: huntWhere });
+    logInfo('info', `Récupération des statistiques pour le partenaire ${userId ?? 'tous les utilisateurs (soit pas relou)'} : ${total} chasses au total, ${active} actives, ${finished} terminées, ${players} participations`, 'HuntsService');
     return { total, active, finished, players };
   }
 
   async create(dto: CreateHuntDto) {
-    if (!dto.title) throw new BadRequestException('Le titre est obligatoire');
-    if (!dto.refUser) throw new BadRequestException('refUser est obligatoire');
+    if (!dto.title) {
+        logInfo('error', 'encore un crétin qui ne met pas de titre', 'HuntsService');
+        throw new BadRequestException('Le titre est obligatoire')};
+    if (!dto.refUser) {
+        logInfo('error', 'mais il fait quoi lui sans refUser', 'HuntsService');
+        throw new BadRequestException('refUser est obligatoire')
+    };
 
     const hunt = await this.prisma.hunt.create({
       data: {
@@ -153,6 +162,7 @@ export class HuntsService {
       );
     }
 
+    logInfo('info', `Chasse ${hunt.id} créée par le partenaire ${dto.refUser}`, 'HuntsService');
     return hunt;
   }
 
@@ -188,10 +198,17 @@ export class HuntsService {
       );
     }
 
+    logInfo('info', `Chasse ${hunt.id} mise à jour par le partenaire ${dto.refUser}`, 'HuntsService');
     return hunt;
   }
 
   async remove(id: number) {
+    const hunt = await this.prisma.hunt.findUnique({ where: { id } });
+    if (!hunt) {
+        logInfo('error', `Chasse ${id} non trouvée`, 'HuntsService');
+      throw new NotFoundException('Chasse non trouvée');
+    }
+    logInfo('info', `Chasse ${hunt.id} supprimée par le partenaire ${hunt.refUser}`, 'HuntsService');
     return this.prisma.hunt.delete({ where: { id } });
   }
 
@@ -232,6 +249,8 @@ export class HuntsService {
         }
       }
     }
+
+    logInfo('info', `Création de ${created.count} étapes pour la chasse ${huntId}`, 'HuntsService');
 
     return created;
   }
