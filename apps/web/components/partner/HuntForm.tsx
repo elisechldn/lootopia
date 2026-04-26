@@ -6,6 +6,8 @@ import StepsTab from "./StepsTab";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { Hunt, Step } from "./types";
 import HuntMap from "@/components/partner/HuntMap";
+import { uploadFile } from "@/lib/upload";
+import { assetUrl } from "@/lib/assets";
 
 type Tab = "metadata" | "steps";
 type Status = "DRAFT" | "ACTIVE" | "FINISHED";
@@ -25,7 +27,6 @@ export default function HuntForm({ initialData }: Props) {
             longitude: s.longitude ?? null,
             radius: s.radius,
             actionType: s.actionType,
-            arMarker: s.arMarker ?? null,
             arContent: s.arContent ?? null,
             qrCode: s.qrCode ?? null,
             points: s.points,
@@ -38,7 +39,9 @@ export default function HuntForm({ initialData }: Props) {
     const [status, setStatus] = useState<Status>((initialData?.status as Status) ?? "DRAFT");
     const [tags, setTags] = useState<string[]>(["futuriste", "Historique", "Piraterie"]);
     const [tagInput, setTagInput] = useState("");
-    const [coverImage, setCoverImage] = useState<string | null>(null);
+    const [coverImage, setCoverImage] = useState<string | null>(assetUrl(initialData?.coverImage));
+    const [coverImageKey, setCoverImageKey] = useState<string | null>(initialData?.coverImage ?? null);
+    const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [form, setForm] = useState({
         title: initialData?.title ?? "",
@@ -75,6 +78,21 @@ export default function HuntForm({ initialData }: Props) {
         setSaving(true);
         if (!form.locationCenter) throw new Error('Hunt must have a defined location center');
         const coords = form.locationCenter.split(' ');
+
+        let nextCoverKey = coverImageKey;
+        try {
+            if (coverImageFile) {
+                const uploaded = await uploadFile(coverImageFile, "cover");
+                nextCoverKey = uploaded.key;
+                setCoverImageKey(uploaded.key);
+                setCoverImageFile(null);
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Échec de l'upload de l'image");
+            setSaving(false);
+            return;
+        }
+
         const payload = {
             title: form.title || "Sans titre",
             shortDescription: form.shortDescription || null,
@@ -88,6 +106,7 @@ export default function HuntForm({ initialData }: Props) {
             status: nextStatus ?? status,
             rewardType: form.rewardType,
             rewardValue: form.rewardValue || null,
+            coverImage: nextCoverKey,
             refUser: user?.sub,
         };
 
@@ -113,10 +132,29 @@ export default function HuntForm({ initialData }: Props) {
             const huntId = huntJson.data?.id ?? initialData?.id;
 
             if (steps.length > 0 && huntId) {
+                let preparedSteps: Step[];
+                try {
+                    preparedSteps = await Promise.all(
+                        steps.map(async (s) => {
+                            if (!s._arContentFile) return s;
+                            const uploaded = await uploadFile(s._arContentFile, "ar-model");
+                            return { ...s, arContent: uploaded.key, _arContentFile: null };
+                        }),
+                    );
+                } catch (err) {
+                    setError(err instanceof Error ? err.message : "Échec de l'upload d'un modèle 3D");
+                    return;
+                }
+                setSteps(preparedSteps);
+
+                const stepsPayload = preparedSteps.map(({ _arContentFile, ...rest }) => {
+                    void _arContentFile;
+                    return rest;
+                });
                 await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hunts/${huntId}/steps`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ steps }),
+                    body: JSON.stringify({ steps: stepsPayload }),
                 });
             }
 
@@ -228,13 +266,13 @@ export default function HuntForm({ initialData }: Props) {
                             <input
                                 ref={fileInputRef}
                                 type="file"
-                                accept="image/*"
+                                accept="image/jpeg,image/png,image/webp"
                                 className="hidden"
                                 onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (file) {
-                                        const url = URL.createObjectURL(file);
-                                        setCoverImage(url);
+                                        setCoverImageFile(file);
+                                        setCoverImage(URL.createObjectURL(file));
                                     }
                                 }}
                             />
@@ -259,7 +297,11 @@ export default function HuntForm({ initialData }: Props) {
                             </div>
                             {coverImage && (
                                 <button
-                                    onClick={() => setCoverImage(null)}
+                                    onClick={() => {
+                                        setCoverImage(null);
+                                        setCoverImageFile(null);
+                                        setCoverImageKey(null);
+                                    }}
                                     className="mt-2 text-xs text-muted-foreground/70 hover:text-red-500 transition-colors">
                                     Supprimer l&apos;image
                                 </button>

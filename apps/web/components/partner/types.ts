@@ -1,6 +1,6 @@
 import type { HuntModel, StepModel } from "@repo/types";
 
-export type Hunt = Pick<HuntModel, "id" | "title" | "shortDescription" | "description" | "status" | "rewardType" | "rewardValue" > & {
+export type Hunt = Pick<HuntModel, "id" | "title" | "shortDescription" | "description" | "status" | "rewardType" | "rewardValue" | "coverImage" > & {
     difficulty: string | null;
     latitude: number;
     longitude: number;
@@ -24,6 +24,8 @@ export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionT
     clue: string;
     latitude?: number | null;
     longitude?: number | null;
-    arMarker: string | null;
     qrCode: string | null;
+    // Transient: fichier .glb sélectionné, uploadé puis remplacé par la clé S3 dans arContent.
+    // Strippé avant l'envoi à l'API.
+    _arContentFile?: File | null;
 }

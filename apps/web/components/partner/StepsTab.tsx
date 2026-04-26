@@ -34,7 +34,6 @@ function emptyStep(orderNumber: number): Step {
         clue: "",
         radius: 50,
         actionType: "QR_CODE",
-        arMarker: null,
         arContent: null,
         qrCode: null,
         points: 0,
@@ -190,28 +189,24 @@ export default function StepsTab({ steps, onChange }: Props) {
                                 {step.actionType === "AR" && (
                                     <div className="space-y-3">
                                         <div>
-                                            <label className="block text-xs font-medium text-muted-foreground mb-1">
-                                                URL du marqueur AR
-                                            </label>
-                                            <input
-                                                value={step.arMarker ?? ""}
-                                                onChange={(e) => updateStep(index, "arMarker", e.target.value)}
-                                                placeholder="https://assets.example.com/markers/..."
-                                                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-medium text-muted-foreground mb-2">
+											<label className="block text-xs font-medium text-muted-foreground mb-1">
                                                 Item 3D
                                             </label>
                                             <input
                                                 ref={(el) => { glbInputRefs.current[index] = el; }}
                                                 type="file"
-                                                accept=".glb"
+                                                accept=".glb,model/gltf-binary"
                                                 className="hidden"
                                                 onChange={(e) => {
                                                     const file = e.target.files?.[0];
-                                                    if (file) updateStep(index, "arContent", file.name);
+                                                    if (file) {
+                                                        const updated = steps.map((s, i) =>
+                                                            i === index
+                                                                ? { ...s, arContent: file.name, _arContentFile: file }
+                                                                : s
+                                                        );
+                                                        onChange(updated);
+                                                    }
                                                 }}
                                             />
                                             <div
@@ -219,7 +214,9 @@ export default function StepsTab({ steps, onChange }: Props) {
                                                 className="border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
                                             >
                                                 {step.arContent ? (
-                                                    <p className="text-sm text-foreground/80 font-medium">{step.arContent}</p>
+                                                    <p className="text-sm text-foreground/80 font-medium truncate max-w-full">
+                                                        {step._arContentFile ? step.arContent : step.arContent.split('/').pop()}
+                                                    </p>
                                                 ) : (
                                                     <>
                                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7 text-muted-foreground/70">
