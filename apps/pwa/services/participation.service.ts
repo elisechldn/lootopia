@@ -22,7 +22,9 @@ function unwrap(res: Response, body: unknown) {
 export async function getParticipationById(participationId: number): Promise<GameParticipation> {
   const res = await fetch(`${API_URL}/participations/${participationId}`);
   if (!res.ok) throw new Error('Participation introuvable');
-  return unwrap(res, await res.json()) as GameParticipation;
+  const data = await res.json();
+  console.log("DATA PARTICIPATION -> ", data);
+  return unwrap(res, data) as GameParticipation;
 }
 
 export async function startHunt(userId: number, huntId: number): Promise<GameParticipation> {

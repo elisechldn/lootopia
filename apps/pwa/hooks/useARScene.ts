@@ -7,11 +7,13 @@ import { useThreeSetup } from './useThreeSetup'
 import { useLocar } from './useLocar'
 import { useDeviceOrientationControls } from './useDeviceOrientationControls'
 import { toast } from 'sonner'
+import * as THREE                                   from "three";
 
 type UseARSceneOptions = {
   canvasRef: RefObject<HTMLCanvasElement | null>
   videoRef: RefObject<HTMLVideoElement | null>
   onItemHit?: (name: string) => void
+  mixerRef: RefObject<THREE.AnimationMixer | null>
 }
 
 export type UseARSceneReturn = {
@@ -21,10 +23,11 @@ export type UseARSceneReturn = {
   refs: RefObject<ARRefs>
 }
 
-export function useARScene({ canvasRef, videoRef, onItemHit }: UseARSceneOptions): UseARSceneReturn {
+export function useARScene({ canvasRef, videoRef, onItemHit, mixerRef }: UseARSceneOptions): UseARSceneReturn {
   const [needsOrientationPermission, setNeedsOrientationPermission] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const onItemHitRef = useRef(onItemHit)
+  const timerRef = useRef(new THREE.Timer());
 
   const refs = useRef<ARRefs>({
     renderer: null,
@@ -83,7 +86,7 @@ export function useARScene({ canvasRef, videoRef, onItemHit }: UseARSceneOptions
       console.log('[AR] stage 4 refs:', { renderer: !!renderer, scene: !!scene, camera: !!camera, controls: !!controls, clickHandler: !!clickHandler })
       if (!renderer || !scene || !camera || !controls || !clickHandler) return
 
-      renderer.setAnimationLoop(() => {
+      renderer.setAnimationLoop((timestamp) => {
         controls.update()
         // console.log("camera.quaternion -> ", camera.quaternion);
         console.log("setAnimationLoop")
@@ -95,6 +98,14 @@ export function useARScene({ canvasRef, videoRef, onItemHit }: UseARSceneOptions
             toast(obj.properties.name)
             onItemHitRef.current?.(obj.properties.name)
           }
+        }
+
+        // Animation
+        const timer = timerRef.current;
+        timer.update(timestamp);
+        const delta = timer.getDelta();
+        if (mixerRef?.current) {
+          mixerRef.current.update(delta);
         }
 
         renderer.render(scene, camera)

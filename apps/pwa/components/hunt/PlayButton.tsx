@@ -24,6 +24,8 @@ export default function PlayButton({ huntId }: PlayButtonProps) {
 
   const alreadyStarted = user?.participations.some((p) => p.refHunt === +huntId) ?? false;
 
+  console.log("USER => ", user)
+
   const handlePlay = async () => {
     if (!user) {
       router.push('/login');
@@ -38,6 +40,7 @@ export default function PlayButton({ huntId }: PlayButtonProps) {
       if (typeof doe.requestPermission === 'function') await doe.requestPermission();
 
       const participation = await startHunt(user.id, Number(huntId));
+      console.log("participation ==> ",participation)
       router.push(`/hunts/${huntId}/game/map?participationId=${participation.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Impossible de démarrer');

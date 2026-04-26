@@ -42,6 +42,7 @@ export default function GameMapPage({ params }: Props) {
       getParticipationById(+participationId),
     ]).then(([huntRes, participationRes]) => {
       setHunt(huntRes.data as HuntWithSteps);
+      console.log("participationRes => ", participationRes)
       setParticipation(participationRes);
       setLoading(false);
     });
@@ -49,10 +50,15 @@ export default function GameMapPage({ params }: Props) {
 
   // Continuous GPS watch
   useEffect(() => {
+    console.log("navigator.geolocation -> ", navigator.geolocation)
     if (!navigator.geolocation) return;
+    console.log(1)
     const watchId = navigator.geolocation.watchPosition(
-      (pos) => setUserCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-      () => {},
+      (pos) => {
+        console.log("POSITION -> ", pos.coords);
+        setUserCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+      },
+      () => {console.log("ERROR")},
       { enableHighAccuracy: true, maximumAge: 2000 },
     );
     return () => navigator.geolocation.clearWatch(watchId);
@@ -60,10 +66,15 @@ export default function GameMapPage({ params }: Props) {
 
   // Current step: the one whose progress is IN_PROGRESS
   const currentStep = useMemo<StepWithCoords | null>(() => {
+    console.log("HUNT => ", hunt);
+    console.log("PARTICIPATION => ", participation);
     if (!hunt || !participation) return null;
     const active = participation.progresses.find((p) => p.statut === 'IN_PROGRESS');
+    console.log("ACTIVE -> ", active)
     if (!active) return null;
-    return (hunt.steps.find((s) => s.id === active.refStep) as StepWithCoords) ?? null;
+    const step = hunt.steps.find((s) => s.id === active.refStep);
+    console.log("CURRENT STEP : ", step)
+    return step as StepWithCoords ?? null;
   }, [hunt, participation]);
 
   // Haversine geofence check
