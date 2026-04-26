@@ -32,13 +32,63 @@ services:
     environment:
       - PORT=8000
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+      - S3_ENDPOINT=http://minio:9000
+      - S3_PUBLIC_URL=http://localhost:9000
+      - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
+      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
+      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_REGION=us-east-1
     depends_on:
       db:
+        condition: service_healthy
+      minio:
         condition: service_healthy
     networks:
       - lootopia-network
     command: sh -c "npm run db:dev && cd apps/api && npm run start"
     restart: unless-stopped
+
+  minio:
+    container_name: lootopia_minio
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - lootopia-minio:/data
+    networks:
+      - lootopia-network
+    restart: unless-stopped
+
+  minio-init:
+    container_name: lootopia_minio_init
+    image: minio/mc
+    # Profil "init" : exclu du `docker compose up` par défaut.
+    # `--wait` ne marche pas avec des conteneurs oneshot (qui exit 0 volontairement).
+    # On l'orchestre explicitement dans le Makefile, avant le up --wait du reste.
+    profiles: ["init"]
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - lootopia-network
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} &&
+      mc mb --ignore-existing local/${MINIO_BUCKET:-lootopia-public} &&
+      mc anonymous set download local/${MINIO_BUCKET:-lootopia-public}
+      "
+    restart: "no"
 
   web:
     container_name: lootopia_web
@@ -47,12 +97,17 @@ services:
       dockerfile: apps/web/Dockerfile
       args:
         - NEXT_PUBLIC_API_URL=http://localhost:8000
+        - NEXT_PUBLIC_ASSETS_BASE_URL=/assets
+        - MINIO_INTERNAL_URL=http://minio:9000
+        - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
     ports:
       - "3000:3000"
     environment:
       - API_URL=http://api:8000
       - HOSTNAME=0.0.0.0
       - PORT=3000
+      - MINIO_INTERNAL_URL=http://minio:9000
+      - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
     depends_on:
       - api
     networks:
@@ -66,13 +121,18 @@ services:
       dockerfile: apps/pwa/Dockerfile
       args:
         - NEXT_PUBLIC_API_URL=/api
+        - NEXT_PUBLIC_ASSETS_BASE_URL=/assets
         - API_URL=http://api:8000
+        - MINIO_INTERNAL_URL=http://minio:9000
+        - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
     ports:
       - "3001:3001"
     environment:
       - API_URL=http://api:8000
       - HOSTNAME=0.0.0.0
       - PORT=3001
+      - MINIO_INTERNAL_URL=http://minio:9000
+      - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
     depends_on:
       - api
     networks:
@@ -100,4 +160,6 @@ networks:
 
 volumes:
   lootopia-data:
+    driver: local
+  lootopia-minio:
     driver: local

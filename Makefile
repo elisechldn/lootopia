@@ -11,10 +11,12 @@ build:
 
 ## Lance les conteneurs en arrière-plan et attend que la BDD soit prête
 start:
-	docker compose up -d --wait
+	docker compose --profile init up -d --build minio-init
+	docker compose up -d --build --wait
 
 ## Arrête et supprime les conteneurs et les volumes
 stop:
+	docker compose --profile init down -v
 	docker compose down -v
 
 ## Réinitialise le schéma et les données sans reconstruire les images
