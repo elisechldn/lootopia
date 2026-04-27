@@ -10,21 +10,21 @@ export default function ViewToggle() {
   const [view, setView] = useState<"list" | "map">("list");
 
   return (
-    <div>
+    <div className="w-full p-4 space-y-4">
       <ToggleGroup
         variant="outline"
         defaultValue={["list"]}
-        className="w-max"
+        className="flex w-full rounded-lg p-1 bg-gray-200"
         aria-label="View toggle"
         onValueChange={(val) => {
           if (val) setView(val as unknown as "list" | "map");
         }}
       >
-        <ToggleGroupItem value="list">
-          <List></List>List
+        <ToggleGroupItem value="list" className="flex-1 border-none data-[state=on]:bg-white data-[state=on]:shadow-md">
+          <List /> List
         </ToggleGroupItem>
-        <ToggleGroupItem value="map">
-          <Map></Map>Map
+        <ToggleGroupItem value="map" className="flex-1 border-none data-[state=on]:bg-white data-[state=on]:shadow-md">
+          <Map /> Map
         </ToggleGroupItem>
       </ToggleGroup>
       {view === "list" ? <HuntList /> : <HuntMap />}
