@@ -45,6 +45,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.clueUsage;
   }
 
+  get arItem() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.prisma.arItem;
+  }
+
   $queryRaw<T = unknown>(
     query: TemplateStringsArray | Prisma.Sql,
     ...values: unknown[]

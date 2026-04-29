@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ParticipationsModule } from './participations/participations.module';
 import { StorageModule } from './storage/storage.module';
 import { FilesModule } from './storage/files/files.module';
+import { ArItemModule } from './ar-item/ar-item.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { FilesModule } from './storage/files/files.module';
     ParticipationsModule,
     StorageModule,
     FilesModule,
+    ArItemModule,
   ],
   controllers: [],
   providers: [PrismaService],

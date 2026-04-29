@@ -5,14 +5,15 @@ model Step {
   location     Unsupported("GEOGRAPHY(Point, 4326)")?
   radius       Int          @default(50)
   actionType   ActionType   @default(GPS)
-  arMarkerUrl  String?
   arContent    String?
   qrCodeValue  String?
   points       Int          @default(0)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   refHunt      Int
+  refArItem    String?
   hunt         Hunt         @relation(fields: [refHunt], references: [id], onDelete: Cascade)
+  arItem       ArItem?      @relation(fields: [refArItem], references: [id])
   clues        Clue[]
   progresses   Progress[]
 

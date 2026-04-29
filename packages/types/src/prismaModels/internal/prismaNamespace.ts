@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  ArItem: 'ArItem',
   ClueUsage: 'ClueUsage',
   Clue: 'Clue',
   Hunt: 'Hunt',
@@ -406,10 +407,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "clueUsage" | "clue" | "hunt" | "participation" | "progress" | "step" | "user"
+    modelProps: "arItem" | "clueUsage" | "clue" | "hunt" | "participation" | "progress" | "step" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    ArItem: {
+      payload: Prisma.$ArItemPayload<ExtArgs>
+      fields: Prisma.ArItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ArItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ArItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload>
+        }
+        findFirst: {
+          args: Prisma.ArItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ArItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload>
+        }
+        findMany: {
+          args: Prisma.ArItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload>[]
+        }
+        create: {
+          args: Prisma.ArItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload>
+        }
+        createMany: {
+          args: Prisma.ArItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ArItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload>[]
+        }
+        delete: {
+          args: Prisma.ArItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload>
+        }
+        update: {
+          args: Prisma.ArItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.ArItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ArItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ArItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.ArItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArItemPayload>
+        }
+        aggregate: {
+          args: Prisma.ArItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateArItem>
+        }
+        groupBy: {
+          args: Prisma.ArItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ArItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ArItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ArItemCountAggregateOutputType> | number
+        }
+      }
+    }
     ClueUsage: {
       payload: Prisma.$ClueUsagePayload<ExtArgs>
       fields: Prisma.ClueUsageFieldRefs
@@ -967,6 +1042,18 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ArItemScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  filepath: 'filepath',
+  hasAnimations: 'hasAnimations',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ArItemScalarFieldEnum = (typeof ArItemScalarFieldEnum)[keyof typeof ArItemScalarFieldEnum]
+
+
 export const ClueUsageScalarFieldEnum = {
   id: 'id',
   usedAt: 'usedAt',
@@ -1046,13 +1133,13 @@ export const StepScalarFieldEnum = {
   title: 'title',
   radius: 'radius',
   actionType: 'actionType',
-  arMarkerUrl: 'arMarkerUrl',
   arContent: 'arContent',
   qrCodeValue: 'qrCodeValue',
   points: 'points',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  refHunt: 'refHunt'
+  refHunt: 'refHunt',
+  refArItem: 'refArItem'
 } as const
 
 export type StepScalarFieldEnum = (typeof StepScalarFieldEnum)[keyof typeof StepScalarFieldEnum]
@@ -1107,16 +1194,23 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'String'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
     
 
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'String[]'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1135,16 +1229,16 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'String'
+ * Reference to a field of type 'Int'
  */
-export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
 /**
- * Reference to a field of type 'String[]'
+ * Reference to a field of type 'Int[]'
  */
-export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1326,6 +1420,7 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  arItem?: Prisma.ArItemOmit
   clueUsage?: Prisma.ClueUsageOmit
   clue?: Prisma.ClueOmit
   hunt?: Prisma.HuntOmit

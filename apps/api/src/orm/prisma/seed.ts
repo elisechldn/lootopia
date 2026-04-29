@@ -376,7 +376,6 @@ async function main() {
     title: string;
     radius: number;
     actionType: 'GPS' | 'QR_CODE' | 'AR' | 'RIDDLE';
-    arMarkerUrl?: string;
     arContent?: string;
     qrCodeValue?: string;
     points: number;
@@ -417,7 +416,6 @@ async function main() {
       actionType: 'AR',
       points: 200,
       refHunt: huntParis.id,
-      arMarkerUrl: 'https://assets.example.com/markers/notre-dame.png',
     },
     {
       orderNumber: 4,
@@ -451,7 +449,6 @@ async function main() {
       actionType: 'AR',
       points: 180,
       refHunt: huntLyon.id,
-      arMarkerUrl: 'https://assets.example.com/markers/fourviere.png',
     },
     {
       orderNumber: 3,
@@ -498,7 +495,6 @@ async function main() {
       actionType: 'AR',
       points: 150,
       refHunt: huntStrasbourg.id,
-      arMarkerUrl: 'https://assets.example.com/markers/strasbourg.png',
     },
     {
       orderNumber: 2,
@@ -542,7 +538,6 @@ async function main() {
       actionType: 'AR',
       points: 180,
       refHunt: huntMarseille.id,
-      arMarkerUrl: 'https://assets.example.com/markers/bonne-mere.png',
     },
 
     // Mont-Saint-Michel
@@ -566,7 +561,6 @@ async function main() {
       actionType: 'AR',
       points: 250,
       refHunt: huntMSM.id,
-      arMarkerUrl: 'https://assets.example.com/markers/abbaye.png',
     },
     {
       orderNumber: 3,
@@ -645,7 +639,6 @@ async function main() {
       actionType: 'AR',
       points: 200,
       refHunt: huntVersailles.id,
-      arMarkerUrl: 'https://assets.example.com/markers/versailles.png',
     },
     {
       orderNumber: 2,
@@ -743,7 +736,6 @@ async function main() {
       title: s.title,
       radius: s.radius,
       actionType: s.actionType,
-      arMarkerUrl: s.arMarkerUrl ?? null,
       arContent: s.arContent ?? null,
       qrCodeValue: s.qrCodeValue ?? null,
       points: s.points,

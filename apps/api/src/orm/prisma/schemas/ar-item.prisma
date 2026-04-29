@@ -1,0 +1,10 @@
+model ArItem {
+  id            String   @id @default(uuid())
+  filename      String
+  filepath      String   @unique
+  hasAnimations Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  steps Step[]
+}

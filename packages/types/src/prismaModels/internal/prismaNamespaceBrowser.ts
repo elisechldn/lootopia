@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  ArItem: 'ArItem',
   ClueUsage: 'ClueUsage',
   Clue: 'Clue',
   Hunt: 'Hunt',
@@ -74,6 +75,18 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const ArItemScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  filepath: 'filepath',
+  hasAnimations: 'hasAnimations',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ArItemScalarFieldEnum = (typeof ArItemScalarFieldEnum)[keyof typeof ArItemScalarFieldEnum]
 
 
 export const ClueUsageScalarFieldEnum = {
@@ -155,13 +168,13 @@ export const StepScalarFieldEnum = {
   title: 'title',
   radius: 'radius',
   actionType: 'actionType',
-  arMarkerUrl: 'arMarkerUrl',
   arContent: 'arContent',
   qrCodeValue: 'qrCodeValue',
   points: 'points',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  refHunt: 'refHunt'
+  refHunt: 'refHunt',
+  refArItem: 'refArItem'
 } as const
 
 export type StepScalarFieldEnum = (typeof StepScalarFieldEnum)[keyof typeof StepScalarFieldEnum]

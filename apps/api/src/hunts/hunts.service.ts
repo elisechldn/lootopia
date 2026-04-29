@@ -46,18 +46,28 @@ export class HuntsService {
                   'title', s.title,
                   'radius', s.radius,
                   'actionType', s."actionType",
-                  'arMarkerUrl', s."arMarkerUrl",
                   'arContent', s."arContent",
                   'qrCodeValue', s."qrCodeValue",
                   'points', s.points,
                   'createdAt', s."createdAt",
                   'updatedAt', s."updatedAt",
                   'refHunt', s."refHunt",
+                  'refArItem', s."refArItem",
                   'latitude', ST_Y(s.location::geometry),
-                  'longitude', ST_X(s.location::geometry)
+                  'longitude', ST_X(s.location::geometry),
+                  'arItem', CASE
+                    WHEN ai.id IS NOT NULL THEN json_build_object(
+                      'id', ai.id,
+                      'filename', ai.filename,
+                      'filepath', ai.filepath,
+                      'hasAnimations', ai."hasAnimations"
+                    )
+                    ELSE NULL
+                  END
                 ) ORDER BY s."orderNumber" ASC
               )
               FROM "Step" s
+              LEFT JOIN "ArItem" ai ON ai.id = s."refArItem"
               WHERE s."refHunt" = h.id
             ),
             '[]'::json
@@ -263,8 +273,8 @@ export class HuntsService {
         title: String(s.title || `Étape ${i + 1}`),
         radius: Number(s.radius ?? 50),
         actionType: String(s.actionType ?? 'QR_CODE') as never,
-        arMarkerUrl: s.arMarkerUrl ? String(s.arMarkerUrl) : null,
         arContent: s.arContent ? String(s.arContent) : null,
+        refArItem: s.refArItem ? String(s.refArItem) : null,
         qrCodeValue: s.qrCodeValue ? String(s.qrCodeValue) : null,
         points: Number(s.points ?? 0),
       })),
