@@ -28,9 +28,7 @@ export class ArItemService {
 
   async upload(userId: number, file: Express.Multer.File) {
     this.validateFile(file);
-
-    const uuid = randomUUID();
-    const filepath = `ar-items/${uuid}/${file.originalname}`;
+    const filepath = `partners/${userId}/ar-items/${file.originalname}-${randomUUID()}`;
 
     await this.storage.uploadObject(filepath, file.buffer, file.mimetype);
 
