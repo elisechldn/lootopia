@@ -138,7 +138,6 @@ export default function ARScene({ hunt, huntId, participationId, stepId }: Props
 
       const steps = data.data.steps;
       if (!steps) return;
-
       const targetStep = stepId
         ? steps.find((s) => s.id === stepId)
         : steps[0];
@@ -147,7 +146,6 @@ export default function ARScene({ hunt, huntId, participationId, stepId }: Props
 
       const properties = { name: targetStep.title };
       let object3d: THREE.Object3D;
-
       const glbUrl = targetStep.arItem?.filepath ? assetUrl(targetStep.arItem.filepath) : null;
       console.log("glbUrl => ", glbUrl);
       if (glbUrl) {
@@ -162,6 +160,17 @@ export default function ARScene({ hunt, huntId, participationId, stepId }: Props
               mixer.clipAction(animationClip).play();
             })
           }
+
+          // Normalization of scale: ensure all objects are roughly the same size (~1 meter)
+          const box = new THREE.Box3().setFromObject(gltf.scene);
+          const size = box.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scale = maxDim > 0 ? 1 / maxDim : 1;
+          gltf.scene.scale.multiplyScalar(scale);
+
+          // Y-alignment: position the base of the object at Y=0
+          const alignedBox = new THREE.Box3().setFromObject(gltf.scene);
+          gltf.scene.position.y = -alignedBox.min.y;
 
           object3d = wrapWithHitTarget(gltf.scene);
         } catch (err) {
