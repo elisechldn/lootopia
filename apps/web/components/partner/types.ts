@@ -1,4 +1,4 @@
-import type { HuntModel, StepModel } from "@repo/types";
+import type { HuntModel, StepModel, ArItem } from "@repo/types";
 
 export type Hunt = Pick<HuntModel, "id" | "title" | "shortDescription" | "description" | "status" | "rewardType" | "rewardValue" | "coverImage" > & {
     difficulty: string | null;
@@ -19,15 +19,14 @@ export interface HuntStats {
     players: number;
 }
 
-export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionType" | "points"> & {
+export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionType" | "points" > & {
     id?: number;
-    clue: string;
+    clue?: string;
     latitude?: number | null;
     longitude?: number | null;
-    qrCode: string | null;
-    // Transient: fichier .glb sélectionné, uploadé puis remplacé par refArItem.
-    // Strippé avant l'envoi à l'API.
-    _arContentFile?: File | null;
+    qrCode?: string | null;
     refArItem?: string | null;
+    arItem?: ArItem | null;
+    _arContentFile?: File | null;
     arItemFilename?: string | null;
 }

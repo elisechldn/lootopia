@@ -28,7 +28,8 @@ export default function HuntForm({ initialData }: Props) {
             radius: s.radius,
             actionType: s.actionType,
             refArItem: s.refArItem ?? null,
-            arItemFilename: null,
+            arItem: s.arItem ?? null,
+            arItemFilename: s.arItem?.filename ?? null,
             qrCode: s.qrCode ?? null,
             points: s.points,
         })) ?? []
