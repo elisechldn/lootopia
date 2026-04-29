@@ -31,7 +31,7 @@ export default function ArItemPicker({ step, onChange }: Omit<ArItemPickerProps,
                 : "text-muted-foreground hover:text-foreground/80"
             }`}
           >
-            ✓ Actuel
+            Item Actuel
           </button>
         )}
         <button
@@ -43,7 +43,7 @@ export default function ArItemPicker({ step, onChange }: Omit<ArItemPickerProps,
               : "text-muted-foreground hover:text-foreground/80"
           }`}
         >
-          Uploader
+          Télécharger un nouvel item
         </button>
         <button
           type="button"
