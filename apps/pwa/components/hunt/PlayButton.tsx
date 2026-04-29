@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Play } from 'lucide-react';
-import { Button }        from '@/components/ui/button';
+import { Button }        from '@/components/ui/Button';
 import { useUserStore }  from '@/store/userStore';
 import { startHunt } from '@/services/participation.service';
 
