@@ -80,7 +80,6 @@ export default function ArItemLibrary({ onSelect, selectedId }: ArItemLibraryPro
     return (
       <div className="py-8 flex flex-col items-center justify-center text-muted-foreground/70 text-sm">
         <p>Aucun asset AR dans votre bibliothèque.</p>
-        <p className="text-xs mt-1">Uploadez un fichier .glb via l&apos;onglet &quot;Uploader&quot;.</p>
       </div>
     );
   }
