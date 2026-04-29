@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Step } from "./types";
+import ArItemPicker from "./ArItemPicker/ArItemPicker";
 
 const StepMap = dynamic(() => import("./StepMap"), {
     ssr: false,
@@ -44,7 +45,6 @@ export default function StepsTab({ steps, onChange }: Props) {
     const [openIndex, setOpenIndex] = useState<number | null>(
         steps.length > 0 ? steps.length - 1 : null
     );
-    const glbInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     const addStep = () => {
         const newStep = emptyStep(steps.length + 1);
@@ -187,48 +187,16 @@ export default function StepsTab({ steps, onChange }: Props) {
 
                                 {/* Item 3D — visible uniquement en mode AR */}
                                 {step.actionType === "AR" && (
-                                    <div className="space-y-3">
-                                        <div>
-											<label className="block text-xs font-medium text-muted-foreground mb-1">
-                                                Item 3D
-                                            </label>
-                                            <input
-                                                ref={(el) => { glbInputRefs.current[index] = el; }}
-                                                type="file"
-                                                accept=".glb,model/gltf-binary"
-                                                className="hidden"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (file) {
-                                                        const updated = steps.map((s, i) =>
-                                                            i === index
-                                                                ? { ...s, arContent: file.name, _arContentFile: file }
-                                                                : s
-                                                        );
-                                                        onChange(updated);
-                                                    }
-                                                }}
-                                            />
-                                            <div
-                                                onClick={() => glbInputRefs.current[index]?.click()}
-                                                className="border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
-                                            >
-                                                {step.arContent ? (
-                                                    <p className="text-sm text-foreground/80 font-medium truncate max-w-full">
-                                                        {step._arContentFile ? step.arContent : step.arContent.split('/').pop()}
-                                                    </p>
-                                                ) : (
-                                                    <>
-                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7 text-muted-foreground/70">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
-                                                        </svg>
-                                                        <p className="text-sm text-muted-foreground">Téléchargez un item 3D</p>
-                                                        <p className="text-xs text-muted-foreground/70">format : .glb</p>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <ArItemPicker
+                                        stepIndex={index}
+                                        step={step}
+                                        onChange={(partial) => {
+                                            const updated = steps.map((s, i) =>
+                                                i === index ? { ...s, ...partial } : s
+                                            );
+                                            onChange(updated);
+                                        }}
+                                    />
                                 )}
 
                                 {/* QR Code */}

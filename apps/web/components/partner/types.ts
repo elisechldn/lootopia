@@ -28,4 +28,5 @@ export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionT
     // Transient: fichier .glb sélectionné, uploadé puis remplacé par la clé S3 dans arContent.
     // Strippé avant l'envoi à l'API.
     _arContentFile?: File | null;
+    refArItem?: string | null;
 }

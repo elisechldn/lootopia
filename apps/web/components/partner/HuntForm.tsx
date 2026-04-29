@@ -136,9 +136,16 @@ export default function HuntForm({ initialData }: Props) {
                 try {
                     preparedSteps = await Promise.all(
                         steps.map(async (s) => {
-                            if (!s._arContentFile) return s;
-                            const uploaded = await uploadFile(s._arContentFile, "ar-model");
-                            return { ...s, arContent: uploaded.key, _arContentFile: null };
+                            if (s._arContentFile) {
+                                const formData = new FormData();
+                                formData.append("file", s._arContentFile);
+                                const res = await fetch("/api/ar-items", { method: "POST", body: formData });
+                                if (!res.ok) throw new Error("Échec de l'upload de l'item AR");
+                                const json = await res.json() as { data: { id: string; filename: string; filepath: string } };
+                                const arItem = json.data;
+                                return { ...s, refArItem: arItem.id, arContent: arItem.filepath, _arContentFile: null };
+                            }
+                            return s;
                         }),
                     );
                 } catch (err) {
