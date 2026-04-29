@@ -52,6 +52,7 @@ function wrapWithHitTarget(object: THREE.Object3D): THREE.Mesh {
 type StepWithCoords = HuntGetPayload<{ include: { steps: true }; }>['steps'][number] & {
   latitude?: number | null;
   longitude?: number | null;
+  arItem?: { id: string; filepath: string; filename: string; hasAnimations: boolean } | null;
 };
 
 type HuntWithSteps = Omit<HuntGetPayload<{ include: { steps: true } }>, 'steps'> & {
@@ -147,7 +148,7 @@ export default function ARScene({ hunt, huntId, participationId, stepId }: Props
       const properties = { name: targetStep.title };
       let object3d: THREE.Object3D;
 
-      const glbUrl = assetUrl(targetStep.arContent);
+      const glbUrl = targetStep.arItem?.filepath ? assetUrl(targetStep.arItem.filepath) : null;
       console.log("glbUrl => ", glbUrl);
       if (glbUrl) {
         try {

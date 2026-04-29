@@ -46,10 +46,10 @@ export default function ArItemPicker({ step, onChange }: Omit<ArItemPickerProps,
 
       {mode === "upload" && (
         <ArItemUploader
-          arContent={step.arContent}
+          arItemFilename={step.arItemFilename ?? null}
           arContentFile={step._arContentFile ?? null}
           onChange={(file) =>
-            onChange({ arContent: file.name, _arContentFile: file, refArItem: null })
+            onChange({ arItemFilename: file.name, _arContentFile: file, refArItem: null })
           }
         />
       )}
@@ -58,7 +58,7 @@ export default function ArItemPicker({ step, onChange }: Omit<ArItemPickerProps,
         <ArItemLibrary
           selectedId={step.refArItem}
           onSelect={(item) =>
-            onChange({ refArItem: item.id, arContent: item.filename, _arContentFile: null })
+            onChange({ refArItem: item.id, arItemFilename: item.filename, _arContentFile: null })
           }
         />
       )}

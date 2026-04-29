@@ -376,7 +376,6 @@ async function main() {
     title: string;
     radius: number;
     actionType: 'GPS' | 'QR_CODE' | 'AR' | 'RIDDLE';
-    arContent?: string;
     qrCodeValue?: string;
     points: number;
     refHunt: number;
@@ -736,7 +735,6 @@ async function main() {
       title: s.title,
       radius: s.radius,
       actionType: s.actionType,
-      arContent: s.arContent ?? null,
       qrCodeValue: s.qrCodeValue ?? null,
       points: s.points,
       refHunt: s.refHunt,

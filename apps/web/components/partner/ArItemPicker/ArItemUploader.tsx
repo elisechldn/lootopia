@@ -3,12 +3,12 @@
 import { useRef } from "react";
 
 interface ArItemUploaderProps {
-  arContent: string | null;
+  arItemFilename: string | null;
   arContentFile: File | null;
   onChange: (file: File) => void;
 }
 
-export default function ArItemUploader({ arContent, arContentFile, onChange }: ArItemUploaderProps) {
+export default function ArItemUploader({ arItemFilename, arContentFile, onChange }: ArItemUploaderProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   return (
@@ -27,9 +27,9 @@ export default function ArItemUploader({ arContent, arContentFile, onChange }: A
         onClick={() => inputRef.current?.click()}
         className="border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
       >
-        {arContent ? (
+        {arItemFilename ? (
           <p className="text-sm text-foreground/80 font-medium truncate max-w-full">
-            {arContentFile ? arContent : arContent.split("/").pop()}
+            {arContentFile ? arItemFilename : arItemFilename.split("/").pop()}
           </p>
         ) : (
           <>

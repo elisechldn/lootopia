@@ -27,7 +27,8 @@ export default function HuntForm({ initialData }: Props) {
             longitude: s.longitude ?? null,
             radius: s.radius,
             actionType: s.actionType,
-            arContent: s.arContent ?? null,
+            refArItem: s.refArItem ?? null,
+            arItemFilename: null,
             qrCode: s.qrCode ?? null,
             points: s.points,
         })) ?? []
@@ -143,7 +144,7 @@ export default function HuntForm({ initialData }: Props) {
                                 if (!res.ok) throw new Error("Échec de l'upload de l'item AR");
                                 const json = await res.json() as { data: { id: string; filename: string; filepath: string } };
                                 const arItem = json.data;
-                                return { ...s, refArItem: arItem.id, arContent: arItem.filepath, _arContentFile: null };
+                                return { ...s, refArItem: arItem.id, arItemFilename: arItem.filename, _arContentFile: null };
                             }
                             return s;
                         }),

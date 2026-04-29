@@ -168,7 +168,6 @@ export const StepScalarFieldEnum = {
   title: 'title',
   radius: 'radius',
   actionType: 'actionType',
-  arContent: 'arContent',
   qrCodeValue: 'qrCodeValue',
   points: 'points',
   createdAt: 'createdAt',

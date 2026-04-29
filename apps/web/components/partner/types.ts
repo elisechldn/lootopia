@@ -19,14 +19,15 @@ export interface HuntStats {
     players: number;
 }
 
-export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionType" | "arContent" | "points"> & {
+export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionType" | "points"> & {
     id?: number;
     clue: string;
     latitude?: number | null;
     longitude?: number | null;
     qrCode: string | null;
-    // Transient: fichier .glb sélectionné, uploadé puis remplacé par la clé S3 dans arContent.
+    // Transient: fichier .glb sélectionné, uploadé puis remplacé par refArItem.
     // Strippé avant l'envoi à l'API.
     _arContentFile?: File | null;
     refArItem?: string | null;
+    arItemFilename?: string | null;
 }

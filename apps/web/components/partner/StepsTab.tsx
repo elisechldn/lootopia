@@ -35,7 +35,8 @@ function emptyStep(orderNumber: number): Step {
         clue: "",
         radius: 50,
         actionType: "QR_CODE",
-        arContent: null,
+        refArItem: null,
+        arItemFilename: null,
         qrCode: null,
         points: 0,
     };
