@@ -1,4 +1,4 @@
-import type { HuntModel, StepModel, ArItem } from "@repo/types";
+import type { HuntModel, StepModel, ArItem, Clue } from "@repo/types";
 
 export type Hunt = Pick<HuntModel, "id" | "title" | "shortDescription" | "description" | "status" | "rewardType" | "rewardValue" | "coverImage" > & {
     difficulty: string | null;
@@ -19,9 +19,9 @@ export interface HuntStats {
     players: number;
 }
 
-export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionType" | "points" > & {
+export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionType" | "points"> & {
     id?: number;
-    clue?: string;
+    clues: Clue[];
     latitude?: number | null;
     longitude?: number | null;
     qrCode?: string | null;

@@ -17,12 +17,11 @@ interface Props {
 }
 
 export default function HuntForm({ initialData }: Props) {
-    const [steps, setSteps] = useState<Step[]>(
-        initialData?.steps?.map((s) => ({
+    const [steps, setSteps] = useState<Step[]>( initialData?.steps?.map((s) => ({
             id: s.id,
             orderNumber: s.orderNumber,
             title: s.title,
-            clue: s.clue ?? "",
+            clues: s.clues ?? [],
             latitude: s.latitude ?? null,
             longitude: s.longitude ?? null,
             radius: s.radius,
@@ -57,12 +56,12 @@ export default function HuntForm({ initialData }: Props) {
         // difficulty: initialData?.difficulty ?? "Intermédiaire",
         rewardType: initialData?.rewardType ?? "DISCOUNT_CODE",
         rewardValue: initialData?.rewardValue ?? "",
+        steps: initialData?.steps ?? []
     });
     const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
 
-    const set = (field: string, value: string) =>
-        setForm((prev) => ({ ...prev, [field]: value }));
+    const set = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
 
     const addTag = () => {
         const trimmed = tagInput.trim();
@@ -72,8 +71,7 @@ export default function HuntForm({ initialData }: Props) {
         setTagInput("");
     };
 
-    const removeTag = (tag: string) =>
-        setTags((prev) => prev.filter((t) => t !== tag));
+    const removeTag = (tag: string) => setTags((prev) => prev.filter((t) => t !== tag));
 
     const handleSave = async (nextStatus?: Status) => {
         setError(null);
@@ -111,7 +109,8 @@ export default function HuntForm({ initialData }: Props) {
             coverImage: nextCoverKey,
             refUser: user?.sub,
         };
-
+        console.log("payload -> ", payload);
+        console.log("steps -> ", steps);
         try {
             const url = isEditing
                 ? `${process.env.NEXT_PUBLIC_API_URL}/hunts/${initialData!.id}`
@@ -160,6 +159,7 @@ export default function HuntForm({ initialData }: Props) {
                     void _arContentFile;
                     return rest;
                 });
+
                 await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hunts/${huntId}/steps`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -244,7 +244,8 @@ export default function HuntForm({ initialData }: Props) {
                                 </label>
                                 <input value={form.title} onChange={(e) => set("title", e.target.value)}
                                        placeholder="Titre de la chasse"
-                                       className="w-full px-4 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />
+                                       className="w-full px-4 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+                                />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-foreground/80 mb-1">
