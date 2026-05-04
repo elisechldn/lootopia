@@ -9,6 +9,7 @@ import { ParticipationsModule } from './participations/participations.module';
 import { StorageModule } from './storage/storage.module';
 import { FilesModule } from './storage/files/files.module';
 import { ArItemModule } from './ar-item/ar-item.module';
+import { CluesModule } from './clues/clues.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ArItemModule } from './ar-item/ar-item.module';
     StorageModule,
     FilesModule,
     ArItemModule,
+    CluesModule,
   ],
   controllers: [],
   providers: [PrismaService],

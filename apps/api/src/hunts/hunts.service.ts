@@ -54,6 +54,18 @@ export class HuntsService {
                   'refArItem', s."refArItem",
                   'latitude', ST_Y(s.location::geometry),
                   'longitude', ST_X(s.location::geometry),
+                  'clues', COALESCE((
+                    SELECT json_agg(
+                       json_build_object(
+                           'id', c.id,
+                           'message', c.message,
+                           'penaltyCost', c."penaltyCost",
+                           'orderNumber', c."orderNumber"
+                       )
+                    )
+                    FROM "Clue" c
+                    WHERE c."refStep" = s.id
+                  ), '[]'::json),
                   'arItem', CASE
                     WHEN ai.id IS NOT NULL THEN json_build_object(
                       'id', ai.id,
@@ -278,24 +290,33 @@ export class HuntsService {
       })),
     });
 
-    // Inject PostGIS coordinates for steps that provide lat/lon
+    // Inject PostGIS coordinates and clues for each step
     for (const s of steps) {
+      const step = await this.prisma.step.findFirst({
+        where: { refHunt: huntId, orderNumber: Number(s.orderNumber) },
+      });
+      if (!step) continue;
+
       if (s.latitude != null && s.longitude != null) {
-        const step = await this.prisma.step.findFirst({
-          where: {
-            refHunt: huntId,
-            orderNumber: Number(s.orderNumber),
-          },
+        await this.prisma.$executeRaw(
+          Prisma.sql`
+            UPDATE "Step"
+            SET "location" = ST_MakePoint(${Number(s.longitude)}, ${Number(s.latitude)})::geography
+            WHERE id = ${step.id}
+          `,
+        );
+      }
+
+      const clues = s.clues as Array<{ message: string; penaltyCost?: number; orderNumber?: number }> | undefined;
+      if (Array.isArray(clues) && clues.length > 0) {
+        await this.prisma.clue.createMany({
+          data: clues.map((c, i) => ({
+            message: String(c.message),
+            penaltyCost: Number(c.penaltyCost ?? 0),
+            orderNumber: Number(c.orderNumber ?? i + 1),
+            refStep: step.id,
+          })),
         });
-        if (step) {
-          await this.prisma.$executeRaw(
-            Prisma.sql`
-              UPDATE "Step"
-              SET "location" = ST_MakePoint(${Number(s.longitude)}, ${Number(s.latitude)})::geography
-              WHERE id = ${step.id}
-            `,
-          );
-        }
       }
     }
 

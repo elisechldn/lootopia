@@ -81,11 +81,16 @@ export class ParticipationsService {
           },
         },
         progresses: {
-          select: {
-            totalPoints: true,
-            statut: true,
-            completedAt: true,
-            refStep: true,
+          include: {
+            step: {
+              select: {
+                id: true,
+                orderNumber: true,
+                title: true,
+                actionType: true,
+                points: true,
+              },
+            },
           },
         },
       },

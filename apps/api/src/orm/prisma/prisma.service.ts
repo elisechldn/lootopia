@@ -31,23 +31,27 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   }
 
   get progress() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.prisma.progress;
   }
 
   get clue() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.prisma.clue;
   }
 
   get clueUsage() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.prisma.clueUsage;
   }
 
   get arItem() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.prisma.arItem;
+  }
+
+  $transaction<T>(
+    fn: (tx: Omit<PrismaService, '$transaction'>) => Promise<T>,
+  ): Promise<T> {
+    return this.prisma.$transaction((tx) =>
+      fn(tx as unknown as Omit<PrismaService, '$transaction'>),
+    );
   }
 
   $queryRaw<T = unknown>(
