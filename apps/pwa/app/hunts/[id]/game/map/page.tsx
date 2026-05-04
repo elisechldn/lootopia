@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Navigation, Trophy, Loader2 } from 'lucide-react';
@@ -8,6 +8,7 @@ import { getHuntById } from '@/services/hunt.service';
 import { getParticipationById, type GameParticipation } from '@/services/participation.service';
 import { haversineDistance, formatDistance } from '@/lib/geo';
 import type { HuntGetPayload } from '@repo/types';
+import HintBubbles from '@/components/game/hints/HintBubbles';
 
 const GameLeafletMap = dynamic(() => import('@/components/game/GameLeafletMap'), { ssr: false });
 
@@ -33,6 +34,7 @@ export default function GameMapPage({ params }: Props) {
   const [userCoords, setUserCoords] = useState<{ lat: number; lon: number } | null>(null);
   const [inZone, setInZone] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [, startClueTransition] = useTransition();
 
   // Fetch hunt + participation
   useEffect(() => {
@@ -77,6 +79,12 @@ export default function GameMapPage({ params }: Props) {
     return step as StepWithCoords ?? null;
   }, [hunt, participation]);
 
+  // Current active progress
+  const currentProgress = useMemo(() => {
+    if (!participation) return null;
+    return participation.progresses.find((p) => p.statut === 'IN_PROGRESS') ?? null;
+  }, [participation]);
+
   // Haversine geofence check
   useEffect(() => {
     if (!userCoords || !currentStep?.latitude || !currentStep?.longitude) return;
@@ -102,6 +110,15 @@ export default function GameMapPage({ params }: Props) {
   const handleEnterAR = () => {
     if (!currentStep || !inZone) return;
     router.push(`/hunts/${huntId}/game/ar?participationId=${participationId}&stepId=${currentStep.id}`);
+  };
+
+  // Refresh participation after last clue reveal
+  const handleProgressChanged = () => {
+    if (!participationId) return;
+    startClueTransition(async () => {
+      const updated = await getParticipationById(+participationId);
+      setParticipation(updated);
+    });
   };
 
   // Hunt completed (no more IN_PROGRESS step)
@@ -141,6 +158,13 @@ export default function GameMapPage({ params }: Props) {
       {/* Top half — Leaflet map */}
       <div className="relative h-1/2 w-full">
         <GameLeafletMap userCoords={userCoords} />
+        {currentProgress && (
+          <HintBubbles
+            progressId={currentProgress.id}
+            totalPoints={currentProgress.totalPoints}
+            onProgressChanged={handleProgressChanged}
+          />
+        )}
       </div>
 
       {/* Bottom half — info + action */}

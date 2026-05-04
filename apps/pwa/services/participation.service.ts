@@ -63,8 +63,10 @@ export async function requestClue(participationId: number, stepId: number, clueI
   return unwrap(res, await res.json()) as { clue: string; alreadyUsed: boolean; penaltyCost?: number };
 }
 
-export async function getMyParticipations(userId: number) {
-  const res = await fetch(`${API_URL}/participations/me?userId=${userId}`);
+export async function getMyParticipations(token: string) {
+  const res = await fetch(`${API_URL}/participations/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   if (!res.ok) return [];
   return unwrap(res, await res.json()) as unknown[];
 }

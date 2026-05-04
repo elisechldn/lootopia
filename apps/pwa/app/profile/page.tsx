@@ -6,7 +6,7 @@ import { LogOut, Trophy, CheckCircle, Clock } from 'lucide-react';
 import TopBar                                 from '@/components/ui/TobBar/TopBar';
 import TabNavigation                          from '@/components/ui/TabNavigation/TabNavigation';
 import { useUserStore } from '@/store/userStore';
-import { getMyParticipations } from '@/services/participation.service';
+import { getMyParticipationsAction } from '@/lib/actions/participation.actions';
 import { logoutAction } from '@/lib/actions/auth.actions';
 import { assetUrl } from '@/lib/assets';
 import { type Prisma } from '@repo/types';
@@ -52,8 +52,8 @@ export default function ProfilePage() {
       router.replace('/login');
       return;
     }
-    getMyParticipations(user.id).then((data) => {
-      setParticipations(data as Participation[]);
+    getMyParticipationsAction().then((data) => {
+      setParticipations(data as unknown as Participation[]);
       setLoading(false);
     });
   }, []);
