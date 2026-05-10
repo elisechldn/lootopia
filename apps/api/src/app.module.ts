@@ -10,6 +10,7 @@ import { StorageModule } from './storage/storage.module';
 import { FilesModule } from './storage/files/files.module';
 import { ArItemModule } from './ar-item/ar-item.module';
 import { CluesModule } from './clues/clues.module';
+import { StepsModule } from './steps/steps.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CluesModule } from './clues/clues.module';
     FilesModule,
     ArItemModule,
     CluesModule,
+    StepsModule,
   ],
   controllers: [],
   providers: [PrismaService],
