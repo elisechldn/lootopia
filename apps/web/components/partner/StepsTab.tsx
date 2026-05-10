@@ -26,11 +26,15 @@ function emptyStep(orderNumber: number): Step {
         title: "",
         clues: [],
         radius: 50,
-        actionType: "QR_CODE",
         refArItem: null,
         arItemFilename: null,
         qrCode: null,
         points: 0,
+        arMode: "GPS",
+        _markerFile: null,
+        _markerPatternFile: null,
+        markerImageUrl: null,
+        markerPatternUrl: null,
     };
 }
 

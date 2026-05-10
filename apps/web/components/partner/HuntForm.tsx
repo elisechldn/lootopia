@@ -25,12 +25,16 @@ export default function HuntForm({ initialData }: Props) {
             latitude: s.latitude ?? null,
             longitude: s.longitude ?? null,
             radius: s.radius,
-            actionType: s.actionType,
             refArItem: s.refArItem ?? null,
             arItem: s.arItem ?? null,
             arItemFilename: s.arItem?.filename ?? null,
             qrCode: s.qrCode ?? null,
             points: s.points,
+            arMode: (s as { arMode?: "GPS" | "MARKER" }).arMode ?? "GPS",
+            _markerFile: null,
+            _markerPatternFile: null,
+            markerImageUrl: (s as { markerImageUrl?: string | null }).markerImageUrl ?? null,
+            markerPatternUrl: (s as { markerPatternUrl?: string | null }).markerPatternUrl ?? null,
         })) ?? []
     );
     const isEditing = !!initialData;
@@ -155,16 +159,43 @@ export default function HuntForm({ initialData }: Props) {
                 }
                 setSteps(preparedSteps);
 
-                const stepsPayload = preparedSteps.map(({ _arContentFile, ...rest }) => {
+                const stepsPayload = preparedSteps.map(({ _arContentFile, _markerFile, _markerPatternFile, ...rest }) => {
                     void _arContentFile;
+                    void _markerFile;
+                    void _markerPatternFile;
                     return rest;
                 });
 
-                await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hunts/${huntId}/steps`, {
+                const stepsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hunts/${huntId}/steps`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ steps: stepsPayload }),
                 });
+
+                // Upload marker files for MARKER-mode steps
+                if (stepsRes.ok) {
+                    const stepsJson = await stepsRes.json() as { data: Array<{ id: number; orderNumber: number }> };
+                    const savedSteps = stepsJson.data ?? [];
+                    for (const preparedStep of preparedSteps) {
+                        if (preparedStep.arMode === "MARKER" && (preparedStep._markerFile || preparedStep._markerPatternFile)) {
+                            const savedStep = savedSteps.find((s) => s.orderNumber === preparedStep.orderNumber);
+                            if (savedStep) {
+                                const fd = new FormData();
+                                if (preparedStep._markerFile) fd.append("image", preparedStep._markerFile);
+                                if (preparedStep._markerPatternFile) fd.append("pattern", preparedStep._markerPatternFile);
+                                const markerRes = await fetch(`/api/steps/${savedStep.id}/marker`, { method: "POST", body: fd });
+                                if (markerRes.ok) {
+                                    const markerJson = await markerRes.json() as { data: { markerImageUrl: string; markerPatternUrl: string } };
+                                    setSteps((prev) => prev.map((s) =>
+                                        s.orderNumber === preparedStep.orderNumber
+                                            ? { ...s, markerImageUrl: markerJson.data.markerImageUrl, markerPatternUrl: markerJson.data.markerPatternUrl, _markerFile: null, _markerPatternFile: null }
+                                            : s
+                                    ));
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             router.push("/dashboard");

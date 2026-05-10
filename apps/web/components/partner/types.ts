@@ -19,7 +19,7 @@ export interface HuntStats {
     players: number;
 }
 
-export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionType" | "points"> & {
+export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "points"> & {
     id?: number;
     clues: Clue[];
     latitude?: number | null;
@@ -29,4 +29,9 @@ export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "actionT
     arItem?: ArItem | null;
     _arContentFile?: File | null;
     arItemFilename?: string | null;
+    arMode?: "GPS" | "MARKER";
+    _markerFile?: File | null;
+    _markerPatternFile?: File | null;
+    markerImageUrl?: string | null;
+    markerPatternUrl?: string | null;
 }

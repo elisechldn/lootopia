@@ -6,6 +6,7 @@ import { Step } from "./types";
 import { Clue } from "@repo/types";
 import ArItemPicker from "./ArItemPicker/ArItemPicker";
 import CluesTab from "./CluesTab";
+import MarkerFileUpload from "./MarkerFileUpload";
 
 const StepMap = dynamic(() => import("./StepMap"), {
     ssr: false,
@@ -39,6 +40,7 @@ const StepItem = memo(function StepItem({
     allSteps,
     onStepsChange,
 }: Props) {
+    console.log("step", step)
     return (
         <div className="border border-border rounded-xl overflow-hidden">
             {/* Header */}
@@ -96,70 +98,135 @@ const StepItem = memo(function StepItem({
                             </div>
                         </div>
 
-                        {/* Type de validation + Rayon */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-xs font-medium text-muted-foreground mb-2">
-                                    Type de validation de l&apos;étape
-                                </label>
-                                <div className="flex gap-1 bg-muted rounded-lg p-1">
-                                    {(["QR_CODE", "AR"] as const).map((type) => (
-                                        <button
-                                            key={type}
-                                            onClick={() => onUpdate(index, "actionType", type)}
-                                            className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-                                                step.actionType === type
-                                                    ? "bg-card text-foreground shadow-sm"
-                                                    : "text-muted-foreground hover:text-foreground/80"
-                                            }`}
-                                        >
-                                            {type === "QR_CODE" ? "Scan QRCode" : "Touch sur l'item 3D"}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-muted-foreground mb-2">
-                                    Rayon de déclenchement de l&apos;indice
-                                </label>
-                                <input
-                                    type="number"
-                                    value={step.radius}
-                                    onChange={(e) => onUpdate(index, "radius", Number(e.target.value))}
-                                    placeholder="Valeur en mètres"
-                                    className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+                        {/* Item 3D + Mode AR */}
+                        <div className="space-y-4">
+                                <ArItemPicker
+                                    stepIndex={index}
+                                    step={step}
+                                    onChange={(partial) => {
+                                        const updated = allSteps.map((s, i) =>
+                                            i === index ? { ...s, ...partial } : s
+                                        );
+                                        onStepsChange(updated);
+                                    }}
                                 />
-                            </div>
+
+                                {/* Technologie AR */}
+                                <div>
+                                    <label className="block text-xs font-medium text-muted-foreground mb-2">
+                                        Technologie AR
+                                    </label>
+                                    <div className="flex gap-1 bg-muted rounded-lg p-1">
+                                        {(["GPS", "MARKER"] as const).map((mode) => (
+                                            <button
+                                                key={mode}
+                                                type="button"
+                                                onClick={() => {
+                                                    const updated = allSteps.map((s, i) =>
+                                                        i === index ? { ...s, arMode: mode, _markerFile: null } : s
+                                                    );
+                                                    onStepsChange(updated);
+                                                }}
+                                                className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                                                    (step.arMode ?? "GPS") === mode
+                                                        ? "bg-card text-foreground shadow-sm"
+                                                        : "text-muted-foreground hover:text-foreground/80"
+                                                }`}
+                                            >
+                                                {mode === "GPS" ? "GPS" : "Marqueur physique"}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Upload marker (conditionnel) */}
+                                {step.arMode === "MARKER" && (
+                                    <div className="space-y-3">
+                                        {/* Lien outil externe */}
+                                        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800">
+                                            <p className="font-semibold mb-1">Génération du marqueur AR</p>
+                                            <span>1. Générez votre image et fichier <code>.patt</code> avec l&apos;outil officiel AR.js : </span>
+                                            <a
+                                                href="https://ar-js-org.github.io/AR.js/three.js/examples/marker-training/examples/generator.html"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="font-bold break-all hover:underline"
+                                            >
+                                                AR.js Marker Trainer
+                                            </a>
+                                            <p className="mt-1">2. Téléchargez les deux fichiers générés puis uploadez-les ci-dessous.</p>
+                                        </div>
+
+                                        {/* Image du marqueur */}
+                                        <MarkerFileUpload
+                                            accept="image/jpeg,image/png,image/webp"
+                                            maxSize={10 * 1024 * 1024}
+                                            label="Image du marqueur"
+                                            hint="JPG, PNG ou WebP · max 10 Mo"
+                                            value={step._markerFile ?? null}
+                                            existingUrl={step.markerImageUrl}
+                                            showImagePreview
+                                            onFileValidate={(f) =>
+                                                ['image/jpeg', 'image/png', 'image/webp'].includes(f.type)
+                                                    ? null
+                                                    : 'Seuls JPG, PNG et WebP sont acceptés'
+                                            }
+                                            onChange={(file) => {
+                                                const updated = allSteps.map((s, i) =>
+                                                    i === index ? { ...s, _markerFile: file } : s
+                                                );
+                                                onStepsChange(updated);
+                                            }}
+                                            onExistingFileDelete={() => {
+                                                const updated = allSteps.map((s, i) =>
+                                                    i === index ? { ...s, markerImageUrl: null } : s
+                                                );
+                                                onStepsChange(updated);
+                                            }}
+                                        />
+
+                                        {/* Fichier .patt */}
+                                        <MarkerFileUpload
+                                            accept=".patt"
+                                            maxSize={1024 * 1024}
+                                            label="Fichier pattern"
+                                            hint=".patt · max 1 Mo"
+                                            value={step._markerPatternFile ?? null}
+                                            existingUrl={step.markerPatternUrl}
+                                            onFileValidate={(f) =>
+                                                f.name.endsWith('.patt')
+                                                    ? null
+                                                    : 'Extension .patt requise'
+                                            }
+                                            onChange={(file) => {
+                                                const updated = allSteps.map((s, i) =>
+                                                    i === index ? { ...s, _markerPatternFile: file } : s
+                                                );
+                                                onStepsChange(updated);
+                                            }}
+                                            onExistingFileDelete={() => {
+                                                const updated = allSteps.map((s, i) =>
+                                                    i === index ? { ...s, markerPatternUrl: null } : s
+                                                );
+                                                onStepsChange(updated);
+                                            }}
+                                        />
+                                    </div>
+                                )}
                         </div>
 
-                        {/* Item 3D */}
-                        {step.actionType === "AR" && (
-                            <ArItemPicker
-                                stepIndex={index}
-                                step={step}
-                                onChange={(partial) => {
-                                    const updated = allSteps.map((s, i) =>
-                                        i === index ? { ...s, ...partial } : s
-                                    );
-                                    onStepsChange(updated);
-                                }}
-                            />
-                        )}
-
-                        {/* QR Code */}
-                        {step.actionType === "QR_CODE" && (
-                            <div>
-                                <label className="block text-xs font-medium text-muted-foreground mb-1">
-                                    Contenu du QR Code
-                                </label>
-                                <input
-                                    value={step.qrCode ?? ""}
-                                    onChange={(e) => onUpdate(index, "qrCode", e.target.value)}
-                                    placeholder="URL ou texte encodé dans le QR Code..."
-                                    className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
-                                />
-                            </div>
-                        )}
+                        {/*/!* QR Code *!/*/}
+                        {/*<div>*/}
+                        {/*    <label className="block text-xs font-medium text-muted-foreground mb-1">*/}
+                        {/*        Contenu du QR Code*/}
+                        {/*    </label>*/}
+                        {/*    <input*/}
+                        {/*        value={step.qrCode ?? ""}*/}
+                        {/*        onChange={(e) => onUpdate(index, "qrCode", e.target.value)}*/}
+                        {/*        placeholder="URL ou texte encodé dans le QR Code..."*/}
+                        {/*        className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"*/}
+                        {/*    />*/}
+                        {/*</div>*/}
 
                         {/* Carte */}
                         <div>
@@ -205,6 +272,22 @@ const StepItem = memo(function StepItem({
                                     </div>
                                 </div>
                             )}
+                        </div>
+
+                        {/* Rayon */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-xs font-medium text-muted-foreground mb-2">
+                                    Rayon de déclenchement de l&apos;indice
+                                </label>
+                                <input
+                                    type="number"
+                                    value={step.radius}
+                                    onChange={(e) => onUpdate(index, "radius", Number(e.target.value))}
+                                    placeholder="Valeur en mètres"
+                                    className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+                                />
+                            </div>
                         </div>
 
                         {/* Indices */}
