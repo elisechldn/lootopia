@@ -47,13 +47,14 @@ export type StepMinAggregateOutputType = {
   orderNumber: number | null
   title: string | null
   radius: number | null
-  actionType: $Enums.ActionType | null
-  qrCodeValue: string | null
   points: number | null
   createdAt: Date | null
   updatedAt: Date | null
   refHunt: number | null
   refArItem: string | null
+  arMode: $Enums.ArMode | null
+  markerImageUrl: string | null
+  markerPatternUrl: string | null
 }
 
 export type StepMaxAggregateOutputType = {
@@ -61,13 +62,14 @@ export type StepMaxAggregateOutputType = {
   orderNumber: number | null
   title: string | null
   radius: number | null
-  actionType: $Enums.ActionType | null
-  qrCodeValue: string | null
   points: number | null
   createdAt: Date | null
   updatedAt: Date | null
   refHunt: number | null
   refArItem: string | null
+  arMode: $Enums.ArMode | null
+  markerImageUrl: string | null
+  markerPatternUrl: string | null
 }
 
 export type StepCountAggregateOutputType = {
@@ -75,13 +77,14 @@ export type StepCountAggregateOutputType = {
   orderNumber: number
   title: number
   radius: number
-  actionType: number
-  qrCodeValue: number
   points: number
   createdAt: number
   updatedAt: number
   refHunt: number
   refArItem: number
+  arMode: number
+  markerImageUrl: number
+  markerPatternUrl: number
   _all: number
 }
 
@@ -107,13 +110,14 @@ export type StepMinAggregateInputType = {
   orderNumber?: true
   title?: true
   radius?: true
-  actionType?: true
-  qrCodeValue?: true
   points?: true
   createdAt?: true
   updatedAt?: true
   refHunt?: true
   refArItem?: true
+  arMode?: true
+  markerImageUrl?: true
+  markerPatternUrl?: true
 }
 
 export type StepMaxAggregateInputType = {
@@ -121,13 +125,14 @@ export type StepMaxAggregateInputType = {
   orderNumber?: true
   title?: true
   radius?: true
-  actionType?: true
-  qrCodeValue?: true
   points?: true
   createdAt?: true
   updatedAt?: true
   refHunt?: true
   refArItem?: true
+  arMode?: true
+  markerImageUrl?: true
+  markerPatternUrl?: true
 }
 
 export type StepCountAggregateInputType = {
@@ -135,13 +140,14 @@ export type StepCountAggregateInputType = {
   orderNumber?: true
   title?: true
   radius?: true
-  actionType?: true
-  qrCodeValue?: true
   points?: true
   createdAt?: true
   updatedAt?: true
   refHunt?: true
   refArItem?: true
+  arMode?: true
+  markerImageUrl?: true
+  markerPatternUrl?: true
   _all?: true
 }
 
@@ -236,13 +242,14 @@ export type StepGroupByOutputType = {
   orderNumber: number
   title: string
   radius: number
-  actionType: $Enums.ActionType
-  qrCodeValue: string | null
   points: number
   createdAt: Date
   updatedAt: Date
   refHunt: number
   refArItem: string | null
+  arMode: $Enums.ArMode
+  markerImageUrl: string | null
+  markerPatternUrl: string | null
   _count: StepCountAggregateOutputType | null
   _avg: StepAvgAggregateOutputType | null
   _sum: StepSumAggregateOutputType | null
@@ -273,13 +280,14 @@ export type StepWhereInput = {
   orderNumber?: Prisma.IntFilter<"Step"> | number
   title?: Prisma.StringFilter<"Step"> | string
   radius?: Prisma.IntFilter<"Step"> | number
-  actionType?: Prisma.EnumActionTypeFilter<"Step"> | $Enums.ActionType
-  qrCodeValue?: Prisma.StringNullableFilter<"Step"> | string | null
   points?: Prisma.IntFilter<"Step"> | number
   createdAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   refHunt?: Prisma.IntFilter<"Step"> | number
   refArItem?: Prisma.StringNullableFilter<"Step"> | string | null
+  arMode?: Prisma.EnumArModeFilter<"Step"> | $Enums.ArMode
+  markerImageUrl?: Prisma.StringNullableFilter<"Step"> | string | null
+  markerPatternUrl?: Prisma.StringNullableFilter<"Step"> | string | null
   arItem?: Prisma.XOR<Prisma.ArItemNullableScalarRelationFilter, Prisma.ArItemWhereInput> | null
   hunt?: Prisma.XOR<Prisma.HuntScalarRelationFilter, Prisma.HuntWhereInput>
   clues?: Prisma.ClueListRelationFilter
@@ -291,13 +299,14 @@ export type StepOrderByWithRelationInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
-  actionType?: Prisma.SortOrder
-  qrCodeValue?: Prisma.SortOrderInput | Prisma.SortOrder
   points?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
   refArItem?: Prisma.SortOrderInput | Prisma.SortOrder
+  arMode?: Prisma.SortOrder
+  markerImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  markerPatternUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   arItem?: Prisma.ArItemOrderByWithRelationInput
   hunt?: Prisma.HuntOrderByWithRelationInput
   clues?: Prisma.ClueOrderByRelationAggregateInput
@@ -313,13 +322,14 @@ export type StepWhereUniqueInput = Prisma.AtLeast<{
   orderNumber?: Prisma.IntFilter<"Step"> | number
   title?: Prisma.StringFilter<"Step"> | string
   radius?: Prisma.IntFilter<"Step"> | number
-  actionType?: Prisma.EnumActionTypeFilter<"Step"> | $Enums.ActionType
-  qrCodeValue?: Prisma.StringNullableFilter<"Step"> | string | null
   points?: Prisma.IntFilter<"Step"> | number
   createdAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   refHunt?: Prisma.IntFilter<"Step"> | number
   refArItem?: Prisma.StringNullableFilter<"Step"> | string | null
+  arMode?: Prisma.EnumArModeFilter<"Step"> | $Enums.ArMode
+  markerImageUrl?: Prisma.StringNullableFilter<"Step"> | string | null
+  markerPatternUrl?: Prisma.StringNullableFilter<"Step"> | string | null
   arItem?: Prisma.XOR<Prisma.ArItemNullableScalarRelationFilter, Prisma.ArItemWhereInput> | null
   hunt?: Prisma.XOR<Prisma.HuntScalarRelationFilter, Prisma.HuntWhereInput>
   clues?: Prisma.ClueListRelationFilter
@@ -331,13 +341,14 @@ export type StepOrderByWithAggregationInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
-  actionType?: Prisma.SortOrder
-  qrCodeValue?: Prisma.SortOrderInput | Prisma.SortOrder
   points?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
   refArItem?: Prisma.SortOrderInput | Prisma.SortOrder
+  arMode?: Prisma.SortOrder
+  markerImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  markerPatternUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.StepCountOrderByAggregateInput
   _avg?: Prisma.StepAvgOrderByAggregateInput
   _max?: Prisma.StepMaxOrderByAggregateInput
@@ -353,24 +364,26 @@ export type StepScalarWhereWithAggregatesInput = {
   orderNumber?: Prisma.IntWithAggregatesFilter<"Step"> | number
   title?: Prisma.StringWithAggregatesFilter<"Step"> | string
   radius?: Prisma.IntWithAggregatesFilter<"Step"> | number
-  actionType?: Prisma.EnumActionTypeWithAggregatesFilter<"Step"> | $Enums.ActionType
-  qrCodeValue?: Prisma.StringNullableWithAggregatesFilter<"Step"> | string | null
   points?: Prisma.IntWithAggregatesFilter<"Step"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Step"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Step"> | Date | string
   refHunt?: Prisma.IntWithAggregatesFilter<"Step"> | number
   refArItem?: Prisma.StringNullableWithAggregatesFilter<"Step"> | string | null
+  arMode?: Prisma.EnumArModeWithAggregatesFilter<"Step"> | $Enums.ArMode
+  markerImageUrl?: Prisma.StringNullableWithAggregatesFilter<"Step"> | string | null
+  markerPatternUrl?: Prisma.StringNullableWithAggregatesFilter<"Step"> | string | null
 }
 
 export type StepCreateInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   arItem?: Prisma.ArItemCreateNestedOneWithoutStepsInput
   hunt: Prisma.HuntCreateNestedOneWithoutStepsInput
   clues?: Prisma.ClueCreateNestedManyWithoutStepInput
@@ -382,13 +395,14 @@ export type StepUncheckedCreateInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
   refArItem?: string | null
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   clues?: Prisma.ClueUncheckedCreateNestedManyWithoutStepInput
   progresses?: Prisma.ProgressUncheckedCreateNestedManyWithoutStepInput
 }
@@ -397,11 +411,12 @@ export type StepUpdateInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arItem?: Prisma.ArItemUpdateOneWithoutStepsNestedInput
   hunt?: Prisma.HuntUpdateOneRequiredWithoutStepsNestedInput
   clues?: Prisma.ClueUpdateManyWithoutStepNestedInput
@@ -413,13 +428,14 @@ export type StepUncheckedUpdateInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
   refArItem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clues?: Prisma.ClueUncheckedUpdateManyWithoutStepNestedInput
   progresses?: Prisma.ProgressUncheckedUpdateManyWithoutStepNestedInput
 }
@@ -429,24 +445,26 @@ export type StepCreateManyInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
   refArItem?: string | null
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
 }
 
 export type StepUpdateManyMutationInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type StepUncheckedUpdateManyInput = {
@@ -454,13 +472,14 @@ export type StepUncheckedUpdateManyInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
   refArItem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type StepListRelationFilter = {
@@ -488,13 +507,14 @@ export type StepCountOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
-  actionType?: Prisma.SortOrder
-  qrCodeValue?: Prisma.SortOrder
   points?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
   refArItem?: Prisma.SortOrder
+  arMode?: Prisma.SortOrder
+  markerImageUrl?: Prisma.SortOrder
+  markerPatternUrl?: Prisma.SortOrder
 }
 
 export type StepAvgOrderByAggregateInput = {
@@ -510,13 +530,14 @@ export type StepMaxOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
-  actionType?: Prisma.SortOrder
-  qrCodeValue?: Prisma.SortOrder
   points?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
   refArItem?: Prisma.SortOrder
+  arMode?: Prisma.SortOrder
+  markerImageUrl?: Prisma.SortOrder
+  markerPatternUrl?: Prisma.SortOrder
 }
 
 export type StepMinOrderByAggregateInput = {
@@ -524,13 +545,14 @@ export type StepMinOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
-  actionType?: Prisma.SortOrder
-  qrCodeValue?: Prisma.SortOrder
   points?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
   refArItem?: Prisma.SortOrder
+  arMode?: Prisma.SortOrder
+  markerImageUrl?: Prisma.SortOrder
+  markerPatternUrl?: Prisma.SortOrder
 }
 
 export type StepSumOrderByAggregateInput = {
@@ -653,19 +675,20 @@ export type StepUpdateOneRequiredWithoutProgressesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StepUpdateToOneWithWhereWithoutProgressesInput, Prisma.StepUpdateWithoutProgressesInput>, Prisma.StepUncheckedUpdateWithoutProgressesInput>
 }
 
-export type EnumActionTypeFieldUpdateOperationsInput = {
-  set?: $Enums.ActionType
+export type EnumArModeFieldUpdateOperationsInput = {
+  set?: $Enums.ArMode
 }
 
 export type StepCreateWithoutArItemInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   hunt: Prisma.HuntCreateNestedOneWithoutStepsInput
   clues?: Prisma.ClueCreateNestedManyWithoutStepInput
   progresses?: Prisma.ProgressCreateNestedManyWithoutStepInput
@@ -676,12 +699,13 @@ export type StepUncheckedCreateWithoutArItemInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   clues?: Prisma.ClueUncheckedCreateNestedManyWithoutStepInput
   progresses?: Prisma.ProgressUncheckedCreateNestedManyWithoutStepInput
 }
@@ -720,24 +744,26 @@ export type StepScalarWhereInput = {
   orderNumber?: Prisma.IntFilter<"Step"> | number
   title?: Prisma.StringFilter<"Step"> | string
   radius?: Prisma.IntFilter<"Step"> | number
-  actionType?: Prisma.EnumActionTypeFilter<"Step"> | $Enums.ActionType
-  qrCodeValue?: Prisma.StringNullableFilter<"Step"> | string | null
   points?: Prisma.IntFilter<"Step"> | number
   createdAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   refHunt?: Prisma.IntFilter<"Step"> | number
   refArItem?: Prisma.StringNullableFilter<"Step"> | string | null
+  arMode?: Prisma.EnumArModeFilter<"Step"> | $Enums.ArMode
+  markerImageUrl?: Prisma.StringNullableFilter<"Step"> | string | null
+  markerPatternUrl?: Prisma.StringNullableFilter<"Step"> | string | null
 }
 
 export type StepCreateWithoutCluesInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   arItem?: Prisma.ArItemCreateNestedOneWithoutStepsInput
   hunt: Prisma.HuntCreateNestedOneWithoutStepsInput
   progresses?: Prisma.ProgressCreateNestedManyWithoutStepInput
@@ -748,13 +774,14 @@ export type StepUncheckedCreateWithoutCluesInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
   refArItem?: string | null
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   progresses?: Prisma.ProgressUncheckedCreateNestedManyWithoutStepInput
 }
 
@@ -778,11 +805,12 @@ export type StepUpdateWithoutCluesInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arItem?: Prisma.ArItemUpdateOneWithoutStepsNestedInput
   hunt?: Prisma.HuntUpdateOneRequiredWithoutStepsNestedInput
   progresses?: Prisma.ProgressUpdateManyWithoutStepNestedInput
@@ -793,13 +821,14 @@ export type StepUncheckedUpdateWithoutCluesInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
   refArItem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   progresses?: Prisma.ProgressUncheckedUpdateManyWithoutStepNestedInput
 }
 
@@ -807,11 +836,12 @@ export type StepCreateWithoutHuntInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   arItem?: Prisma.ArItemCreateNestedOneWithoutStepsInput
   clues?: Prisma.ClueCreateNestedManyWithoutStepInput
   progresses?: Prisma.ProgressCreateNestedManyWithoutStepInput
@@ -822,12 +852,13 @@ export type StepUncheckedCreateWithoutHuntInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refArItem?: string | null
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   clues?: Prisma.ClueUncheckedCreateNestedManyWithoutStepInput
   progresses?: Prisma.ProgressUncheckedCreateNestedManyWithoutStepInput
 }
@@ -862,11 +893,12 @@ export type StepCreateWithoutProgressesInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   arItem?: Prisma.ArItemCreateNestedOneWithoutStepsInput
   hunt: Prisma.HuntCreateNestedOneWithoutStepsInput
   clues?: Prisma.ClueCreateNestedManyWithoutStepInput
@@ -877,13 +909,14 @@ export type StepUncheckedCreateWithoutProgressesInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
   refArItem?: string | null
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
   clues?: Prisma.ClueUncheckedCreateNestedManyWithoutStepInput
 }
 
@@ -907,11 +940,12 @@ export type StepUpdateWithoutProgressesInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arItem?: Prisma.ArItemUpdateOneWithoutStepsNestedInput
   hunt?: Prisma.HuntUpdateOneRequiredWithoutStepsNestedInput
   clues?: Prisma.ClueUpdateManyWithoutStepNestedInput
@@ -922,13 +956,14 @@ export type StepUncheckedUpdateWithoutProgressesInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
   refArItem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clues?: Prisma.ClueUncheckedUpdateManyWithoutStepNestedInput
 }
 
@@ -937,23 +972,25 @@ export type StepCreateManyArItemInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
 }
 
 export type StepUpdateWithoutArItemInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hunt?: Prisma.HuntUpdateOneRequiredWithoutStepsNestedInput
   clues?: Prisma.ClueUpdateManyWithoutStepNestedInput
   progresses?: Prisma.ProgressUpdateManyWithoutStepNestedInput
@@ -964,12 +1001,13 @@ export type StepUncheckedUpdateWithoutArItemInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clues?: Prisma.ClueUncheckedUpdateManyWithoutStepNestedInput
   progresses?: Prisma.ProgressUncheckedUpdateManyWithoutStepNestedInput
 }
@@ -979,12 +1017,13 @@ export type StepUncheckedUpdateManyWithoutArItemInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type StepCreateManyHuntInput = {
@@ -992,23 +1031,25 @@ export type StepCreateManyHuntInput = {
   orderNumber: number
   title: string
   radius?: number
-  actionType?: $Enums.ActionType
-  qrCodeValue?: string | null
   points?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refArItem?: string | null
+  arMode?: $Enums.ArMode
+  markerImageUrl?: string | null
+  markerPatternUrl?: string | null
 }
 
 export type StepUpdateWithoutHuntInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arItem?: Prisma.ArItemUpdateOneWithoutStepsNestedInput
   clues?: Prisma.ClueUpdateManyWithoutStepNestedInput
   progresses?: Prisma.ProgressUpdateManyWithoutStepNestedInput
@@ -1019,12 +1060,13 @@ export type StepUncheckedUpdateWithoutHuntInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refArItem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clues?: Prisma.ClueUncheckedUpdateManyWithoutStepNestedInput
   progresses?: Prisma.ProgressUncheckedUpdateManyWithoutStepNestedInput
 }
@@ -1034,12 +1076,13 @@ export type StepUncheckedUpdateManyWithoutHuntInput = {
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  qrCodeValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refArItem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
+  markerImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markerPatternUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1087,13 +1130,14 @@ export type StepSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   orderNumber?: boolean
   title?: boolean
   radius?: boolean
-  actionType?: boolean
-  qrCodeValue?: boolean
   points?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   refHunt?: boolean
   refArItem?: boolean
+  arMode?: boolean
+  markerImageUrl?: boolean
+  markerPatternUrl?: boolean
   arItem?: boolean | Prisma.Step$arItemArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
   clues?: boolean | Prisma.Step$cluesArgs<ExtArgs>
@@ -1106,13 +1150,14 @@ export type StepSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   orderNumber?: boolean
   title?: boolean
   radius?: boolean
-  actionType?: boolean
-  qrCodeValue?: boolean
   points?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   refHunt?: boolean
   refArItem?: boolean
+  arMode?: boolean
+  markerImageUrl?: boolean
+  markerPatternUrl?: boolean
   arItem?: boolean | Prisma.Step$arItemArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["step"]>
@@ -1122,13 +1167,14 @@ export type StepSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   orderNumber?: boolean
   title?: boolean
   radius?: boolean
-  actionType?: boolean
-  qrCodeValue?: boolean
   points?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   refHunt?: boolean
   refArItem?: boolean
+  arMode?: boolean
+  markerImageUrl?: boolean
+  markerPatternUrl?: boolean
   arItem?: boolean | Prisma.Step$arItemArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["step"]>
@@ -1138,16 +1184,16 @@ export type StepSelectScalar = {
   orderNumber?: boolean
   title?: boolean
   radius?: boolean
-  actionType?: boolean
-  qrCodeValue?: boolean
   points?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   refHunt?: boolean
   refArItem?: boolean
+  arMode?: boolean
+  markerImageUrl?: boolean
+  markerPatternUrl?: boolean
 }
 
-export type StepOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "title" | "radius" | "actionType" | "qrCodeValue" | "points" | "createdAt" | "updatedAt" | "refHunt" | "refArItem", ExtArgs["result"]["step"]>
 export type StepInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   arItem?: boolean | Prisma.Step$arItemArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
@@ -1177,13 +1223,14 @@ export type $StepPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     orderNumber: number
     title: string
     radius: number
-    actionType: $Enums.ActionType
-    qrCodeValue: string | null
     points: number
     createdAt: Date
     updatedAt: Date
     refHunt: number
     refArItem: string | null
+    arMode: $Enums.ArMode
+    markerImageUrl: string | null
+    markerPatternUrl: string | null
   }, ExtArgs["result"]["step"]>
   composites: {}
 }
@@ -1615,13 +1662,14 @@ export interface StepFieldRefs {
   readonly orderNumber: Prisma.FieldRef<"Step", 'Int'>
   readonly title: Prisma.FieldRef<"Step", 'String'>
   readonly radius: Prisma.FieldRef<"Step", 'Int'>
-  readonly actionType: Prisma.FieldRef<"Step", 'ActionType'>
-  readonly qrCodeValue: Prisma.FieldRef<"Step", 'String'>
   readonly points: Prisma.FieldRef<"Step", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Step", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Step", 'DateTime'>
   readonly refHunt: Prisma.FieldRef<"Step", 'Int'>
   readonly refArItem: Prisma.FieldRef<"Step", 'String'>
+  readonly arMode: Prisma.FieldRef<"Step", 'ArMode'>
+  readonly markerImageUrl: Prisma.FieldRef<"Step", 'String'>
+  readonly markerPatternUrl: Prisma.FieldRef<"Step", 'String'>
 }
     
 

@@ -226,21 +226,21 @@ export type EnumProgressStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumProgressStatusFilter<$PrismaModel>
 }
 
-export type EnumActionTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.ActionType | Prisma.EnumActionTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ActionType[] | Prisma.ListEnumActionTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ActionType[] | Prisma.ListEnumActionTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumActionTypeFilter<$PrismaModel> | $Enums.ActionType
+export type EnumArModeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ArMode | Prisma.EnumArModeFieldRefInput<$PrismaModel>
+  in?: $Enums.ArMode[] | Prisma.ListEnumArModeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ArMode[] | Prisma.ListEnumArModeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumArModeFilter<$PrismaModel> | $Enums.ArMode
 }
 
-export type EnumActionTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ActionType | Prisma.EnumActionTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ActionType[] | Prisma.ListEnumActionTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ActionType[] | Prisma.ListEnumActionTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumActionTypeWithAggregatesFilter<$PrismaModel> | $Enums.ActionType
+export type EnumArModeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ArMode | Prisma.EnumArModeFieldRefInput<$PrismaModel>
+  in?: $Enums.ArMode[] | Prisma.ListEnumArModeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ArMode[] | Prisma.ListEnumArModeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumArModeWithAggregatesFilter<$PrismaModel> | $Enums.ArMode
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumActionTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumActionTypeFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumArModeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumArModeFilter<$PrismaModel>
 }
 
 export type EnumRoleFilter<$PrismaModel = never> = {
@@ -485,21 +485,21 @@ export type NestedEnumProgressStatusWithAggregatesFilter<$PrismaModel = never> =
   _max?: Prisma.NestedEnumProgressStatusFilter<$PrismaModel>
 }
 
-export type NestedEnumActionTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.ActionType | Prisma.EnumActionTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ActionType[] | Prisma.ListEnumActionTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ActionType[] | Prisma.ListEnumActionTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumActionTypeFilter<$PrismaModel> | $Enums.ActionType
+export type NestedEnumArModeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ArMode | Prisma.EnumArModeFieldRefInput<$PrismaModel>
+  in?: $Enums.ArMode[] | Prisma.ListEnumArModeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ArMode[] | Prisma.ListEnumArModeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumArModeFilter<$PrismaModel> | $Enums.ArMode
 }
 
-export type NestedEnumActionTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ActionType | Prisma.EnumActionTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ActionType[] | Prisma.ListEnumActionTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ActionType[] | Prisma.ListEnumActionTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumActionTypeWithAggregatesFilter<$PrismaModel> | $Enums.ActionType
+export type NestedEnumArModeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ArMode | Prisma.EnumArModeFieldRefInput<$PrismaModel>
+  in?: $Enums.ArMode[] | Prisma.ListEnumArModeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ArMode[] | Prisma.ListEnumArModeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumArModeWithAggregatesFilter<$PrismaModel> | $Enums.ArMode
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumActionTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumActionTypeFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumArModeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumArModeFilter<$PrismaModel>
 }
 
 export type NestedEnumRoleFilter<$PrismaModel = never> = {

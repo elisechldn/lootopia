@@ -1132,13 +1132,14 @@ export const StepScalarFieldEnum = {
   orderNumber: 'orderNumber',
   title: 'title',
   radius: 'radius',
-  actionType: 'actionType',
-  qrCodeValue: 'qrCodeValue',
   points: 'points',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   refHunt: 'refHunt',
-  refArItem: 'refArItem'
+  refArItem: 'refArItem',
+  arMode: 'arMode',
+  markerImageUrl: 'markerImageUrl',
+  markerPatternUrl: 'markerPatternUrl'
 } as const
 
 export type StepScalarFieldEnum = (typeof StepScalarFieldEnum)[keyof typeof StepScalarFieldEnum]
@@ -1284,16 +1285,16 @@ export type ListEnumProgressStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
- * Reference to a field of type 'ActionType'
+ * Reference to a field of type 'ArMode'
  */
-export type EnumActionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActionType'>
+export type EnumArModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ArMode'>
     
 
 
 /**
- * Reference to a field of type 'ActionType[]'
+ * Reference to a field of type 'ArMode[]'
  */
-export type ListEnumActionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActionType[]'>
+export type ListEnumArModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ArMode[]'>
     
 
 

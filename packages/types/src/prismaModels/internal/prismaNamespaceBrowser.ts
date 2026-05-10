@@ -167,13 +167,14 @@ export const StepScalarFieldEnum = {
   orderNumber: 'orderNumber',
   title: 'title',
   radius: 'radius',
-  actionType: 'actionType',
-  qrCodeValue: 'qrCodeValue',
   points: 'points',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   refHunt: 'refHunt',
-  refArItem: 'refArItem'
+  refArItem: 'refArItem',
+  arMode: 'arMode',
+  markerImageUrl: 'markerImageUrl',
+  markerPatternUrl: 'markerPatternUrl'
 } as const
 
 export type StepScalarFieldEnum = (typeof StepScalarFieldEnum)[keyof typeof StepScalarFieldEnum]
