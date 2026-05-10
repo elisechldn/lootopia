@@ -4,6 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { extname, basename } from 'path';
 import { Prisma } from '@repo/types';
 import type { ArItemModel } from '@repo/types';
 import { PrismaService } from '../orm/prisma/prisma.service';
@@ -28,7 +29,9 @@ export class ArItemService {
 
   async upload(userId: number, file: Express.Multer.File) {
     this.validateFile(file);
-    const filepath = `partners/${userId}/ar-items/${file.originalname}-${randomUUID()}`;
+    const ext = extname(file.originalname);
+    const base = basename(file.originalname, ext);
+    const filepath = `partners/${userId}/ar-items/${base}-${randomUUID()}${ext}`;
 
     await this.storage.uploadObject(filepath, file.buffer, file.mimetype);
 
