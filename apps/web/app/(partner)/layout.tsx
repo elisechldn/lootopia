@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import PartnerSidebar from "@/components/partner/PartnerSidebar";
 import AuthProvider from "@/components/partner/AuthProvider";
+import ThemeWrapper from "@/components/partner/ThemeWrapper";
 
 async function getSession() {
     const token = (await cookies()).get('auth_token')?.value;
@@ -16,10 +17,12 @@ export default async function PartnerLayout({ children }: { children: React.Reac
     const session = await getSession();
     return (
         <AuthProvider user={session}>
-            <div className="flex min-h-screen">
+            <ThemeWrapper>
                 <PartnerSidebar user={session} />
-                <main className="flex-1 bg-gray-50">{children}</main>
-            </div>
+                <main className="flex-1 bg-background">
+                    {children}
+                </main>
+            </ThemeWrapper>
         </AuthProvider>
     );
 }

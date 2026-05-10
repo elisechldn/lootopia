@@ -1,17 +1,49 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto, PaginatedResult, UpdateUserDto } from '@repo/types';
+import * as bcrypt from 'bcrypt';
+import {
+  CreateUserDto,
+  PaginatedResult,
+  Prisma,
+  UpdateUserDto,
+} from '@repo/types';
 import { PrismaService } from '../orm/prisma/prisma.service';
+
+type UserProfile = Omit<
+  Prisma.UserGetPayload<{
+    include: {
+      participations: {
+        include: {
+          hunt: { select: { id: true; title: true } };
+          progresses: {
+            include: {
+              step: {
+                select: {
+                  id: true;
+                  orderNumber: true;
+                  title: true;
+                  actionType: true;
+                  points: true;
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  }>,
+  'passwordHash'
+>;
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createUserDto: CreateUserDto) {
-    const data = {
-      ...createUserDto,
-      lastConnection: null,
-    };
-    return this.prisma.user.create({ data });
+  async create(createUserDto: CreateUserDto) {
+    const { password, ...rest } = createUserDto;
+    const passwordHash = await bcrypt.hash(password, 10);
+    return this.prisma.user.create({
+      data: { ...rest, passwordHash, lastConnection: null },
+    });
   }
 
   async findAll(page = 1, pageSize = 10): Promise<PaginatedResult<unknown>> {
@@ -46,5 +78,37 @@ export class UsersService {
     } catch {
       throw new NotFoundException(`User #${id} not found`);
     }
+  }
+
+  async findMe(userId: number): Promise<UserProfile> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      omit: {
+        passwordHash: true,
+      },
+      include: {
+        participations: {
+          include: {
+            hunt: { select: { id: true, title: true } },
+            progresses: {
+              include: {
+                step: {
+                  select: {
+                    id: true,
+                    orderNumber: true,
+                    title: true,
+                    actionType: true,
+                    points: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user) throw new NotFoundException(`User #${userId} not found`);
+    return user;
   }
 }

@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Footer() {
     return (
-        <footer className="bg-white text-gray-700">
+        <footer className="bg-card text-foreground/80">
             <div className="max-w-7xl mx-auto px-6 py-12">
                 {/* Top grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-10">
@@ -12,10 +12,10 @@ export default function Footer() {
                         <Link href="/apps/web/public"
                               className="flex items-center gap-2 text-black font-semibold text-base mb-3">
                             <span
-                                className="inline-flex items-center justify-center w-7 h-7 bg-white/10 rounded-lg text-sm">🏠</span>
+                                className="inline-flex items-center justify-center w-7 h-7 bg-card/10 rounded-lg text-sm">🏠</span>
                             Lootopia
                         </Link>
-                        <p className="text-sm leading-relaxed text-gray-700">
+                        <p className="text-sm leading-relaxed text-foreground/80">
                             Chasses au trésor numériques en réalité augmentée pour les explorateurs urbains.
                         </p>
                     </div>
@@ -56,10 +56,10 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <hr className="border-gray-200"/>
+                <hr className="border-border"/>
 
                 {/* Bottom bar */}
-                <div className="border-gray-800 pt-10 text-center text-gray-900">
+                <div className="border-gray-800 pt-10 text-center text-foreground">
                     © 2025 Lootopia. Tous droits réservés.
                 </div>
             </div>

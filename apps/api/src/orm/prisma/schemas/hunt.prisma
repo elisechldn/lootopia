@@ -5,9 +5,9 @@ model Hunt {
   description      String?
   startDate        DateTime?
   endDate          DateTime?
-  location         String?
+  locationCenter   Unsupported("GEOGRAPHY(Point, 4326)")?
   radius           Int             @default(5000)
-  difficulty       String?         @default("Intermédiaire")
+  coverImage       String?
   status           HuntStatus      @default(DRAFT)
   rewardType       String?         @default("DISCOUNT_CODE")
   rewardValue      String?

@@ -7,10 +7,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
 
   app.enableCors({
-    origin: [
-      'http://localhost:3000', // web
-      'http://localhost:3001', // pwa (si différent)
-    ],
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });

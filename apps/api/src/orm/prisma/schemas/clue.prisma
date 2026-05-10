@@ -1,0 +1,15 @@
+model Clue {
+  id          Int        @id @default(autoincrement())
+  message     String
+  penaltyCost Int        @default(0)
+  orderNumber Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  refStep Int
+  step    Step @relation(fields: [refStep], references: [id], onDelete: Cascade)
+
+  clueUsages ClueUsage[]
+
+  @@unique([refStep, orderNumber])
+}
