@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  reactStrictMode: false,
   rewrites: async () => {
     const minio = process.env.MINIO_INTERNAL_URL ?? 'http://localhost:9000';
     const bucket = process.env.S3_BUCKET ?? 'lootopia-public';
