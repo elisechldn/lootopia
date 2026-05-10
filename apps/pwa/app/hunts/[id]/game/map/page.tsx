@@ -34,6 +34,7 @@ export default function GameMapPage({ params }: Props) {
   const [userCoords, setUserCoords] = useState<{ lat: number; lon: number } | null>(null);
   const [inZone, setInZone] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [cameraPermissionDenied, setCameraPermissionDenied] = useState(false);
   const [, startClueTransition] = useTransition();
 
   // Fetch hunt + participation
@@ -107,9 +108,23 @@ export default function GameMapPage({ params }: Props) {
     );
   }, [userCoords, currentStep]);
 
-  const handleEnterAR = () => {
-    if (!currentStep || !inZone) return;
-    router.push(`/hunts/${huntId}/game/ar?participationId=${participationId}&stepId=${currentStep.id}`);
+  const handleEnterAR = async () => {
+    if (!currentStep) return;
+    setCameraPermissionDenied(false);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream.getTracks().forEach((t) => t.stop());
+      router.push(
+        `/hunts/${huntId}/game/ar?participationId=${participationId}&stepId=${currentStep.id}`,
+      );
+    } catch (err) {
+      if (
+        err instanceof DOMException &&
+        (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')
+      ) {
+        setCameraPermissionDenied(true);
+      }
+    }
   };
 
   // Refresh participation after last clue reveal
@@ -206,19 +221,25 @@ export default function GameMapPage({ params }: Props) {
           </div>
         </div>
 
-        {/* AR trigger button — always visible, enabled only when in zone */}
-        <button
-          onClick={handleEnterAR}
-          disabled={!inZone}
-          className={[
-            'mt-auto w-full rounded-xl py-4 text-sm font-bold uppercase tracking-widest text-white transition-colors',
-            inZone
-              ? 'bg-green-500 hover:bg-green-600 animate-pulse'
-              : 'bg-muted text-muted-foreground cursor-not-allowed',
-          ].join(' ')}
-        >
-          {inZone ? 'Utiliser la caméra' : 'Approchez-vous de la zone…'}
-        </button>
+        {/* AR trigger button — always accessible regardless of GPS zone */}
+        <div className="mt-auto space-y-1">
+          <button
+            onClick={() => void handleEnterAR()}
+            className="w-full rounded-xl bg-green-500 py-4 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600"
+          >
+            Utiliser la caméra AR
+          </button>
+          {!inZone && (
+            <p className="text-center text-xs text-muted-foreground">
+              Approchez-vous de la zone pour valider l&apos;étape après scan
+            </p>
+          )}
+          {cameraPermissionDenied && (
+            <p className="text-center text-xs text-amber-600">
+              Permission caméra refusée. Activez-la dans les réglages du navigateur (Site → Caméra → Autoriser).
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

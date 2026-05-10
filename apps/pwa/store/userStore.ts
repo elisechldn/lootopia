@@ -12,7 +12,6 @@ export type ParticipationType = Prisma.ParticipationGetPayload<{
             id: true;
             orderNumber: true;
             title: true;
-            actionType: true;
             points: true;
           };
         };
