@@ -87,7 +87,6 @@ export class ParticipationsService {
                 id: true,
                 orderNumber: true,
                 title: true,
-                actionType: true,
                 points: true,
               },
             },
@@ -127,7 +126,14 @@ export class ParticipationsService {
     const participation = await this.prisma.participation.findUnique({
       where: { id },
       include: {
-        hunt: { include: { steps: { orderBy: { orderNumber: 'asc' } } } },
+        hunt: {
+          include: {
+            steps: {
+              orderBy: { orderNumber: 'asc' },
+              include: { arItem: true },
+            },
+          },
+        },
         progresses: { include: { clueUsages: true } },
       },
     });
