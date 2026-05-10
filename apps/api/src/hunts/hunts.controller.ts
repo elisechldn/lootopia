@@ -70,10 +70,10 @@ export class HuntsController {
   }
 
   @Post(':id/steps')
-  createSteps(
+  upsertSteps(
     @Param('id') id: string,
     @Body() body: { steps: Array<Record<string, unknown>> },
   ): Promise<unknown> {
-    return this.huntsService.createSteps(Number(id), body.steps);
+    return this.huntsService.upsertSteps(Number(id), body.steps);
   }
 }
