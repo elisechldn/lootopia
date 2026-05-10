@@ -21,7 +21,6 @@ type UserProfile = Omit<
                   id: true;
                   orderNumber: true;
                   title: true;
-                  actionType: true;
                   points: true;
                 };
               };
@@ -97,7 +96,6 @@ export class UsersService {
                     id: true,
                     orderNumber: true,
                     title: true,
-                    actionType: true,
                     points: true,
                   },
                 },
