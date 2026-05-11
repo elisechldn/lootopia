@@ -18,6 +18,7 @@ export default function HintBubbles({ progressId, totalPoints, onProgressChanged
   const [isPending, startTransition] = useTransition();
   const [confirmBubble, setConfirmBubble] = useState<BubbleInfo | null>(null);
   const [contentClue, setContentClue] = useState<ContentClue | null>(null);
+  const [currentPoints, setCurrentPoints] = useState(totalPoints);
 
   const loadClues = () => {
     startTransition(async () => {
@@ -74,6 +75,7 @@ export default function HintBubbles({ progressId, totalPoints, onProgressChanged
         if (result.isLastClue) {
           onProgressChanged();
         } else {
+          setCurrentPoints((prev) => Math.max(0, prev - result.clue.penaltyCost));
           loadClues();
         }
       } catch {
@@ -98,7 +100,7 @@ export default function HintBubbles({ progressId, totalPoints, onProgressChanged
       {confirmBubble && (
         <HintConfirmModal
           bubble={confirmBubble}
-          totalPoints={totalPoints}
+          totalPoints={currentPoints}
           onConfirm={handleConfirm}
           onCancel={() => setConfirmBubble(null)}
           isPending={isPending}
