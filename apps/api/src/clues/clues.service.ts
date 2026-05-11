@@ -233,7 +233,7 @@ export class CluesService {
               select: {
                 steps: {
                   orderBy: { orderNumber: 'asc' },
-                  select: { id: true, orderNumber: true },
+                  select: { id: true, orderNumber: true, points: true },
                 },
               },
             },
@@ -262,6 +262,7 @@ export class CluesService {
           refParticipation: progress.participation.id,
           refStep: nextStep.id,
           statut: 'IN_PROGRESS',
+          totalPoints: nextStep.points,
         },
       });
     } else {
