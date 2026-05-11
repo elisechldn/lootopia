@@ -66,7 +66,7 @@ export class HuntsService {
                            'message', c.message,
                            'penaltyCost', c."penaltyCost",
                            'orderNumber', c."orderNumber"
-                       )
+                       ) ORDER BY c."orderNumber" ASC
                     )
                     FROM "Clue" c
                     WHERE c."refStep" = s.id
