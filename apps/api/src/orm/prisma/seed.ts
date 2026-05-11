@@ -22,6 +22,7 @@ const HUNT_COORDS: Record<number, [number, number]> = {
   9: [2.1301, 48.8014], // Versailles
   10: [-1.5536, 47.2184], // Nantes
   11: [1.950804, 48.819725], // Valibout
+  12: [2.238728, 48.893536], // Sup De Vinci — Paris
 };
 
 async function setHuntLocationCenter(huntId: number, lon: number, lat: number) {
@@ -369,6 +370,27 @@ async function main() {
   });
   await setHuntLocationCenter(huntValibout.id, ...HUNT_COORDS[11]!);
 
+  // 12 — Sup De Vinci (Alice, ACTIVE)
+  const huntSupDeVinci = await prisma.hunt.upsert({
+    where: { id: 12 },
+    update: {},
+    create: {
+      title: 'Portes ouvertes de Sup De Vinci',
+      shortDescription: 'Découvrez les formations et labs de l\'école en explorant le campus.',
+      description:
+        'Partez à la découverte du campus parisien de Sup De Vinci, école d\'informatique et du numérique. Résolvez des énigmes liées au développement, à l\'IA et au cybersécurité pour décrocher votre badge Futur Étudiant.',
+      startDate: new Date('2026-05-15'),
+      endDate: new Date('2026-05-15'),
+      radius: 300,
+      status: 'ACTIVE',
+      rewardType: 'BADGE',
+      rewardValue: 'Badge Futur Étudiant Sup De Vinci',
+      coverImage: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntSupDeVinci.id, ...HUNT_COORDS[12]!);
+
   // ── Steps ──────────────────────────────────────────────────────────────────
 
   type StepSeed = {
@@ -658,6 +680,35 @@ async function main() {
       refHunt: huntValibout.id,
     },
 
+    // Sup De Vinci
+    {
+      orderNumber: 1,
+      title: "Accueil & Inscription",
+      lat: 48.893536,
+      lon: 2.238728,
+      radius: 30,
+      points: 100,
+      refHunt: huntSupDeVinci.id,
+    },
+    {
+      orderNumber: 2,
+      title: "Atelier Développement Web",
+      lat: 48.893494,
+      lon: 2.238763,
+      radius: 25,
+      points: 150,
+      refHunt: huntSupDeVinci.id,
+    },
+    {
+      orderNumber: 3,
+      title: "Lab Intelligence Artificielle",
+      lat: 48.893363,
+      lon: 2.238465,
+      radius: 25,
+      points: 200,
+      refHunt: huntSupDeVinci.id,
+    },
+
     // Nantes
     {
       orderNumber: 1,
@@ -846,6 +897,20 @@ async function main() {
     { refHunt: huntValibout.id, stepOrder: 3, clues: [
       { orderNumber: 1, message: 'Le dessert se déguste au bord du petit étang.', penaltyCost: 10 },
       { orderNumber: 2, message: 'Le marqueur AR est collé sous le banc en fer forgé.', penaltyCost: 20 },
+    ]},
+
+    // Sup De Vinci
+    { refHunt: huntSupDeVinci.id, stepOrder: 1, clues: [
+      { orderNumber: 1, message: 'Le premier contact avec l\'école se fait derrière la grande porte vitrée à l\'entrée du bâtiment.', penaltyCost: 10 },
+      { orderNumber: 2, message: 'Cherche le panneau "Bienvenue" portant le logo de l\'école — il indique le bureau des inscriptions.', penaltyCost: 15 },
+    ]},
+    { refHunt: huntSupDeVinci.id, stepOrder: 2, clues: [
+      { orderNumber: 1, message: 'Dans cette salle, les étudiants apprennent à bâtir des sites web. Cherche la machine affichant un éditeur de code.', penaltyCost: 10 },
+      { orderNumber: 2, message: 'Le tableau blanc mentionne HTML, CSS et JavaScript — tu es au bon endroit.', penaltyCost: 20 },
+    ]},
+    { refHunt: huntSupDeVinci.id, stepOrder: 3, clues: [
+      { orderNumber: 1, message: 'Dans ce laboratoire, les machines entraînent des modèles de machine learning. Repère les GPUs sous les bureaux.', penaltyCost: 10 },
+      { orderNumber: 2, message: 'Le poster sur le mur montre un réseau de neurones artificiels — l\'indice final est collé derrière lui.', penaltyCost: 25 },
     ]},
 
     // Nantes
