@@ -37,7 +37,10 @@ export default function CluesTab({ stepIndex, clues, onChange }: Props) {
     }, [clues, stepIndex, onChange]);
 
     const handleDelete = useCallback((index: number) => {
-        onChange(stepIndex, clues.filter((_, i) => i !== index));
+        const filtered = clues
+            .filter((_, i) => i !== index)
+            .map((c, i) => ({ ...c, orderNumber: i + 1 }));
+        onChange(stepIndex, filtered);
     }, [clues, stepIndex, onChange]);
 
     return (
