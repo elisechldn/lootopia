@@ -56,6 +56,7 @@ export class ParticipationsService {
         refParticipation: participation.id,
         refStep: firstStep.id,
         statut: 'IN_PROGRESS',
+        totalPoints: firstStep.points,
       },
     });
 
@@ -219,6 +220,7 @@ export class ParticipationsService {
           refParticipation: participationId,
           refStep: nextStep.id,
           statut: 'IN_PROGRESS',
+          totalPoints: nextStep.points,
         },
       });
       return this.prisma.participation.findUnique({
