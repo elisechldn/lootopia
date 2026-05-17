@@ -34,6 +34,8 @@ reset: reset-db reset-bucket
 reset-db:
 	@echo "🔄 Reset de la base de données..."
 	cd $(API_DIR) && npx prisma db push --force-reset
+	cd $(API_DIR) && npx prisma generate
+	npm run build --workspace=packages/types
 	cd $(API_DIR) && npx prisma db seed
 
 ## Réinitialise uniquement les accès du bucket MinIO

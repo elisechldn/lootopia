@@ -1194,6 +1194,7 @@ export type StepSelectScalar = {
   markerPatternUrl?: boolean
 }
 
+export type StepOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "title" | "radius" | "points" | "createdAt" | "updatedAt" | "refHunt" | "refArItem" | "arMode" | "markerImageUrl" | "markerPatternUrl", ExtArgs["result"]["step"]>
 export type StepInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   arItem?: boolean | Prisma.Step$arItemArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
