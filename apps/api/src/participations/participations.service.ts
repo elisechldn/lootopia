@@ -56,6 +56,7 @@ export class ParticipationsService {
         refParticipation: participation.id,
         refStep: firstStep.id,
         statut: 'IN_PROGRESS',
+        totalPoints: firstStep.points,
       },
     });
 
@@ -81,11 +82,15 @@ export class ParticipationsService {
           },
         },
         progresses: {
-          select: {
-            totalPoints: true,
-            statut: true,
-            completedAt: true,
-            refStep: true,
+          include: {
+            step: {
+              select: {
+                id: true,
+                orderNumber: true,
+                title: true,
+                points: true,
+              },
+            },
           },
         },
       },
@@ -122,12 +127,20 @@ export class ParticipationsService {
     const participation = await this.prisma.participation.findUnique({
       where: { id },
       include: {
-        hunt: { include: { steps: { orderBy: { orderNumber: 'asc' } } } },
+        hunt: {
+          include: {
+            steps: {
+              orderBy: { orderNumber: 'asc' },
+              include: { arItem: true },
+            },
+          },
+        },
         progresses: { include: { clueUsages: true } },
       },
     });
     if (!participation)
       throw new NotFoundException('Participation introuvable');
+    console.log("PARTICI => ", participation)
     return participation;
   }
 
@@ -158,7 +171,7 @@ export class ParticipationsService {
 
     // Vérification géofence via PostGIS si l'étape est géolocalisée
     const [geoResult] = await this.prisma.$queryRaw<Array<{ hasLocation: boolean }>>(
-      Prisma.sql`SELECT "location" IS NOT NULL AS "hasLocation" FROM "Step" WHERE id = ${stepId}`,
+      Prisma.sql`SELECT "location" IS NOT NULL AS "hasLocation" FROM "steps" WHERE id = ${stepId}`,
     );
     if (geoResult?.hasLocation) {
       const [result] = await this.prisma.$queryRaw<Array<{ isInZone: boolean }>>(
@@ -168,7 +181,7 @@ export class ParticipationsService {
               ST_MakePoint(${dto.longitude}, ${dto.latitude})::geography,
               ${step.radius}
           ) AS "isInZone"
-          FROM "Step"
+          FROM "steps"
           WHERE id = ${stepId}
         `,
       );
@@ -207,6 +220,7 @@ export class ParticipationsService {
           refParticipation: participationId,
           refStep: nextStep.id,
           statut: 'IN_PROGRESS',
+          totalPoints: nextStep.points,
         },
       });
       return this.prisma.participation.findUnique({

@@ -45,11 +45,9 @@ export const ProgressStatus = {
 export type ProgressStatus = (typeof ProgressStatus)[keyof typeof ProgressStatus]
 
 
-export const ActionType = {
+export const ArMode = {
   GPS: 'GPS',
-  QR_CODE: 'QR_CODE',
-  AR: 'AR',
-  RIDDLE: 'RIDDLE'
+  MARKER: 'MARKER'
 } as const
 
-export type ActionType = (typeof ActionType)[keyof typeof ActionType]
+export type ArMode = (typeof ArMode)[keyof typeof ArMode]

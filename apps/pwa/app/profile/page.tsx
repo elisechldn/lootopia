@@ -6,8 +6,9 @@ import { LogOut, Trophy, CheckCircle, Clock } from 'lucide-react';
 import TopBar                                 from '@/components/ui/TobBar/TopBar';
 import TabNavigation                          from '@/components/ui/TabNavigation/TabNavigation';
 import { useUserStore } from '@/store/userStore';
-import { getMyParticipations } from '@/services/participation.service';
+import { getMyParticipationsAction } from '@/lib/actions/participation.actions';
 import { logoutAction } from '@/lib/actions/auth.actions';
+import { assetUrl } from '@/lib/assets';
 import { type Prisma } from '@repo/types';
 
 type Participation = Prisma.ParticipationGetPayload<{
@@ -51,8 +52,8 @@ export default function ProfilePage() {
       router.replace('/login');
       return;
     }
-    getMyParticipations(user.id).then((data) => {
-      setParticipations(data as Participation[]);
+    getMyParticipationsAction().then((data) => {
+      setParticipations(data as unknown as Participation[]);
       setLoading(false);
     });
   }, []);
@@ -129,7 +130,7 @@ export default function ProfilePage() {
                   <div className="w-10 h-10 rounded-lg bg-muted overflow-hidden flex-shrink-0">
                     {p.hunt.coverImage && (
                       <img
-                        src={p.hunt.coverImage}
+                        src={assetUrl(p.hunt.coverImage)!}
                         alt={p.hunt.title}
                         className="w-full h-full object-cover"
                       />

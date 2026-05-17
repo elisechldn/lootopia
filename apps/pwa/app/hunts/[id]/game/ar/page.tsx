@@ -1,21 +1,16 @@
-import ARScene from '@/components/ar/ARScene';
-import { getHuntById } from '@/services/hunt.service';
+import { Suspense } from "react";
+import ARPageContent from "@/components/ar/ARPageContent";
 
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ participationId?: string; stepId?: string }>;
 };
 
-export default async function ARPage({ params, searchParams }: Props) {
-  const [{ id }, { participationId, stepId }] = await Promise.all([params, searchParams]);
-  const hunt = getHuntById(+id);
-
+export default async function ARPage({ params }: Props) {
+  const { id } = await params;
+  console.log("HUNT PAGE -> ", id)
   return (
-    <ARScene
-      hunt={hunt}
-      huntId={+id}
-      participationId={participationId ? +participationId : undefined}
-      stepId={stepId ? +stepId : undefined}
-    />
+    <Suspense fallback={null}>
+      <ARPageContent huntId={+id} />
+    </Suspense>
   );
 }

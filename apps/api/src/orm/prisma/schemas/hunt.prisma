@@ -1,22 +1,24 @@
 model Hunt {
   id               Int             @id @default(autoincrement())
   title            String
-  shortDescription String?
+  shortDescription String?         @map("short_description")
   description      String?
-  startDate        DateTime?
-  endDate          DateTime?
-  locationCenter   Unsupported("GEOGRAPHY(Point, 4326)")?
+  startDate        DateTime?       @map("start_date")
+  endDate          DateTime?       @map("end_date")
+  locationCenter   Unsupported("GEOGRAPHY(Point, 4326)")? @map("location_center")
   radius           Int             @default(5000)
-  coverImage       String?
+  coverImage       String?         @map("cover_image")
   status           HuntStatus      @default(DRAFT)
-  rewardType       String?         @default("DISCOUNT_CODE")
-  rewardValue      String?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  refUser          Int
+  rewardType       String?         @default("DISCOUNT_CODE") @map("reward_type")
+  rewardValue      String?         @map("reward_value")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  refUser          Int             @map("ref_user")
   user             User            @relation(fields: [refUser], references: [id], onDelete: Cascade)
   steps            Step[]
   participations   Participation[]
+
+  @@map("hunts")
 }
 
 enum HuntStatus {

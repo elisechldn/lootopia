@@ -3,6 +3,7 @@ import HuntHero from "../../../components/hunt/HuntHero";
 import HuntInfoSection from "../../../components/hunt/HuntInfoSection";
 import PlayButton from "../../../components/hunt/PlayButton";
 import { getHuntById } from "../../../services/hunt.service";
+import { assetUrl } from "@/lib/assets";
 
 function formatDuration(startDate: Date | string | null, endDate: Date | string | null): string {
   if (!startDate || !endDate) return "—";
@@ -20,10 +21,9 @@ export default async function HuntOnBoardingPage({ params }: { params: Promise<{
 
   const { id } = await params;
   const { data: hunt } = await getHuntById(Number(id));
-
   return (
     <main className="flex flex-col min-h-screen bg-background">
-      <HuntHero title={hunt.title} imageUrl={hunt.coverImage!}/>
+      <HuntHero title={hunt.title} imageUrl={assetUrl(hunt.coverImage)!}/>
 
       <div className="flex flex-col flex-1 px-4">
         <hr className="border-border" />

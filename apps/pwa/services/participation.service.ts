@@ -8,11 +8,26 @@ export type GameProgress = {
   completedAt: string | null;
 };
 
+export type GameStep = {
+  id: number;
+  orderNumber: number;
+  title: string;
+  arMode: 'GPS' | 'MARKER';
+  markerImageUrl: string | null;
+  markerPatternUrl: string | null;
+  arItem?: { id: string; filepath: string; filename: string; hasAnimations: boolean } | null;
+};
+
 export type GameParticipation = {
   id: number;
   status: 'IN_PROGRESS' | 'COMPLETED' | 'ABANDONED';
   totalPoints: number;
   progresses: GameProgress[];
+  hunt?: {
+    id: number;
+    title: string;
+    steps: GameStep[];
+  };
 };
 
 function unwrap(res: Response, body: unknown) {
@@ -22,7 +37,9 @@ function unwrap(res: Response, body: unknown) {
 export async function getParticipationById(participationId: number): Promise<GameParticipation> {
   const res = await fetch(`${API_URL}/participations/${participationId}`);
   if (!res.ok) throw new Error('Participation introuvable');
-  return unwrap(res, await res.json()) as GameParticipation;
+  const data = await res.json();
+  console.log("DATA PARTICIPATION -> ", data);
+  return unwrap(res, data) as GameParticipation;
 }
 
 export async function startHunt(userId: number, huntId: number): Promise<GameParticipation> {
@@ -61,8 +78,10 @@ export async function requestClue(participationId: number, stepId: number, clueI
   return unwrap(res, await res.json()) as { clue: string; alreadyUsed: boolean; penaltyCost?: number };
 }
 
-export async function getMyParticipations(userId: number) {
-  const res = await fetch(`${API_URL}/participations/me?userId=${userId}`);
+export async function getMyParticipations(token: string) {
+  const res = await fetch(`${API_URL}/participations/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   if (!res.ok) return [];
   return unwrap(res, await res.json()) as unknown[];
 }
