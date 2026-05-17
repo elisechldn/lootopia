@@ -27,15 +27,15 @@ const HUNT_COORDS: Record<number, [number, number]> = {
 
 async function setHuntLocationCenter(huntId: number, lon: number, lat: number) {
   await prisma.$executeRaw`
-    UPDATE "Hunt"
-    SET "locationCenter" = ST_MakePoint(${lon}, ${lat})::geography
+    UPDATE "hunts"
+    SET "location_center" = ST_MakePoint(${lon}, ${lat})::geography
     WHERE id = ${huntId}
   `;
 }
 
 async function setStepLocation(stepId: number, lon: number, lat: number) {
   await prisma.$executeRaw`
-    UPDATE "Step"
+    UPDATE "steps"
     SET "location" = ST_MakePoint(${lon}, ${lat})::geography
     WHERE id = ${stepId}
   `;

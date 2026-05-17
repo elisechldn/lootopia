@@ -55,12 +55,18 @@ export class ArItemService {
       return this.prisma.arItem.findMany({ orderBy: { createdAt: 'desc' } });
     }
     return this.prisma.$queryRaw<ArItemModel[]>(Prisma.sql`
-      SELECT DISTINCT ai.*
-      FROM "ArItem" ai
-      INNER JOIN "Step" s ON s."refArItem" = ai.id
-      INNER JOIN "Hunt" h ON s."refHunt" = h.id
-      WHERE h."refUser" = ${userId}
-      ORDER BY ai."createdAt" DESC
+      SELECT DISTINCT
+        ai.id,
+        ai.filename,
+        ai.filepath,
+        ai."has_animations"  AS "hasAnimations",
+        ai."created_at"      AS "createdAt",
+        ai."updated_at"      AS "updatedAt"
+      FROM "ar_items" ai
+      INNER JOIN "steps" s ON s."ref_ar_item" = ai.id
+      INNER JOIN "hunts" h ON s."ref_hunt" = h.id
+      WHERE h."ref_user" = ${userId}
+      ORDER BY ai."created_at" DESC
     `);
   }
 
@@ -74,9 +80,9 @@ export class ArItemService {
         SELECT
           COUNT(DISTINCT s.id) AS steps_count,
           COUNT(DISTINCT h.id) AS hunts_count
-        FROM "Step" s
-        INNER JOIN "Hunt" h ON s."refHunt" = h.id
-        WHERE s."refArItem" = ${id}
+        FROM "steps" s
+        INNER JOIN "hunts" h ON s."ref_hunt" = h.id
+        WHERE s."ref_ar_item" = ${id}
       `,
     );
     return {

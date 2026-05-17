@@ -20,25 +20,25 @@ export class HuntsService {
         SELECT json_build_object(
           'id', h.id,
           'title', h.title,
-          'shortDescription', h."shortDescription",
+          'shortDescription', h."short_description",
           'description', h.description,
-          'startDate', h."startDate",
-          'endDate', h."endDate",
+          'startDate', h."start_date",
+          'endDate', h."end_date",
           'radius', h.radius,
-          'coverImage', h."coverImage",
+          'coverImage', h."cover_image",
           'status', h.status,
-          'rewardType', h."rewardType",
-          'rewardValue', h."rewardValue",
-          'createdAt', h."createdAt",
-          'updatedAt', h."updatedAt",
-          'refUser', h."refUser",
-          'latitude', ST_Y(h."locationCenter"::geometry),
-          'longitude', ST_X(h."locationCenter"::geometry),
+          'rewardType', h."reward_type",
+          'rewardValue', h."reward_value",
+          'createdAt', h."created_at",
+          'updatedAt', h."updated_at",
+          'refUser', h."ref_user",
+          'latitude', ST_Y(h."location_center"::geometry),
+          'longitude', ST_X(h."location_center"::geometry),
           '_count', json_build_object(
             'participations', (
               SELECT COUNT(*)::int
-              FROM "Participation" p
-              WHERE p."refHunt" = h.id
+              FROM "participations" p
+              WHERE p."ref_hunt" = h.id
             )
           ),
           'steps', COALESCE(
@@ -46,17 +46,17 @@ export class HuntsService {
               SELECT json_agg(
                 json_build_object(
                   'id', s.id,
-                  'orderNumber', s."orderNumber",
+                  'orderNumber', s."order_number",
                   'title', s.title,
                   'radius', s.radius,
                   'points', s.points,
-                  'createdAt', s."createdAt",
-                  'updatedAt', s."updatedAt",
-                  'refHunt', s."refHunt",
-                  'arMode', s."arMode",
-                  'markerImageUrl', s."markerImageUrl",
-                  'markerPatternUrl', s."markerPatternUrl",
-                  'refArItem', s."refArItem",
+                  'createdAt', s."created_at",
+                  'updatedAt', s."updated_at",
+                  'refHunt', s."ref_hunt",
+                  'arMode', s."ar_mode",
+                  'markerImageUrl', s."marker_image_url",
+                  'markerPatternUrl', s."marker_pattern_url",
+                  'refArItem', s."ref_ar_item",
                   'latitude', ST_Y(s.location::geometry),
                   'longitude', ST_X(s.location::geometry),
                   'clues', COALESCE((
@@ -64,32 +64,32 @@ export class HuntsService {
                        json_build_object(
                            'id', c.id,
                            'message', c.message,
-                           'penaltyCost', c."penaltyCost",
-                           'orderNumber', c."orderNumber"
-                       ) ORDER BY c."orderNumber" ASC
+                           'penaltyCost', c."penalty_cost",
+                           'orderNumber', c."order_number"
+                       ) ORDER BY c."order_number" ASC
                     )
-                    FROM "Clue" c
-                    WHERE c."refStep" = s.id
+                    FROM "clues" c
+                    WHERE c."ref_step" = s.id
                   ), '[]'::json),
                   'arItem', CASE
                     WHEN ai.id IS NOT NULL THEN json_build_object(
                       'id', ai.id,
                       'filename', ai.filename,
                       'filepath', ai.filepath,
-                      'hasAnimations', ai."hasAnimations"
+                      'hasAnimations', ai."has_animations"
                     )
                     ELSE NULL
                   END
-                ) ORDER BY s."orderNumber" ASC
+                ) ORDER BY s."order_number" ASC
               )
-              FROM "Step" s
-              LEFT JOIN "ArItem" ai ON ai.id = s."refArItem"
-              WHERE s."refHunt" = h.id
+              FROM "steps" s
+              LEFT JOIN "ar_items" ai ON ai.id = s."ref_ar_item"
+              WHERE s."ref_hunt" = h.id
             ),
             '[]'::json
           )
         ) AS hunt
-        FROM "Hunt" h
+        FROM "hunts" h
         WHERE h.id = ${id}
       `,
     );
@@ -111,20 +111,25 @@ export class HuntsService {
     return this.prisma.$queryRaw(
       Prisma.sql`
                 SELECT
-                    id, title, "shortDescription",
-                    "rewardType", "rewardValue", radius,
-                    "startDate", "endDate", "createdAt",
-                    ST_Y("locationCenter"::geometry) AS latitude,
-                    ST_X("locationCenter"::geometry) AS longitude,
+                    id, title,
+                    "short_description"   AS "shortDescription",
+                    "reward_type"         AS "rewardType",
+                    "reward_value"        AS "rewardValue",
+                    radius,
+                    "start_date"          AS "startDate",
+                    "end_date"            AS "endDate",
+                    "created_at"          AS "createdAt",
+                    ST_Y("location_center"::geometry) AS latitude,
+                    ST_X("location_center"::geometry) AS longitude,
                     ST_Distance(
-                        "locationCenter",
+                        "location_center",
                         ST_MakePoint(${lon}, ${lat})::geography
                     ) AS distance
-                FROM "Hunt"
+                FROM "hunts"
                 WHERE status = 'ACTIVE'
-                  AND "locationCenter" IS NOT NULL
+                  AND "location_center" IS NOT NULL
                   AND ST_DWithin(
-                      "locationCenter",
+                      "location_center",
                       ST_MakePoint(${lon}, ${lat})::geography,
                       ${searchRadius}
                   )
@@ -229,8 +234,8 @@ export class HuntsService {
     if (dto.locationLat != null && dto.locationLon != null) {
       await this.prisma.$executeRaw(
         Prisma.sql`
-                    UPDATE "Hunt"
-                    SET "locationCenter" = ST_MakePoint(${dto.locationLon}, ${dto.locationLat})::geography
+                    UPDATE "hunts"
+                    SET "location_center" = ST_MakePoint(${dto.locationLon}, ${dto.locationLat})::geography
                     WHERE id = ${hunt.id}
                 `,
       );
@@ -275,8 +280,8 @@ export class HuntsService {
     if (dto.locationLat != null && dto.locationLon != null) {
       await this.prisma.$executeRaw(
         Prisma.sql`
-                    UPDATE "Hunt"
-                    SET "locationCenter" = ST_MakePoint(${dto.locationLon}, ${dto.locationLat})::geography
+                    UPDATE "hunts"
+                    SET "location_center" = ST_MakePoint(${dto.locationLon}, ${dto.locationLat})::geography
                     WHERE id = ${hunt.id}
                 `,
       );
@@ -355,7 +360,7 @@ export class HuntsService {
       if (s.latitude != null && s.longitude != null) {
         await this.prisma.$executeRaw(
           Prisma.sql`
-            UPDATE "Step"
+            UPDATE "steps"
             SET "location" = ST_MakePoint(${Number(s.longitude)}, ${Number(s.latitude)})::geography
             WHERE id = ${step.id}
           `,

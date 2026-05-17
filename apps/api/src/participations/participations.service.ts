@@ -171,7 +171,7 @@ export class ParticipationsService {
 
     // Vérification géofence via PostGIS si l'étape est géolocalisée
     const [geoResult] = await this.prisma.$queryRaw<Array<{ hasLocation: boolean }>>(
-      Prisma.sql`SELECT "location" IS NOT NULL AS "hasLocation" FROM "Step" WHERE id = ${stepId}`,
+      Prisma.sql`SELECT "location" IS NOT NULL AS "hasLocation" FROM "steps" WHERE id = ${stepId}`,
     );
     if (geoResult?.hasLocation) {
       const [result] = await this.prisma.$queryRaw<Array<{ isInZone: boolean }>>(
@@ -181,7 +181,7 @@ export class ParticipationsService {
               ST_MakePoint(${dto.longitude}, ${dto.latitude})::geography,
               ${step.radius}
           ) AS "isInZone"
-          FROM "Step"
+          FROM "steps"
           WHERE id = ${stepId}
         `,
       );
