@@ -1,9 +1,13 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, HuntStatus } from '@repo/types';
 import { PrismaService } from '../orm/prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
 import { CreateHuntDto } from './dto/create-hunt.dto';
-
+import { logInfo } from '../loggeur';
 @Injectable()
 export class HuntsService {
   constructor(
@@ -93,21 +97,34 @@ export class HuntsService {
         WHERE h.id = ${id}
       `,
     );
-
+    logInfo('info', `Récupération de la chasse ${id}`, 'HuntsService');
     return rows[0]?.hunt ?? null;
   }
 
   async findByPartner(userId: number | null) {
-    return this.prisma.hunt.findMany({
-      where: userId ? { refUser: userId } : undefined,
-      include: {
-        _count: { select: { participations: true } },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+    return this.prisma.hunt
+      .findMany({
+        where: userId ? { refUser: userId } : undefined,
+        include: {
+          _count: { select: { participations: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+      })
+      .then((hunts) => {
+        logInfo(
+          'info',
+          `Récupération des chasses pour le partenaire ${userId ?? 'tous les utilisateurs (soit pas relou)'} avec ${hunts.length} chasses`,
+          'HuntsService',
+        );
+        return hunts;
+      });
   }
 
-  async findNearby(lat: number, lon: number, searchRadius = 20000): Promise<unknown[]> {
+  async findNearby(
+    lat: number,
+    lon: number,
+    searchRadius = 20000,
+  ): Promise<unknown[]> {
     return this.prisma.$queryRaw(
       Prisma.sql`
                 SELECT
@@ -152,6 +169,11 @@ export class HuntsService {
       }),
     ]);
     const players = await this.prisma.participation.count({ where: huntWhere });
+    logInfo(
+      'info',
+      `Récupération des statistiques pour le partenaire ${userId ?? 'tous les utilisateurs (soit pas relou)'} : ${total} chasses au total, ${active} actives, ${finished} terminées, ${players} participations`,
+      'HuntsService',
+    );
     return { total, active, finished, players };
   }
 
@@ -181,20 +203,30 @@ export class HuntsService {
     });
 
     return hunts.map((hunt) => {
-      const completed = hunt.participations.filter(p => p.status === 'COMPLETED');
-      const inProgress = hunt.participations.filter(p => p.status === 'IN_PROGRESS');
+      const completed = hunt.participations.filter(
+        (p) => p.status === 'COMPLETED',
+      );
+      const inProgress = hunt.participations.filter(
+        (p) => p.status === 'IN_PROGRESS',
+      );
 
-      const avgDuration = completed.length > 0
+      const avgDuration =
+        completed.length > 0
           ? completed.reduce((sum, p) => {
-        if (!p.endTime) return sum;
-        const diff = p.endTime.getTime() - p.startTime.getTime();
-        if (diff <= 0) return sum; // ← ignorer les durées incohérentes
-        return sum + diff;
-      }, 0) / completed.length / 1000 / 60
+              if (!p.endTime) return sum;
+              const diff = p.endTime.getTime() - p.startTime.getTime();
+              if (diff <= 0) return sum; // ← ignorer les durées incohérentes
+              return sum + diff;
+            }, 0) /
+            completed.length /
+            1000 /
+            60
           : null;
 
-      const totalClueUsages = hunt.participations.reduce((sum, p) =>
-          sum + p.progresses.reduce((s, pr) => s + pr.clueUsages.length, 0), 0
+      const totalClueUsages = hunt.participations.reduce(
+        (sum, p) =>
+          sum + p.progresses.reduce((s, pr) => s + pr.clueUsages.length, 0),
+        0,
       );
 
       return {
@@ -212,8 +244,18 @@ export class HuntsService {
   }
 
   async create(dto: CreateHuntDto) {
-    if (!dto.title) throw new BadRequestException('Le titre est obligatoire');
-    if (!dto.refUser) throw new BadRequestException('refUser est obligatoire');
+    if (!dto.title) {
+      logInfo(
+        'error',
+        'encore un crétin qui ne met pas de titre',
+        'HuntsService',
+      );
+      throw new BadRequestException('Le titre est obligatoire');
+    }
+    if (!dto.refUser) {
+      logInfo('error', 'mais il fait quoi lui sans refUser', 'HuntsService');
+      throw new BadRequestException('refUser est obligatoire');
+    }
 
     const hunt = await this.prisma.hunt.create({
       data: {
@@ -241,6 +283,11 @@ export class HuntsService {
       );
     }
 
+    logInfo(
+      'info',
+      `Chasse ${hunt.id} créée par le partenaire ${dto.refUser}`,
+      'HuntsService',
+    );
     return hunt;
   }
 
@@ -287,10 +334,25 @@ export class HuntsService {
       );
     }
 
+    logInfo(
+      'info',
+      `Chasse ${hunt.id} mise à jour par le partenaire ${dto.refUser}`,
+      'HuntsService',
+    );
     return hunt;
   }
 
   async remove(id: number) {
+    const hunt = await this.prisma.hunt.findUnique({ where: { id } });
+    if (!hunt) {
+      logInfo('error', `Chasse ${id} non trouvée`, 'HuntsService');
+      throw new NotFoundException('Chasse non trouvée');
+    }
+    logInfo(
+      'info',
+      `Chasse ${hunt.id} supprimée par le partenaire ${hunt.refUser}`,
+      'HuntsService',
+    );
     return this.prisma.hunt.delete({ where: { id } });
   }
 
@@ -308,10 +370,16 @@ export class HuntsService {
     });
 
     await Promise.all(
-      stepsToDelete.flatMap((s) => [
-        s.markerImageUrl ? this.storage.deleteObject(s.markerImageUrl).catch(() => {}) : null,
-        s.markerPatternUrl ? this.storage.deleteObject(s.markerPatternUrl).catch(() => {}) : null,
-      ]).filter((p): p is Promise<void> => p !== null),
+      stepsToDelete
+        .flatMap((s) => [
+          s.markerImageUrl
+            ? this.storage.deleteObject(s.markerImageUrl).catch(() => {})
+            : null,
+          s.markerPatternUrl
+            ? this.storage.deleteObject(s.markerPatternUrl).catch(() => {})
+            : null,
+        ])
+        .filter((p): p is Promise<void> => p !== null),
     );
 
     await this.prisma.step.deleteMany({
@@ -333,7 +401,9 @@ export class HuntsService {
         refArItem: s.refArItem ? String(s.refArItem) : null,
         points: Number(s.points ?? 0),
         markerImageUrl: s.markerImageUrl ? String(s.markerImageUrl) : null,
-        markerPatternUrl: s.markerPatternUrl ? String(s.markerPatternUrl) : null,
+        markerPatternUrl: s.markerPatternUrl
+          ? String(s.markerPatternUrl)
+          : null,
       };
 
       let step;
@@ -343,10 +413,14 @@ export class HuntsService {
           select: { markerImageUrl: true, markerPatternUrl: true },
         });
         if (existing?.markerImageUrl && !s.markerImageUrl) {
-          await this.storage.deleteObject(existing.markerImageUrl).catch(() => {});
+          await this.storage
+            .deleteObject(existing.markerImageUrl)
+            .catch(() => {});
         }
         if (existing?.markerPatternUrl && !s.markerPatternUrl) {
-          await this.storage.deleteObject(existing.markerPatternUrl).catch(() => {});
+          await this.storage
+            .deleteObject(existing.markerPatternUrl)
+            .catch(() => {});
         }
         step = await this.prisma.step.update({
           where: { id: Number(s.id) },
@@ -367,7 +441,14 @@ export class HuntsService {
         );
       }
 
-      const clues = s.clues as Array<{ id?: number; message: string; penaltyCost?: number; orderNumber?: number }> | undefined;
+      const clues = s.clues as
+        | Array<{
+            id?: number;
+            message: string;
+            penaltyCost?: number;
+            orderNumber?: number;
+          }>
+        | undefined;
       if (Array.isArray(clues)) {
         const incomingClueIds = clues
           .filter((c) => c.id != null)
@@ -376,7 +457,9 @@ export class HuntsService {
         await this.prisma.clue.deleteMany({
           where: {
             refStep: step.id,
-            ...(incomingClueIds.length > 0 ? { id: { notIn: incomingClueIds } } : {}),
+            ...(incomingClueIds.length > 0
+              ? { id: { notIn: incomingClueIds } }
+              : {}),
           },
         });
 
@@ -403,6 +486,12 @@ export class HuntsService {
         }
       }
     }
+
+    logInfo(
+      'info',
+      `Création de ${savedSteps.length} étapes pour la chasse ${huntId}`,
+      'HuntsService',
+    );
 
     return savedSteps;
   }
