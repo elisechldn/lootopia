@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Navigation, Trophy, Loader2 } from 'lucide-react';
@@ -8,6 +8,7 @@ import { getHuntById } from '@/services/hunt.service';
 import { getParticipationById, type GameParticipation } from '@/services/participation.service';
 import { haversineDistance, formatDistance } from '@/lib/geo';
 import type { HuntGetPayload } from '@repo/types';
+import HintBubbles from '@/components/game/hints/HintBubbles';
 
 const GameLeafletMap = dynamic(() => import('@/components/game/GameLeafletMap'), { ssr: false });
 
@@ -33,6 +34,8 @@ export default function GameMapPage({ params }: Props) {
   const [userCoords, setUserCoords] = useState<{ lat: number; lon: number } | null>(null);
   const [inZone, setInZone] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [cameraPermissionDenied, setCameraPermissionDenied] = useState(false);
+  const [, startClueTransition] = useTransition();
 
   // Fetch hunt + participation
   useEffect(() => {
@@ -42,6 +45,7 @@ export default function GameMapPage({ params }: Props) {
       getParticipationById(+participationId),
     ]).then(([huntRes, participationRes]) => {
       setHunt(huntRes.data as HuntWithSteps);
+      console.log("participationRes => ", participationRes)
       setParticipation(participationRes);
       setLoading(false);
     });
@@ -49,10 +53,15 @@ export default function GameMapPage({ params }: Props) {
 
   // Continuous GPS watch
   useEffect(() => {
+    console.log("navigator.geolocation -> ", navigator.geolocation)
     if (!navigator.geolocation) return;
+    console.log(1)
     const watchId = navigator.geolocation.watchPosition(
-      (pos) => setUserCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-      () => {},
+      (pos) => {
+        console.log("POSITION -> ", pos.coords);
+        setUserCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+      },
+      () => {console.log("ERROR")},
       { enableHighAccuracy: true, maximumAge: 2000 },
     );
     return () => navigator.geolocation.clearWatch(watchId);
@@ -60,11 +69,22 @@ export default function GameMapPage({ params }: Props) {
 
   // Current step: the one whose progress is IN_PROGRESS
   const currentStep = useMemo<StepWithCoords | null>(() => {
+    console.log("HUNT => ", hunt);
+    console.log("PARTICIPATION => ", participation);
     if (!hunt || !participation) return null;
     const active = participation.progresses.find((p) => p.statut === 'IN_PROGRESS');
+    console.log("ACTIVE -> ", active)
     if (!active) return null;
-    return (hunt.steps.find((s) => s.id === active.refStep) as StepWithCoords) ?? null;
+    const step = hunt.steps.find((s) => s.id === active.refStep);
+    console.log("CURRENT STEP : ", step)
+    return step as StepWithCoords ?? null;
   }, [hunt, participation]);
+
+  // Current active progress
+  const currentProgress = useMemo(() => {
+    if (!participation) return null;
+    return participation.progresses.find((p) => p.statut === 'IN_PROGRESS') ?? null;
+  }, [participation]);
 
   // Haversine geofence check
   useEffect(() => {
@@ -88,9 +108,32 @@ export default function GameMapPage({ params }: Props) {
     );
   }, [userCoords, currentStep]);
 
-  const handleEnterAR = () => {
-    if (!currentStep || !inZone) return;
-    router.push(`/hunts/${huntId}/game/ar?participationId=${participationId}&stepId=${currentStep.id}`);
+  const handleEnterAR = async () => {
+    if (!currentStep) return;
+    setCameraPermissionDenied(false);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream.getTracks().forEach((t) => t.stop());
+      router.push(
+        `/hunts/${huntId}/game/ar?participationId=${participationId}&stepId=${currentStep.id}`,
+      );
+    } catch (err) {
+      if (
+        err instanceof DOMException &&
+        (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')
+      ) {
+        setCameraPermissionDenied(true);
+      }
+    }
+  };
+
+  // Refresh participation after last clue reveal
+  const handleProgressChanged = () => {
+    if (!participationId) return;
+    startClueTransition(async () => {
+      const updated = await getParticipationById(+participationId);
+      setParticipation(updated);
+    });
   };
 
   // Hunt completed (no more IN_PROGRESS step)
@@ -130,6 +173,13 @@ export default function GameMapPage({ params }: Props) {
       {/* Top half — Leaflet map */}
       <div className="relative h-1/2 w-full">
         <GameLeafletMap userCoords={userCoords} />
+        {currentProgress && (
+          <HintBubbles
+            progressId={currentProgress.id}
+            totalPoints={currentProgress.totalPoints}
+            onProgressChanged={handleProgressChanged}
+          />
+        )}
       </div>
 
       {/* Bottom half — info + action */}
@@ -171,19 +221,25 @@ export default function GameMapPage({ params }: Props) {
           </div>
         </div>
 
-        {/* AR trigger button — always visible, enabled only when in zone */}
-        <button
-          onClick={handleEnterAR}
-          disabled={!inZone}
-          className={[
-            'mt-auto w-full rounded-xl py-4 text-sm font-bold uppercase tracking-widest text-white transition-colors',
-            inZone
-              ? 'bg-green-500 hover:bg-green-600 animate-pulse'
-              : 'bg-muted text-muted-foreground cursor-not-allowed',
-          ].join(' ')}
-        >
-          {inZone ? 'Utiliser la caméra' : 'Approchez-vous de la zone…'}
-        </button>
+        {/* AR trigger button — always accessible regardless of GPS zone */}
+        <div className="mt-auto space-y-1">
+          <button
+            onClick={() => void handleEnterAR()}
+            className="w-full rounded-xl bg-green-500 py-4 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600"
+          >
+            Utiliser la caméra AR
+          </button>
+          {!inZone && (
+            <p className="text-center text-xs text-muted-foreground">
+              Approchez-vous de la zone pour valider l&apos;étape après scan
+            </p>
+          )}
+          {cameraPermissionDenied && (
+            <p className="text-center text-xs text-amber-600">
+              Permission caméra refusée. Activez-la dans les réglages du navigateur (Site → Caméra → Autoriser).
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

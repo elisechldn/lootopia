@@ -6,6 +6,11 @@ import { UsersModule } from './users/users.module';
 import { HuntsModule } from './hunts/hunts.module';
 import { AuthModule } from './auth/auth.module';
 import { ParticipationsModule } from './participations/participations.module';
+import { StorageModule } from './storage/storage.module';
+import { FilesModule } from './storage/files/files.module';
+import { ArItemModule } from './ar-item/ar-item.module';
+import { CluesModule } from './clues/clues.module';
+import { StepsModule } from './steps/steps.module';
 
 @Module({
   imports: [
@@ -15,6 +20,11 @@ import { ParticipationsModule } from './participations/participations.module';
     HuntsModule,
     AuthModule,
     ParticipationsModule,
+    StorageModule,
+    FilesModule,
+    ArItemModule,
+    CluesModule,
+    StepsModule,
   ],
   controllers: [],
   providers: [PrismaService],

@@ -452,10 +452,6 @@ export type ClueUpdateOneRequiredWithoutClueUsagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClueUpdateToOneWithWhereWithoutClueUsagesInput, Prisma.ClueUpdateWithoutClueUsagesInput>, Prisma.ClueUncheckedUpdateWithoutClueUsagesInput>
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type ClueCreateNestedManyWithoutStepInput = {
   create?: Prisma.XOR<Prisma.ClueCreateWithoutStepInput, Prisma.ClueUncheckedCreateWithoutStepInput> | Prisma.ClueCreateWithoutStepInput[] | Prisma.ClueUncheckedCreateWithoutStepInput[]
   connectOrCreate?: Prisma.ClueCreateOrConnectWithoutStepInput | Prisma.ClueCreateOrConnectWithoutStepInput[]

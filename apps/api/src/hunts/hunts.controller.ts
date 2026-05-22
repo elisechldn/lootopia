@@ -41,6 +41,12 @@ export class HuntsController {
     );
   }
 
+  @Get('analytics')
+  analytics(@Query('userId') userId?: string) {
+    const id = userId ? Number(userId) : null;
+    return this.huntsService.analytics(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.huntsService.findOne(Number(id));
@@ -64,10 +70,10 @@ export class HuntsController {
   }
 
   @Post(':id/steps')
-  createSteps(
+  upsertSteps(
     @Param('id') id: string,
     @Body() body: { steps: Array<Record<string, unknown>> },
   ): Promise<unknown> {
-    return this.huntsService.createSteps(Number(id), body.steps);
+    return this.huntsService.upsertSteps(Number(id), body.steps);
   }
 }

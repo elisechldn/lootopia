@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {usePathname} from "next/navigation";
+import { useAuthStore } from "@/lib/stores/auth.store";
 
 interface User {
     sub: number;
@@ -59,13 +60,16 @@ const navItems = [
     },
 ];
 
-export default function PartnerSidebar({ user }: Props) {
+export default function PartnerSidebar({ user: initialUser }: Props) {
     const pathname = usePathname();
+    const storeUser = useAuthStore((s) => s.user);
+
+    const user = storeUser ?? initialUser;
 
     return (
-        <aside className="w-56 min-h-screen bg-white border-r border-gray-100 flex flex-col">
+        <aside className="w-56 min-h-screen bg-card border-r border-border flex flex-col">
             {/* Brand */}
-            <div className="px-5 py-5 border-b border-gray-100">
+            <div className="px-5 py-5 border-b border-border">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
                         <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" className="w-4 h-4">
@@ -74,8 +78,8 @@ export default function PartnerSidebar({ user }: Props) {
                         </svg>
                     </div>
                     <div>
-                        <p className="text-sm font-bold text-gray-900 leading-none">Chasse au Trésor</p>
-                        <p className="text-xs text-gray-400 mt-0.5">Portail des partenaires</p>
+                        <p className="text-sm font-bold text-foreground leading-none">Chasse au Trésor</p>
+                        <p className="text-xs text-muted-foreground/70 mt-0.5">Portail des partenaires</p>
                     </div>
                 </div>
             </div>
@@ -90,8 +94,8 @@ export default function PartnerSidebar({ user }: Props) {
                             href={item.href}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                                 isActive
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                                    ? "bg-muted text-foreground"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                             }`}
                         >
                             {item.icon}
@@ -102,31 +106,28 @@ export default function PartnerSidebar({ user }: Props) {
             </nav>
 
             {/* User */}
-            <div className="px-4 py-4 border-t border-gray-100">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-500">
+            <div className="px-4 py-4 border-t border-border">
+                <Link href="/dashboard/profile" className="flex items-center gap-3 hover:bg-muted/50 rounded-lg p-1 transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shrink-0">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-muted-foreground">
                             <path fillRule="evenodd"
                                   d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
                                   clipRule="evenodd"/>
                         </svg>
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-medium text-foreground truncate">
                             {user ? `${user.firstname ?? ''} ${user.lastname ?? ''}`.trim() || user.email : 'Partenaire'}
                         </p>
-                        <p className="text-xs text-gray-400 truncate">
+                        <p className="text-xs text-muted-foreground/70 truncate">
                             {user?.email ?? ''}
                         </p>
                     </div>
-                    <button className="text-gray-400 hover:text-gray-600">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                            <path fillRule="evenodd"
-                                  d="M4.5 12a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm6 0a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm6 0a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-                                  clipRule="evenodd"/>
-                        </svg>
-                    </button>
-                </div>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-muted-foreground/70 shrink-0">
+                        <path strokeLinecap="round" strokeLinejoin="round"
+                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/>
+                    </svg>
+                </Link>
             </div>
         </aside>
     );

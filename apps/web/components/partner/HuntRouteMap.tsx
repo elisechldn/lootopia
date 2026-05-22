@@ -63,13 +63,13 @@ export default function HuntRouteMap({ steps }: Props) {
     return (
         <div className="space-y-2">
             <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-gray-600">
+                <p className="text-xs font-medium text-muted-foreground">
                     Aperçu de l&apos;itinéraire
                 </p>
                 {totalDistance > 0 && (
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                         Distance totale estimée :{" "}
-                        <span className="font-semibold text-gray-700">
+                        <span className="font-semibold text-foreground/80">
                             {totalDistance >= 1000
                                 ? `${(totalDistance / 1000).toFixed(1)} km`
                                 : `${Math.round(totalDistance)} m`}
@@ -78,7 +78,7 @@ export default function HuntRouteMap({ steps }: Props) {
                 )}
             </div>
 
-            <div className="h-100 rounded-xl overflow-hidden border border-gray-200">
+            <div className="h-100 rounded-xl overflow-hidden border border-border">
                 <MapContainer
                     center={center}
                     zoom={14}

@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Query, HttpCode } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, HttpCode, UseGuards, Request } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ParticipationsService } from './participations.service';
 import { StartHuntDto } from './dto/start-hunt.dto';
 import { ValidateStepDto } from './dto/validate-step.dto';
@@ -14,10 +15,18 @@ export class ParticipationsController {
         return this.participationsService.startHunt(dto);
     }
 
-    // GET /participations/me?userId= — historique d'un joueur
+    // GET /participations/me — historique du joueur authentifié
     @Get('me')
-    findByUser(@Query('userId') userId: string) {
-        return this.participationsService.findByUser(Number(userId));
+    @UseGuards(AuthGuard('jwt'))
+    findByUser(@Request() req: { user: { sub: number } }) {
+        return this.participationsService.findByUser(req.user.sub);
+    }
+
+    // GET /participations/partner?partnerId= — joueurs des chasses d'un partenaire
+    @Get('partner')
+    findByPartner(@Query('partnerId') partnerId?: string) {
+        const id = partnerId ? Number(partnerId) : null;
+        return this.participationsService.findByPartner(id);
     }
 
     // GET /participations/:id — détail d'une participation

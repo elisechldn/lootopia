@@ -94,6 +94,7 @@ export class ParticipationsService {
         refParticipation: participation.id,
         refStep: firstStep.id,
         statut: 'IN_PROGRESS',
+        totalPoints: firstStep.points,
       },
     });
 
@@ -125,11 +126,15 @@ export class ParticipationsService {
             },
           },
           progresses: {
-            select: {
-              totalPoints: true,
-              statut: true,
-              completedAt: true,
-              refStep: true,
+            include: {
+              step: {
+                select: {
+                  id: true,
+                  orderNumber: true,
+                  title: true,
+                  points: true,
+                },
+              },
             },
           },
         },
@@ -145,11 +150,43 @@ export class ParticipationsService {
       });
   }
 
+  async findByPartner(partnerId: number | null) {
+    return this.prisma.participation.findMany({
+      where: partnerId ? { hunt: { refUser: partnerId } } : undefined,
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            email: true,
+          },
+        },
+        hunt: {
+          select: {
+            id: true,
+            title: true,
+            rewardType: true,
+            rewardValue: true,
+          },
+        },
+      },
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
   async findOne(id: number) {
     const participation = await this.prisma.participation.findUnique({
       where: { id },
       include: {
-        hunt: { include: { steps: { orderBy: { orderNumber: 'asc' } } } },
+        hunt: {
+          include: {
+            steps: {
+              orderBy: { orderNumber: 'asc' },
+              include: { arItem: true },
+            },
+          },
+        },
         progresses: { include: { clueUsages: true } },
       },
     });
@@ -166,6 +203,7 @@ export class ParticipationsService {
       );
       throw new NotFoundException('Participation introuvable');
     }
+    console.log('PARTICI => ', participation);
     return participation;
   }
 
@@ -233,7 +271,7 @@ export class ParticipationsService {
     const [geoResult] = await this.prisma.$queryRaw<
       Array<{ hasLocation: boolean }>
     >(
-      Prisma.sql`SELECT "location" IS NOT NULL AS "hasLocation" FROM "Step" WHERE id = ${stepId}`,
+      Prisma.sql`SELECT "location" IS NOT NULL AS "hasLocation" FROM "steps" WHERE id = ${stepId}`,
     );
     if (geoResult?.hasLocation) {
       const [result] = await this.prisma.$queryRaw<
@@ -245,7 +283,7 @@ export class ParticipationsService {
               ST_MakePoint(${dto.longitude}, ${dto.latitude})::geography,
               ${step.radius}
           ) AS "isInZone"
-          FROM "Step"
+          FROM "steps"
           WHERE id = ${stepId}
         `,
       );
@@ -295,6 +333,7 @@ export class ParticipationsService {
           refParticipation: participationId,
           refStep: nextStep.id,
           statut: 'IN_PROGRESS',
+          totalPoints: nextStep.points,
         },
       });
       return this.prisma.participation.findUnique({
@@ -312,20 +351,28 @@ export class ParticipationsService {
       0,
     );
 
-    return this.prisma.participation.update({
-      where: { id: participationId },
-      data: {
-        status: 'COMPLETED',
-        endTime: new Date(),
-        totalPoints,
-      },
-      include: {
-        hunt: { select: { title: true, rewardType: true, rewardValue: true } },
-      },
-    }).then((updated) => {
-        logInfo('info', `Participation ${participationId} complétée avec ${totalPoints} points`, 'ParticipationsService');
+    return this.prisma.participation
+      .update({
+        where: { id: participationId },
+        data: {
+          status: 'COMPLETED',
+          endTime: new Date(),
+          totalPoints,
+        },
+        include: {
+          hunt: {
+            select: { title: true, rewardType: true, rewardValue: true },
+          },
+        },
+      })
+      .then((updated) => {
+        logInfo(
+          'info',
+          `Participation ${participationId} complétée avec ${totalPoints} points`,
+          'ParticipationsService',
+        );
         return updated;
-    });
+      });
   }
 
   async requestClue(
@@ -338,15 +385,15 @@ export class ParticipationsService {
       where: { id: participationId },
       include: { progresses: true },
     });
-    if (!participation)
-    {      logInfo(
+    if (!participation) {
+      logInfo(
         'error',
         `Participation ${participationId} introuvable`,
         'ParticipationsService',
       );
       throw new NotFoundException('Participation introuvable');
     }
-    if (participation.refUser !== userId){
+    if (participation.refUser !== userId) {
       logInfo(
         'error',
         `L'utilisateur ${userId} n'est pas le propriétaire de la participation ${participationId}`,
@@ -406,7 +453,11 @@ export class ParticipationsService {
     await this.prisma.clueUsage.create({
       data: { refProgress: currentProgress.id, refClue: clueId },
     });
-        logInfo('info', `L'indice ${clueId} a été utilisé pour l'étape ${stepId}`, 'ParticipationsService');
+    logInfo(
+      'info',
+      `L'indice ${clueId} a été utilisé pour l'étape ${stepId}`,
+      'ParticipationsService',
+    );
     return {
       clue: clue.message,
       alreadyUsed: false,
@@ -415,19 +466,25 @@ export class ParticipationsService {
   }
 
   async leaderboard(huntId: number) {
-    return this.prisma.participation.findMany({
-      where: { refHunt: huntId, status: 'COMPLETED' },
-      select: {
-        id: true,
-        totalPoints: true,
-        startTime: true,
-        endTime: true,
-        user: { select: { id: true, firstname: true, lastname: true } },
-      },
-      orderBy: [{ totalPoints: 'desc' }, { endTime: 'asc' }],
-    }).then((results) => {
-        logInfo('info', `Récupération du leaderboard pour la chasse ${huntId} avec ${results.length} participations`, 'ParticipationsService');
+    return this.prisma.participation
+      .findMany({
+        where: { refHunt: huntId, status: 'COMPLETED' },
+        select: {
+          id: true,
+          totalPoints: true,
+          startTime: true,
+          endTime: true,
+          user: { select: { id: true, firstname: true, lastname: true } },
+        },
+        orderBy: [{ totalPoints: 'desc' }, { endTime: 'asc' }],
+      })
+      .then((results) => {
+        logInfo(
+          'info',
+          `Récupération du leaderboard pour la chasse ${huntId} avec ${results.length} participations`,
+          'ParticipationsService',
+        );
         return results;
-    });
+      });
   }
 }

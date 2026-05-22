@@ -27,7 +27,6 @@ type UserWithParticipations = {
         id: number;
         orderNumber: number;
         title: string;
-        actionType: string;
         points: number;
       };
     }[];
@@ -88,7 +87,6 @@ export class AuthService {
                     id: true,
                     orderNumber: true,
                     title: true,
-                    actionType: true,
                     points: true,
                   },
                 },

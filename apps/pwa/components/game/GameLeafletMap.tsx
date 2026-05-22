@@ -2,15 +2,15 @@
 
 import { useEffect } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Circle, useMap } from 'react-leaflet';
-import L from 'leaflet';
+// import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-delete (L.Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-});
+// delete (L.Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl;
+// L.Icon.Default.mergeOptions({
+//   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+//   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+//   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+// });
 
 function FollowUser({ lat, lon }: { lat: number; lon: number }) {
   const map = useMap();
@@ -33,6 +33,7 @@ export default function GameLeafletMap({ userCoords }: Props) {
       zoom={17}
       style={{ height: '100%', width: '100%' }}
       zoomControl={false}
+      attributionControl={false}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

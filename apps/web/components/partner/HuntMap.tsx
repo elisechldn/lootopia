@@ -83,7 +83,7 @@ export default function HuntMap({ locationCenter, radius, onChange }: Props) {
 	return (
 		<div
 			ref={containerRef}
-			className="h-100 rounded-xl overflow-hidden border border-gray-200"
+			className="h-100 rounded-xl overflow-hidden border border-border"
 			style={{ cursor: "crosshair" }}
 		/>
 	);
