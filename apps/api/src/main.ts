@@ -1,20 +1,22 @@
+// Charge .env AVANT tout autre import. Sans ça, les modules NestJS (AuthModule, FilesModule…)
+// évalueraient `process.env.JWT_SECRET` au moment de leur déclaration, AVANT que
+// ConfigModule n'ait eu le temps de lire le fichier .env. Conséquence : `requireEnv`
+// throwerait alors que la variable est bien définie dans .env.
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { TransformInterceptor } from './shared/interceptors/transform.interceptor';
-
+import { logInfo } from './loggeur';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalInterceptors(new TransformInterceptor());
-
+  logInfo('info', 'API server started');
   app.enableCors({
-    origin: [
-      'http://localhost:3000', // web
-      'http://localhost:3001', // pwa (si différent)
-    ],
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
-
+  logInfo('info', 'CORS enabled for all origins');
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

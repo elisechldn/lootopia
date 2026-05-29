@@ -1,27 +1,27 @@
 model Step {
-  id             Int             @id @default(autoincrement())
-  orderNumber    Int
-  title          String
-  clue           String?
-  latitude       Float?
-  longitude      Float?
-  radius         Int             @default(50)
-  actionType     ActionType      @default(GPS)
-  arMarker       String?
-  arContent      String?
-  qrCode         String?
-  points         Int             @default(0)
-  createdAt      DateTime        @default(now())
-  refHunt        Int
-  hunt           Hunt            @relation(fields: [refHunt], references: [id], onDelete: Cascade)
-  participations Participation[]
+  id               Int          @id @default(autoincrement())
+  orderNumber      Int          @map("order_number")
+  title            String
+  location         Unsupported("GEOGRAPHY(Point, 4326)")?
+  radius           Int          @default(50)
+  points           Int          @default(0)
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+  refHunt          Int          @map("ref_hunt")
+  refArItem        String?      @map("ref_ar_item")
+  arMode           ArMode       @default(GPS) @map("ar_mode")
+  markerImageUrl   String?      @map("marker_image_url")
+  markerPatternUrl String?      @map("marker_pattern_url")
+  arItem           ArItem?      @relation(fields: [refArItem], references: [id])
+  hunt             Hunt         @relation(fields: [refHunt], references: [id], onDelete: Cascade)
+  clues            Clue[]
+  progresses       Progress[]
 
   @@unique([refHunt, orderNumber])
+  @@map("steps")
 }
 
-enum ActionType {
+enum ArMode {
   GPS
-  QR_CODE
-  AR
-  RIDDLE
+  MARKER
 }

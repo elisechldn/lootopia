@@ -7,14 +7,14 @@ export default function CallToAction() {
                 <h2 className="text-3xl md:text-4xl font-bold leading-tight tracking-tight">
                     Prêt à commencer votre aventure ?
                 </h2>
-                <p className="text-gray-400 text-base leading-relaxed">
+                <p className="text-muted-foreground/70 text-base leading-relaxed">
                     Rejoignez des milliers de joueurs qui explorent leurs villes à travers des chasses au trésor
                     numériques.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 mt-2">
                     <Link
                         href="/download"
-                        className="inline-flex items-center justify-center gap-2 bg-white text-gray-900 text-sm font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 active:scale-[0.98] transition-all"
+                        className="inline-flex items-center justify-center gap-2 bg-card text-foreground text-sm font-semibold px-6 py-3 rounded-xl hover:bg-muted active:scale-[0.98] transition-all"
                     >
                         Télécharger l'application
                     </Link>
