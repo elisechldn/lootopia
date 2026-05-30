@@ -193,6 +193,9 @@ export const UserScalarFieldEnum = {
   country: 'country',
   resetToken: 'resetToken',
   resetTokenExpiry: 'resetTokenExpiry',
+  emailVerified: 'emailVerified',
+  emailVerificationToken: 'emailVerificationToken',
+  emailVerificationExpiry: 'emailVerificationExpiry',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

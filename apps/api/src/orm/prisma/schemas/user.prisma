@@ -9,9 +9,12 @@ model User {
   profilePicture String?   @map("profile_picture")
   lastConnection   DateTime? @map("last_connection")
   country          String
-  resetToken       String?   @unique @map("reset_token")
-  resetTokenExpiry DateTime? @map("reset_token_expiry")
-  createdAt        DateTime  @default(now()) @map("created_at")
+  resetToken               String?   @unique @map("reset_token")
+  resetTokenExpiry         DateTime? @map("reset_token_expiry")
+  emailVerified            Boolean   @default(false) @map("email_verified")
+  emailVerificationToken   String?   @unique @map("email_verification_token")
+  emailVerificationExpiry  DateTime? @map("email_verification_expiry")
+  createdAt                DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
 
   hunts          Hunt[]
