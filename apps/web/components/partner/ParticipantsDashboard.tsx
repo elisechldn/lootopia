@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 
@@ -47,6 +48,7 @@ function StatusBadge({ status }: { status: Participant["status"] }) {
 }
 
 export default function ParticipantsDashboard({ data }: Props) {
+    const router = useRouter();
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState<string>("all");
 
@@ -117,7 +119,11 @@ export default function ParticipantsDashboard({ data }: Props) {
                             </tr>
                         ) : (
                             filtered.map(p => (
-                                <tr key={p.id} className="h-16 border-b border-border last:border-0">
+                                <tr
+                                    key={p.id}
+                                    className="h-16 border-b border-border last:border-0 cursor-pointer hover:bg-muted/30 transition-colors"
+                                    onClick={() => router.push(`/dashboard/participants/${p.user.id}`)}
+                                >
                                     <td className="px-5">
                                         <div>
                                             <p className="text-sm font-medium text-foreground">

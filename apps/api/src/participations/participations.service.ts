@@ -175,6 +175,32 @@ export class ParticipationsService {
     });
   }
 
+  async findByPlayer(userId: number) {
+    return this.prisma.participation.findMany({
+      where: { refUser: userId },
+      include: {
+        user: {
+          select: { id: true, firstname: true, lastname: true, email: true },
+        },
+        hunt: {
+          select: { id: true, title: true, rewardType: true },
+        },
+        progresses: {
+          include: {
+            step: {
+              select: { id: true, orderNumber: true, title: true, points: true },
+            },
+            clueUsages: {
+              include: { clue: { select: { id: true, penaltyCost: true } } },
+            },
+          },
+          orderBy: { startedAt: 'asc' },
+        },
+      },
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
   async findOne(id: number) {
     const participation = await this.prisma.participation.findUnique({
       where: { id },

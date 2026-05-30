@@ -29,6 +29,12 @@ export class ParticipationsController {
         return this.participationsService.findByPartner(id);
     }
 
+    // GET /participations/player/:userId — toutes les participations d'un joueur
+    @Get('player/:userId')
+    findByPlayer(@Param('userId') userId: string) {
+        return this.participationsService.findByPlayer(Number(userId));
+    }
+
     // GET /participations/:id — détail d'une participation
     @Get(':id')
     findOne(@Param('id') id: string) {
