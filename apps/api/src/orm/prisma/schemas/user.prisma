@@ -7,10 +7,12 @@ model User {
   passwordHash   String    @map("password_hash") @db.VarChar(60)
   role           Role      @default(PLAYER)
   profilePicture String?   @map("profile_picture")
-  lastConnection DateTime? @map("last_connection")
-  country        String
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
+  lastConnection   DateTime? @map("last_connection")
+  country          String
+  resetToken       String?   @unique @map("reset_token")
+  resetTokenExpiry DateTime? @map("reset_token_expiry")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
 
   hunts          Hunt[]
   participations Participation[]
