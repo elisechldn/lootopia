@@ -1156,6 +1156,8 @@ export const UserScalarFieldEnum = {
   profilePicture: 'profilePicture',
   lastConnection: 'lastConnection',
   country: 'country',
+  resetToken: 'resetToken',
+  resetTokenExpiry: 'resetTokenExpiry',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

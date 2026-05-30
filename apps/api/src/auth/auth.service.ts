@@ -1,8 +1,15 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../orm/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { logInfo } from '../loggeur';
+import { MailService } from '../mail/mail.service';
 
 type UserWithParticipations = {
   id: number;
@@ -38,6 +45,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
+    private readonly mail: MailService,
   ) {}
 
   async register(dto: {
@@ -58,7 +66,7 @@ export class AuthService {
     };
 
     const hash = await bcrypt.hash(dto.password, 10);
-    // logInfo('warn', `leak de mot de passe: ${dto.password}`, 'AuthService'); a ne jamais active 
+    // logInfo('warn', `leak de mot de passe: ${dto.password}`, 'AuthService'); a ne jamais active
     // sauf si on veux la mettre a l'envers SDV :)
 
     const { password: _pw, ...rest } = dto;
@@ -69,7 +77,12 @@ export class AuthService {
         role: (dto.role === 'PLAYER' ? 'PLAYER' : 'PARTNER') as never,
       },
     });
-        logInfo('info', `Nouvel utilisateur enregistré: ${user.email} (ID: ${user.id})`, 'AuthService');
+    logInfo('info', `Nouvel utilisateur enregistré: ${user.email} (ID: ${user.id})`, 'AuthService');
+
+    this.mail.sendWelcome({ email: user.email, firstname: user.firstname }).catch(() => {
+      logInfo('error', `Échec envoi email de bienvenue pour: ${user.email}`, 'AuthService');
+    });
+
     return this.signToken(user);
   }
 
@@ -98,7 +111,7 @@ export class AuthService {
     });
     if (!user) {
         logInfo('error', `Tentative de connexion avec un email non reconnu: ${email} (raté mon coco)`, 'AuthService');
-        
+
         throw new UnauthorizedException('Identifiants invalides')
     };
 
@@ -117,13 +130,65 @@ export class AuthService {
     return this.signToken(user);
   }
 
+  async forgotPassword(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      // Anti-enumeration : même réponse que si l'utilisateur existe
+      return;
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { resetToken: token, resetTokenExpiry: expiry },
+    });
+
+    logInfo('info', `Token de réinitialisation généré pour: ${user.email}`, 'AuthService');
+
+    const appUrl = user.role === 'PLAYER'
+      ? (process.env.APP_URL_PWA ?? 'https://localhost:3001')
+      : (process.env.APP_URL_WEB ?? 'https://localhost:3000');
+
+    this.mail.sendPasswordReset({ email: user.email, firstname: user.firstname }, token, appUrl).catch(() => {
+      logInfo('error', `Échec envoi email de réinitialisation pour: ${user.email}`, 'AuthService');
+    });
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExpiry: { gt: new Date() },
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Token invalide ou expiré');
+    }
+
+    const hash = await bcrypt.hash(newPassword, 10);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordHash: hash,
+        resetToken: null,
+        resetTokenExpiry: null,
+      },
+    });
+
+    logInfo('info', `Mot de passe réinitialisé pour: ${user.email} (ID: ${user.id})`, 'AuthService');
+  }
+
   private signToken(user: UserWithParticipations) {
     const payload = {
       sub: user.id,
       email: user.email,
       role: user.role,
     };
-    
+
     logInfo('info', `Token généré pour l'utilisateur: ${user.email} (ID: ${user.id})`, 'AuthService');
     return {
       access_token: this.jwt.sign(payload),

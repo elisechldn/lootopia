@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { apiLogin, apiRegister } from '@/lib/auth';
+import { apiLogin, apiRegister, apiForgotPassword, apiResetPassword } from '@/lib/auth';
 
 const cookieOptions = {
     httpOnly: true,
@@ -49,6 +49,34 @@ export async function registerAction(_prevState: unknown, formData: FormData) {
     }
 
     redirect('/dashboard');
+}
+
+export async function forgotPasswordAction(_prevState: unknown, formData: FormData) {
+    const email = formData.get('email') as string;
+    try {
+        await apiForgotPassword(email);
+    } catch {
+        // Silencieux côté client : anti-énumération
+    }
+    return { success: true };
+}
+
+export async function resetPasswordAction(_prevState: unknown, formData: FormData) {
+    const token = formData.get('token') as string;
+    const password = formData.get('password') as string;
+    const confirm = formData.get('confirmPassword') as string;
+
+    if (password !== confirm) {
+        return { error: 'Les mots de passe ne correspondent pas' };
+    }
+
+    try {
+        await apiResetPassword(token, password);
+    } catch (e: unknown) {
+        return { error: e instanceof Error ? e.message : 'Token invalide ou expiré' };
+    }
+
+    redirect('/login');
 }
 
 export async function logoutAction() {
