@@ -23,7 +23,21 @@ export async function apiLogin(email: string, password: string) {
     });
     if (!res.ok) throw new Error('Identifiants invalides');
     const json = await res.json();
-    return json.data as { access_token: string; user: { role: string } };
+    return json.data as { access_token: string; user: { id: number; email: string; role: string; firstname: string; lastname: string } };
+}
+
+export async function apiVerifyEmail(token: string) {
+    const res = await fetch(`${API_URL}/auth/verify-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.message ?? 'Lien invalide ou expiré');
+    }
+    const json = await res.json();
+    return json.data as { access_token: string; user: { id: number; email: string; role: string; firstname: string; lastname: string } };
 }
 
 export async function apiForgotPassword(email: string) {
@@ -62,5 +76,5 @@ export async function apiRegister(data: {
         throw new Error(err.message ?? 'Erreur inscription');
     }
     const json = await res.json();
-    return json.data as { access_token: string; user: { role: string } };
+    return json.data as { message: string };
 }

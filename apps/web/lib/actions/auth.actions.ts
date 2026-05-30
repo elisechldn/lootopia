@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { apiLogin, apiRegister, apiForgotPassword, apiResetPassword } from '@/lib/auth';
+import { apiLogin, apiRegister, apiVerifyEmail, apiForgotPassword, apiResetPassword } from '@/lib/auth';
 
 const cookieOptions = {
     httpOnly: true,
@@ -35,7 +35,7 @@ export async function registerAction(_prevState: unknown, formData: FormData) {
     }
 
     try {
-        const { access_token } = await apiRegister({
+        await apiRegister({
             firstname: formData.get('firstname') as string,
             lastname: formData.get('lastname') as string,
             username: formData.get('username') as string,
@@ -43,9 +43,21 @@ export async function registerAction(_prevState: unknown, formData: FormData) {
             password,
             country: (formData.get('country') as string) ?? 'FR',
         });
-        (await cookies()).set('auth_token', access_token, cookieOptions);
     } catch (e: unknown) {
         return { error: e instanceof Error ? e.message : 'Erreur inscription' };
+    }
+
+    redirect('/register/confirm');
+}
+
+export async function verifyEmailAction(_prevState: unknown, formData: FormData) {
+    const token = formData.get('token') as string;
+
+    try {
+        const { access_token } = await apiVerifyEmail(token);
+        (await cookies()).set('auth_token', access_token, cookieOptions);
+    } catch (e: unknown) {
+        return { error: e instanceof Error ? e.message : 'Lien invalide ou expiré' };
     }
 
     redirect('/dashboard');
