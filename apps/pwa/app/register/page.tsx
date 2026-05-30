@@ -4,11 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { registerPlayer } from '@/services/auth.service';
-import { useUserStore } from '@/store/userStore';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { setUser } = useUserStore();
   const [form, setForm] = useState({
     firstname: '',
     lastname: '',
@@ -31,14 +29,13 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
     try {
-      const res = await registerPlayer({
+      await registerPlayer({
         firstname: form.firstname,
         lastname: form.lastname,
         email: form.email,
         password: form.password,
       });
-      setUser(res.user)
-      router.replace('/');
+      router.replace('/register/confirm');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de l\'inscription');
     } finally {

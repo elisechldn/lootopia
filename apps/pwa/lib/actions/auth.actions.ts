@@ -48,6 +48,22 @@ export async function resetPasswordAction(token: string, password: string): Prom
   if (!res.ok) throw new Error('Token invalide ou expiré');
 }
 
+export async function verifyEmailAction(token: string): Promise<{ user: UserInfos }> {
+  const res = await fetch(`${API_URL}/auth/verify-email`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body?.message ?? 'Lien invalide ou expiré');
+  }
+  const json = await res.json();
+  const { access_token, user } = json.data as { access_token: string; user: UserInfos };
+  (await cookies()).set('auth_token', access_token, COOKIE_OPTIONS);
+  return { user };
+}
+
 export async function logoutAction() {
   (await cookies()).delete('auth_token');
 }
