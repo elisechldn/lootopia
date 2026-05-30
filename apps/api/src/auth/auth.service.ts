@@ -79,11 +79,30 @@ export class AuthService {
     });
     logInfo('info', `Nouvel utilisateur enregistré: ${user.email} (ID: ${user.id})`, 'AuthService');
 
-    this.mail.sendWelcome({ email: user.email, firstname: user.firstname }).catch(() => {
-      logInfo('error', `Échec envoi email de bienvenue pour: ${user.email}`, 'AuthService');
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        emailVerificationToken: verificationToken,
+        emailVerificationExpiry: verificationExpiry,
+      },
     });
 
-    return this.signToken(user);
+    const appUrl = (dto.role === 'PLAYER')
+      ? (process.env.APP_URL_PWA ?? 'https://localhost:3001')
+      : (process.env.APP_URL_WEB ?? 'https://localhost:3000');
+
+    this.mail.sendEmailVerification(
+      { email: user.email, firstname: user.firstname },
+      verificationToken,
+      appUrl,
+    ).catch(() => {
+      logInfo('error', `Échec envoi email de vérification pour: ${user.email}`, 'AuthService');
+    });
+
+    return { message: 'Vérifiez votre email pour activer votre compte.' };
   }
 
   async login(email: string, password: string) {
@@ -121,12 +140,42 @@ export class AuthService {
         throw new UnauthorizedException('Identifiants invalides');
     }
 
+    if (!user.emailVerified) {
+      logInfo('warn', `Tentative de connexion avec email non vérifié: ${email}`, 'AuthService');
+      throw new UnauthorizedException('Veuillez confirmer votre email avant de vous connecter.');
+    }
+
     await this.prisma.user.update({
       where: { id: user.id },
       data: { lastConnection: new Date() },
     });
 
     logInfo('info', `Utilisateur connecté: ${user.email} (ID: ${user.id})`, 'AuthService');
+    return this.signToken(user);
+  }
+
+  async verifyEmail(token: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        emailVerificationToken: token,
+        emailVerificationExpiry: { gt: new Date() },
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Lien de vérification invalide ou expiré.');
+    }
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        emailVerified: true,
+        emailVerificationToken: null,
+        emailVerificationExpiry: null,
+      },
+    });
+
+    logInfo('info', `Email vérifié pour: ${user.email} (ID: ${user.id})`, 'AuthService');
     return this.signToken(user);
   }
 

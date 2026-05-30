@@ -14,6 +14,20 @@ export class MailService {
     });
   }
 
+  async sendEmailVerification(
+    user: { email: string; firstname: string },
+    token: string,
+    appUrl: string,
+  ) {
+    const verificationUrl = `${appUrl}/verify-email?token=${token}`;
+    await this.mailer.sendMail({
+      to: user.email,
+      subject: 'Confirmez votre email Lootopia',
+      template: 'email-verification',
+      context: { firstname: user.firstname, verificationUrl },
+    });
+  }
+
   async sendPasswordReset(
     user: { email: string; firstname: string },
     token: string,
