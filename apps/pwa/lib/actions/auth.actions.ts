@@ -30,6 +30,24 @@ export async function loginAction(email: string, password: string,): Promise<{ u
   return { user };
 }
 
+export async function forgotPasswordAction(email: string): Promise<void> {
+  await fetch(`${API_URL}/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  // Silencieux : anti-énumération, pas de throw
+}
+
+export async function resetPasswordAction(token: string, password: string): Promise<void> {
+  const res = await fetch(`${API_URL}/auth/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, password }),
+  });
+  if (!res.ok) throw new Error('Token invalide ou expiré');
+}
+
 export async function logoutAction() {
   (await cookies()).delete('auth_token');
 }

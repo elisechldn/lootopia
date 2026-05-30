@@ -62,6 +62,12 @@ export default function LoginPage() {
             />
           </div>
 
+          <div className="flex justify-end">
+            <Link href="/forgot-password" className="text-sm text-primary underline underline-offset-2">
+              Mot de passe oublié ?
+            </Link>
+          </div>
+
           {error && (
             <p className="text-sm text-destructive">{error}</p>
           )}
