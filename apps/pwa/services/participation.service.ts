@@ -86,8 +86,16 @@ export async function getMyParticipations(token: string) {
   return unwrap(res, await res.json()) as unknown[];
 }
 
-export async function getLeaderboard(huntId: number) {
+export type LeaderboardEntry = {
+  id: number;
+  totalPoints: number;
+  startTime: string;
+  endTime: string;
+  user: { id: number; firstname: string; lastname: string };
+};
+
+export async function getLeaderboard(huntId: number): Promise<LeaderboardEntry[]> {
   const res = await fetch(`${API_URL}/participations/hunt/${huntId}/leaderboard`);
   if (!res.ok) return [];
-  return unwrap(res, await res.json()) as unknown[];
+  return unwrap(res, await res.json()) as LeaderboardEntry[];
 }

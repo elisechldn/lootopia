@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogOut, Trophy, CheckCircle, Clock } from 'lucide-react';
+import Link from 'next/link';
+import { LogOut, Trophy, CheckCircle, Clock, Gift } from 'lucide-react';
 import TopBar                                 from '@/components/ui/TobBar/TopBar';
 import TabNavigation                          from '@/components/ui/TabNavigation/TabNavigation';
 import { useUserStore } from '@/store/userStore';
@@ -18,12 +19,12 @@ type Participation = Prisma.ParticipationGetPayload<{
     totalPoints: true;
     startTime: true;
     endTime: true;
+    refHunt: true;
     hunt: {
       select: {
         title: true;
         coverImage: true;
         rewardType: true;
-        rewardValue: true;
       };
     };
   };
@@ -144,10 +145,14 @@ export default function ProfilePage() {
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className="text-sm font-semibold">{p.totalPoints} pts</p>
-                    {p.hunt.rewardValue && p.status === 'COMPLETED' && (
-                      <p className="text-xs text-amber-600 dark:text-amber-400 truncate max-w-[80px]">
-                        {p.hunt.rewardValue}
-                      </p>
+                    {p.status === 'COMPLETED' && (
+                      <Link
+                        href={`/hunts/${p.refHunt}/reward`}
+                        className="inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 hover:underline"
+                      >
+                        <Gift size={11} />
+                        Récompense
+                      </Link>
                     )}
                   </div>
                 </div>

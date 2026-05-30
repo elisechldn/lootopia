@@ -1,9 +1,11 @@
-import { Briefcase, Clock, Award } from "lucide-react";
+import Link from "next/link";
+import { Briefcase, Clock, Award, Trophy } from "lucide-react";
 import HuntHero from "../../../components/hunt/HuntHero";
 import HuntInfoSection from "../../../components/hunt/HuntInfoSection";
 import PlayButton from "../../../components/hunt/PlayButton";
 import { getHuntById } from "../../../services/hunt.service";
 import { assetUrl } from "@/lib/assets";
+import { formatRewardType } from "@/lib/reward";
 
 function formatDuration(startDate: Date | string | null, endDate: Date | string | null): string {
   if (!startDate || !endDate) return "—";
@@ -40,11 +42,18 @@ export default async function HuntOnBoardingPage({ params }: { params: Promise<{
 
         <HuntInfoSection icon={Award} label="Récompense">
           <p className="font-semibold text-2xl tracking-widest">
-            {hunt.rewardValue ?? "? ? ?"}
+            {formatRewardType(hunt.rewardType)}
           </p>
         </HuntInfoSection>
 
-        <div className="mt-auto pt-6 pb-safe" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
+        <div className="mt-auto pt-6 pb-safe space-y-3" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
+          <Link
+            href={`/hunts/${id}/leaderboard`}
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 text-sm font-semibold transition-colors hover:bg-muted"
+          >
+            <Trophy size={16} className="text-amber-500" />
+            Classement
+          </Link>
           <PlayButton huntId={id} />
         </div>
       </div>

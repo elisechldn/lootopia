@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { MapPin, Trophy, ChevronRight } from 'lucide-react';
 import type { NearbyHunt }              from '@/services/hunt.service';
+import { formatRewardType } from '@/lib/reward';
 
 function formatDist(meters: number | null): string | null {
   if (meters == null) return null;
@@ -31,10 +32,10 @@ function HuntCard({ hunt }: { hunt: NearbyHunt }) {
           {hunt.shortDescription && (
             <p className="text-xs text-muted-foreground line-clamp-2">{hunt.shortDescription}</p>
           )}
-          {hunt.rewardValue && (
+          {hunt.rewardType && (
             <div className="flex items-center gap-1 mt-1.5 text-xs text-amber-600 dark:text-amber-400">
               <Trophy size={11} />
-              <span className="truncate">{hunt.rewardValue}</span>
+              <span className="truncate">{formatRewardType(hunt.rewardType)}</span>
             </div>
           )}
         </div>
