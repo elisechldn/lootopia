@@ -26,6 +26,24 @@ export async function apiLogin(email: string, password: string) {
     return json.data as { access_token: string; user: { role: string } };
 }
 
+export async function apiForgotPassword(email: string) {
+    const res = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+    });
+    if (!res.ok) throw new Error('Erreur lors de la demande');
+}
+
+export async function apiResetPassword(token: string, password: string) {
+    const res = await fetch(`${API_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password }),
+    });
+    if (!res.ok) throw new Error('Token invalide ou expiré');
+}
+
 export async function apiRegister(data: {
     firstname: string;
     lastname: string;
