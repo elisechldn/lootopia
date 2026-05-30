@@ -170,25 +170,29 @@ export default function GameMapPage({ params }: Props) {
 
   return (
     <div className="flex h-screen flex-col">
-      {/* Top half — Leaflet map */}
-      <div className="relative h-1/2 w-full">
+      {/* Map */}
+      <div className="relative h-[42vh] w-full sm:h-[50vh]">
         <GameLeafletMap userCoords={userCoords} />
-        {currentProgress && (
+      </div>
+
+      {/* Hints strip — horizontal row below map */}
+      {currentProgress && (
+        <div className="w-full shrink-0 border-b border-border bg-background/95 px-4 py-2">
           <HintBubbles
             progressId={currentProgress.id}
             totalPoints={currentProgress.totalPoints}
             onProgressChanged={handleProgressChanged}
           />
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Bottom half — info + action */}
-      <div className="flex h-1/2 flex-col gap-4 overflow-y-auto bg-background px-5 py-4">
+      {/* Info + action — fills remaining space */}
+      <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-y-auto bg-background px-4 py-3 pb-[env(safe-area-inset-bottom,1rem)] sm:px-5 sm:py-4">
 
         {/* Hunt title */}
         <div>
           <p className="text-xs text-muted-foreground uppercase tracking-wider">Chasse en cours</p>
-          <h1 className="text-lg font-bold leading-tight">{hunt?.title}</h1>
+          <h1 className="text-base font-bold leading-tight sm:text-lg">{hunt?.title}</h1>
         </div>
 
         {/* Current step info */}

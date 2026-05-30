@@ -86,11 +86,11 @@ export default function HintBubbles({ progressId, totalPoints, onProgressChanged
 
   return (
     <>
-      <div className="absolute h-88 top-3 right-3 z-400 flex flex-col gap-1.5 backdrop-blur-xl rounded-full items-center">
-        <div className="rounded-full border border-gray-200 bg-white/90 px-2.5  text-sm font-black">
+      <div className="flex flex-row items-center gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <span className="shrink-0 rounded-full border border-gray-200 bg-white/90 px-2.5 py-0.5 text-sm font-black">
           Indices
-        </div>
-        <div className="relative flex px-1 flex-col items-end gap-1.5 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] [mask-image:linear-gradient(to_bottom,black_0%,black_10%,black_95%,transparent_100%)]">
+        </span>
+        <div className="flex flex-row items-center gap-1.5">
           {bubbles.map((bubble) => (
             <HintBubbleItem key={bubble.orderNumber} bubble={bubble} onClick={() => handleBubbleClick(bubble)} />
           ))}
