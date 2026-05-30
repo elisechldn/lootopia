@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import ARCameraLoader from "./ARCameraLoader";
-import { getParticipationById } from "@/services/participation.service";
+import { getParticipationById, validateStep } from "@/services/participation.service";
 import { getHuntById } from "@/services/hunt.service";
 import { useUserStore } from "@/store/userStore";
+import StepValidationOverlay, { type StepValidationResult } from "./StepValidationOverlay";
 
 const ARScene = dynamic(() => import("./ARScene"), { ssr: false });
 
@@ -24,8 +25,11 @@ export default function ARPageContent({ huntId }: Props) {
   const [arMode, setArMode] = useState<"GPS" | "MARKER" | null>(null);
   const [patternUrl, setPatternUrl] = useState<string | null>(null);
   const [glbFilepath, setGlbFilepath] = useState<string | null>(null);
+  const [isValidating, setIsValidating] = useState(false);
+  const [stepResult, setStepResult] = useState<StepValidationResult | null>(null);
 
   const hunt = useMemo(() => getHuntById(huntId), [huntId]);
+
   useEffect(() => {
     if (!participationId || !stepId) {
       setArMode("GPS");
@@ -43,8 +47,28 @@ export default function ARPageContent({ huntId }: Props) {
       });
   }, [participationId, stepId]);
 
+  const handleItemHit = useCallback(async (lat: number, lon: number) => {
+    if (isValidating || !participationId || !stepId || !user) return;
+    setIsValidating(true);
+    try {
+      const res = await validateStep(+participationId, +stepId, user.id, lat, lon) as { status?: string; totalPoints?: number };
+      setStepResult({ success: true, message: 'Étape validée !', points: res?.totalPoints ?? 0 });
+    } catch (err) {
+      setStepResult({
+        success: false,
+        message: err instanceof Error ? err.message : 'Validation échouée',
+      });
+    } finally {
+      setIsValidating(false);
+    }
+  }, [isValidating, participationId, stepId, user]);
+
+  const handleDismiss = useCallback(() => {
+    setStepResult(null);
+    router.replace(`/hunts/${huntId}/game/map?participationId=${participationId}`);
+  }, [huntId, participationId, router]);
+
   if (arMode === null) {
-    // Loading participation data
     return (
       <div
         style={{
@@ -62,32 +86,35 @@ export default function ARPageContent({ huntId }: Props) {
     );
   }
 
-  if (arMode === "MARKER" && patternUrl) {
-    return (
-      <ARCameraLoader
-        patternUrl={patternUrl}
-        glbFilepath={glbFilepath}
-        participationId={participationId ? +participationId : undefined}
-        stepId={stepId ? +stepId : undefined}
-        userId={user?.id}
-        onValidate={() => {
-          router.push(
-            `/hunts/${huntId}/game/map?participationId=${participationId}`,
-          );
-        }}
-      />
-    );
-  }
-
-  // GPS mode — existing ARScene
   return (
-    <Suspense fallback={null}>
-      <ARScene
-        hunt={hunt}
-        huntId={huntId}
-        participationId={participationId ? +participationId : undefined}
-        stepId={stepId ? +stepId : undefined}
+    <>
+      {arMode === "MARKER" && patternUrl ? (
+        <ARCameraLoader
+          patternUrl={patternUrl}
+          glbFilepath={glbFilepath}
+          participationId={participationId ? +participationId : undefined}
+          stepId={stepId ? +stepId : undefined}
+          userId={user?.id}
+          onItemHit={handleItemHit}
+          isValidating={isValidating}
+        />
+      ) : (
+        <Suspense fallback={null}>
+          <ARScene
+            hunt={hunt}
+            huntId={huntId}
+            participationId={participationId ? +participationId : undefined}
+            stepId={stepId ? +stepId : undefined}
+            onItemHit={handleItemHit}
+            isValidating={isValidating}
+          />
+        </Suspense>
+      )}
+      <StepValidationOverlay
+        isValidating={isValidating}
+        result={stepResult}
+        onDismiss={handleDismiss}
       />
-    </Suspense>
+    </>
   );
 }

@@ -6,7 +6,6 @@ import type { ARRefs } from './arRefs'
 import { useThreeSetup } from './useThreeSetup'
 import { useLocar } from './useLocar'
 import { useDeviceOrientationControls } from './useDeviceOrientationControls'
-import { toast } from 'sonner'
 import * as THREE                                   from "three";
 
 type UseARSceneOptions = {
@@ -95,7 +94,6 @@ export function useARScene({ canvasRef, videoRef, onItemHit, mixerRef }: UseARSc
         if (first) {
           const obj = first.object as unknown as { properties: { name: string } }
           if (obj.properties?.name) {
-            toast(obj.properties.name)
             onItemHitRef.current?.(obj.properties.name)
           }
         }

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState }                         from "react";
 import * as THREE                                              from "three";
 import { GLTFLoader }                                          from "three/addons/loaders/GLTFLoader.js";
-import { validateStep }                                        from "@/services/participation.service";
 import { assetUrl }                                            from "@/lib/assets";
 import {
   ArToolkitSource,
@@ -25,8 +24,8 @@ export interface ARCameraProps {
   participationId?: number;
   stepId?: number;
   userId?: number;
-  onValidate?: () => void;
-  onOutOfZone?: () => void;
+  onItemHit?: (lat: number, lon: number) => void;
+  isValidating?: boolean;
 }
 
 function buildPlaceholderMesh() {
@@ -39,18 +38,20 @@ function buildPlaceholderMesh() {
 // AR.js classes have no TypeScript types — typed as unknown at call sites
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export default function ARCamera({ patternUrl, glbFilepath, participationId, stepId, userId, onValidate, onOutOfZone }: ARCameraProps) {
+export default function ARCamera({ patternUrl, glbFilepath, participationId, stepId, userId, onItemHit, isValidating }: ARCameraProps) {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [cameraError, setCameraError] = useState<string | null>(null);
-  const [outOfZone, setOutOfZone] = useState(false);
-  const onValidateRef = useRef(onValidate);
-  const onOutOfZoneRef = useRef(onOutOfZone);
-  const setOutOfZoneRef = useRef(setOutOfZone);
+  const onItemHitRef = useRef(onItemHit);
+  const isValidatingRef = useRef(isValidating);
+  const pendingRef = useRef(false);
 
-  useEffect(() => { onValidateRef.current = onValidate; }, [onValidate]);
-  useEffect(() => { onOutOfZoneRef.current = onOutOfZone; }, [onOutOfZone]);
+  useEffect(() => { onItemHitRef.current = onItemHit; }, [onItemHit]);
+  useEffect(() => {
+    isValidatingRef.current = isValidating;
+    if (!isValidating) pendingRef.current = false;
+  }, [isValidating]);
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -195,26 +196,12 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
           return;
         }
 
-        // If no participation context, just fire onValidate directly
-        if (!participationId || !stepId || !userId) {
-          onValidateRef.current?.();
-          return;
-        }
+        if (isValidatingRef.current || pendingRef.current) return;
+        pendingRef.current = true;
 
         navigator.geolocation.getCurrentPosition(
           (pos) => {
-            void validateStep(
-              participationId,
-              stepId,
-              userId,
-              pos.coords.latitude,
-              pos.coords.longitude,
-            )
-              .then(() => { onValidateRef.current?.(); })
-              .catch(() => {
-                setOutOfZoneRef.current(true);
-                onOutOfZoneRef.current?.();
-              });
+            onItemHitRef.current?.(pos.coords.latitude, pos.coords.longitude);
           },
           () => {
             setCameraError("Impossible d'obtenir votre position GPS");
@@ -353,70 +340,6 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
         </div>
       )}
 
-      {/* Out-of-zone modal — object 3D stays visible underneath */}
-      {outOfZone && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "center",
-            zIndex: 20,
-            padding: "0 16px 32px",
-            background: "rgba(0,0,0,0.4)",
-          }}
-        >
-          <div
-            style={{
-              background: "#fff",
-              borderRadius: 16,
-              padding: "24px 20px",
-              width: "100%",
-              maxWidth: 400,
-              textAlign: "center",
-            }}
-          >
-            <p
-              style={{
-                fontSize: 15,
-                fontWeight: 600,
-                color: "#111",
-                marginBottom: 8,
-              }}
-            >
-              Hors de la zone
-            </p>
-            <p
-              style={{
-                fontSize: 13,
-                color: "#555",
-                marginBottom: 20,
-                lineHeight: 1.5,
-              }}
-            >
-              Vous devez vous trouver dans la zone de déclenchement pour
-              valider cette étape
-            </p>
-            <button
-              onClick={() => setOutOfZone(false)}
-              style={{
-                width: "100%",
-                padding: "12px 0",
-                borderRadius: 10,
-                background: "#111",
-                color: "#fff",
-                fontSize: 14,
-                fontWeight: 600,
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Continuer à chercher
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
