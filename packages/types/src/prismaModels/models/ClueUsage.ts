@@ -193,7 +193,7 @@ export type ClueUsageGroupByOutputType = {
   _max: ClueUsageMaxAggregateOutputType | null
 }
 
-type GetClueUsageGroupByPayload<T extends ClueUsageGroupByArgs> = Prisma.PrismaPromise<
+export type GetClueUsageGroupByPayload<T extends ClueUsageGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ClueUsageGroupByOutputType, T['by']> &
       {
@@ -1264,6 +1264,11 @@ export type ClueUsageFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` ClueUsages.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ClueUsages.
+   */
   distinct?: Prisma.ClueUsageScalarFieldEnum | Prisma.ClueUsageScalarFieldEnum[]
 }
 

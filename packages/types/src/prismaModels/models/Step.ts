@@ -257,7 +257,7 @@ export type StepGroupByOutputType = {
   _max: StepMaxAggregateOutputType | null
 }
 
-type GetStepGroupByPayload<T extends StepGroupByArgs> = Prisma.PrismaPromise<
+export type GetStepGroupByPayload<T extends StepGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<StepGroupByOutputType, T['by']> &
       {
@@ -1867,6 +1867,11 @@ export type StepFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Steps.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Steps.
+   */
   distinct?: Prisma.StepScalarFieldEnum | Prisma.StepScalarFieldEnum[]
 }
 

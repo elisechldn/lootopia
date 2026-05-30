@@ -165,7 +165,7 @@ export type ArItemGroupByOutputType = {
   _max: ArItemMaxAggregateOutputType | null
 }
 
-type GetArItemGroupByPayload<T extends ArItemGroupByArgs> = Prisma.PrismaPromise<
+export type GetArItemGroupByPayload<T extends ArItemGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ArItemGroupByOutputType, T['by']> &
       {
@@ -1134,6 +1134,11 @@ export type ArItemFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Skip the first `n` ArItems.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ArItems.
+   */
   distinct?: Prisma.ArItemScalarFieldEnum | Prisma.ArItemScalarFieldEnum[]
 }
 
