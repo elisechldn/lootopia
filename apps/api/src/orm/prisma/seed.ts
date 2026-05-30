@@ -47,7 +47,7 @@ async function main() {
 
   const admin = await prisma.user.upsert({
     where: { email: 'john@admin.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'admin_john',
       firstname: 'John',
@@ -56,13 +56,14 @@ async function main() {
       passwordHash: hash,
       role: 'ADMIN',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=john',
     },
   });
 
   const alice = await prisma.user.upsert({
     where: { email: 'alice@partner.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'partner_alice',
       firstname: 'Alice',
@@ -71,13 +72,14 @@ async function main() {
       passwordHash: hash,
       role: 'PARTNER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice',
     },
   });
 
   const bob = await prisma.user.upsert({
     where: { email: 'bob@partner.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'partner_bob',
       firstname: 'Bob',
@@ -86,13 +88,14 @@ async function main() {
       passwordHash: hash,
       role: 'PARTNER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob',
     },
   });
 
   const charlie = await prisma.user.upsert({
     where: { email: 'charlie@player.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'player_charlie',
       firstname: 'Charlie',
@@ -101,13 +104,14 @@ async function main() {
       passwordHash: hash,
       role: 'PLAYER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=charlie',
     },
   });
 
   const diana = await prisma.user.upsert({
     where: { email: 'diana@player.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'player_diana',
       firstname: 'Diana',
@@ -116,13 +120,14 @@ async function main() {
       passwordHash: hash,
       role: 'PLAYER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=diana',
     },
   });
 
   const john = await prisma.user.upsert({
     where: { email: 'john.doe@gmail.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'Johnny',
       firstname: 'John',
@@ -131,6 +136,7 @@ async function main() {
       passwordHash: hash,
       role: 'PLAYER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://thispersondoesnotexist.com/',
     },
   });

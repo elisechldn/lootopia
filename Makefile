@@ -5,8 +5,9 @@ MINIO_BUCKET := lootopia-public
 MINIO_URL := http://localhost:9000
 MINIO_USER := minioadmin
 MINIO_PASS := minioadmin
+MAILPIT_URL := http://localhost:8025
 
-.PHONY: setup build start stop reset reset-db reset-bucket seed help
+.PHONY: setup build start stop reset reset-db reset-bucket reset-mailpit seed help
 
 ## Initialise l'environnement complet
 setup: build start reset
@@ -27,8 +28,8 @@ stop:
 
 ## --- COMMANDES DE RESET ---
 
-## Réinitialise TOUT (DB + Bucket)
-reset: reset-db reset-bucket
+## Réinitialise TOUT (DB + Bucket + Mailpit)
+reset: reset-db reset-bucket reset-mailpit
 
 ## Réinitialise uniquement la base de données Prisma
 reset-db:
@@ -48,6 +49,11 @@ reset-bucket:
 	# 3. On s'assure que le bucket est bien accessible en lecture seule pour le Web/PWA
 	-docker exec $(MINIO_CONTAINER) mc anonymous set download self/$(MINIO_BUCKET)
 
+## Vide tous les emails de Mailpit
+reset-mailpit:
+	@echo "📬 Reset de Mailpit..."
+	-curl -s -X DELETE $(MAILPIT_URL)/api/v1/messages
+
 ## --- ------------------- ---
 
 ## Injecte uniquement les données
@@ -57,8 +63,9 @@ seed:
 help:
 	@echo ""
 	@echo "  make setup        — build + démarrage + reset complet"
-	@echo "  make reset        — reset-db + reset-bucket"
+	@echo "  make reset        — reset-db + reset-bucket + reset-mailpit"
 	@echo "  make reset-db     — réinitialise Prisma et relance le seed"
-	@echo "  make reset-bucket — réinitialise les droits publics sur MinIO"
+	@echo "  make reset-bucket  — réinitialise les droits publics sur MinIO"
+	@echo "  make reset-mailpit — vide tous les emails de Mailpit"
 	@echo "  make seed         — injecte uniquement les données de seed"
 	@echo ""
