@@ -6,83 +6,79 @@ export class StatsController {
     constructor(private readonly prisma: PrismaService) {}
 
     @Get('all')
-    public async getStats(@Query() query: { startDate: string, endDate: string }) { 
-        const { startDate, endDate } = query;
+    public async getStats(@Query() query: {  }) { 
         console.log('Received stats request with query:', query);
         
-        // Sécurité supplémentaire : vérifier que les dates sont bien présentes
-        // if (!startDate || !endDate) {
-        //     throw new Error("startDate and endDate are required");
-        // }
 
-        const statsHunts = await this.prisma.hunt.findMany({
-            where: {
-                // startDate: {
-                //     gte: new Date(startDate),
-                //     lte: new Date(endDate),
-                // },
-                status: 'ACTIVE',
-            },
+
+        // 1. Statistiques des Chasses (Hunts)
+        const huntsByStatus = await this.prisma.hunt.groupBy({
+            by: ['status'],
+            _count: { id: true },
+        });
+
+        // Top 5 des chasses les plus populaires (avec Prisma _count)
+        const popularHunts = await this.prisma.hunt.findMany({
             select: {
-                id: true,
                 title: true,
-                description: true,
-                createdAt: true,
-                refUser: true,
-                difficulty: true,
-                participations: true,
-            },
-        });
-        console.log(`Found ${statsHunts.length} hunts between ${startDate} and ${endDate}`);
-        console.log('Sample hunt:', statsHunts);
-        const statsUsers = await this.prisma.user.findMany({
-            where: {
-                id: {in: statsHunts.map(hunt => hunt.refUser)},
-            },
-            select: {
-                id: true,
-                username: true,
-                country: true,
-            },
-        });
-
-        return {
-            huntNumbers: statsHunts.length,
-            difficultyCounts: 
-                Object.entries(
-                    statsHunts.reduce((acc, hunt) => {
-                        const difficulty = hunt.difficulty!;
-                        if (!acc[difficulty]) {
-                            acc[difficulty] = 0;
-                        }
-                        acc[difficulty] += 1;
-                        return acc;
-                    }, {} as Record<string, number>)
-                ).map(([difficulty, count]) => ({ difficulty, count })),
-
-            participationNumbers: statsHunts.reduce((acc, hunt) => acc + hunt.participations.length, 0),
-            
-            retartitionHunts: Object.entries(statsHunts.reduce((acc, hunt) => {
-                const title = hunt.title;
-                if (!acc[title]) {
-                    acc[title] = 0;
+                _count: {
+                    select: { participations: true }
                 }
-                acc[title] += hunt.participations.length;
-                return acc;
-            }, {} as Record<string, number>))
-            .map(([huntId, count]) => ({ huntId, count })),
-            
-            userNumbers: statsUsers.length,
-            userCountries: Object.entries(
-                statsUsers.reduce((acc, user) => {
-                    const country = user.country || 'Unknown';
-                    if (!acc[country]) {
-                        acc[country] = 0;
-                    }
-                    acc[country] += 1;
-                    return acc;
-                }, {} as Record<string, number>)
-            ).map(([country, count]) => ({ country, count })),
+            },
+            orderBy: {
+                participations: { _count: 'desc' }
+            },
+            take: 5,
+        });
+
+        // 2. Statistiques des Participations (Taux de complétion)
+        const participationsByStatus = await this.prisma.participation.groupBy({
+            by: ['status'],
+            _count: { id: true },
+        });
+
+        // 3. Statistiques des Utilisateurs
+        const usersByRole = await this.prisma.user.groupBy({
+            by: ['role'],
+            _count: { id: true },
+        });
+
+        const usersByCountry = await this.prisma.user.groupBy({
+            by: ['country'],
+            _count: { id: true },
+            orderBy: {
+                _count: { id: 'desc' }
+            }
+        });
+
+        // 4. Statistiques de Jeu (Étapes et Réalité Augmentée)
+        const stepsByArMode = await this.prisma.step.groupBy({
+            by: ['arMode'],
+            _count: { id: true },
+        });
+
+        const totalCluesUsed = await this.prisma.clueUsage.count();
+
+        // Formatage de la réponse pour le frontend
+        return {
+            hunts: {
+                total: huntsByStatus.reduce((acc, curr) => acc + curr._count.id, 0),
+                byStatus: huntsByStatus.map(h => ({ status: h.status, count: h._count.id })),
+                topPopular: popularHunts.map(h => ({ title: h.title, participations: h._count.participations }))
+            },
+            participations: {
+                total: participationsByStatus.reduce((acc, curr) => acc + curr._count.id, 0),
+                byStatus: participationsByStatus.map(p => ({ status: p.status, count: p._count.id }))
+            },
+            users: {
+                total: usersByRole.reduce((acc, curr) => acc + curr._count.id, 0),
+                byRole: usersByRole.map(u => ({ role: u.role, count: u._count.id })),
+                topCountries: usersByCountry.map(u => ({ country: u.country, count: u._count.id }))
+            },
+            gameplay: {
+                arModesDistribution: stepsByArMode.map(s => ({ mode: s.arMode, count: s._count.id })),
+                totalCluesUsed: totalCluesUsed
+            }
         };
     }
 }

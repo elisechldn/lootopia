@@ -48,6 +48,16 @@ const navItems = [
         ),
     },
     {
+        label: "Stats Générales",
+        href: "/dashboard/stats",
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-２a２ ２ ０ ０１-２ -２z"/>
+            </svg>
+        )
+    },
+    {
         label: "Paramètres",
         href: "/dashboard/settings",
         icon: (
@@ -57,7 +67,7 @@ const navItems = [
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
         ),
-    },
+    },    
 ];
 
 export default function PartnerSidebar({ user: initialUser }: Props) {
