@@ -225,6 +225,9 @@ export class AuthService {
         passwordHash: hash,
         resetToken: null,
         resetTokenExpiry: null,
+        emailVerified: true,
+        emailVerificationToken: null,
+        emailVerificationExpiry: null,
       },
     });
 

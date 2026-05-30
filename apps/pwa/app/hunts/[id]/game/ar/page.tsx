@@ -7,7 +7,6 @@ type Props = {
 
 export default async function ARPage({ params }: Props) {
   const { id } = await params;
-  console.log("HUNT PAGE -> ", id)
   return (
     <Suspense fallback={null}>
       <ARPageContent huntId={+id} />

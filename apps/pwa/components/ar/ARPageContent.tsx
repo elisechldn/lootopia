@@ -25,7 +25,6 @@ export default function ARPageContent({ huntId }: Props) {
   const [patternUrl, setPatternUrl] = useState<string | null>(null);
   const [glbFilepath, setGlbFilepath] = useState<string | null>(null);
 
-  // hunt promise for ARScene (GPS mode)
   const hunt = useMemo(() => getHuntById(huntId), [huntId]);
   useEffect(() => {
     if (!participationId || !stepId) {
@@ -35,7 +34,6 @@ export default function ARPageContent({ huntId }: Props) {
     getParticipationById(+participationId)
       .then((p) => {
         const step = p.hunt?.steps.find((s) => s.id === +stepId);
-        console.log("P", p)
         setArMode(step?.arMode ?? "GPS");
         setPatternUrl(step?.markerPatternUrl ?? null);
         setGlbFilepath(step?.arItem?.filepath ?? null);

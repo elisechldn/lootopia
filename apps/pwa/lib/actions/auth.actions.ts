@@ -20,7 +20,10 @@ export async function loginAction(email: string, password: string,): Promise<{ u
     body: JSON.stringify({ email, password }),
   });
 
-  if (!res.ok) throw new Error('Email ou mot de passe incorrect');
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body?.message ?? 'Email ou mot de passe incorrect');
+  }
 
   const json = await res.json();
   const { access_token, user } = json.data as { access_token: string; user: UserInfos };
