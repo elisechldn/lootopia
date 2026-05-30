@@ -39,11 +39,19 @@ services:
       - S3_ACCESS_KEY=${MINIO_ROOT_USER}
       - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
       - S3_REGION=us-east-1
+      - MAIL_HOST=mailpit
+      - MAIL_PORT=1025
+      - MAIL_FROM=noreply@lootopia.local
+      - MAIL_FROM_NAME=Lootopia
+      - APP_URL_PWA=https://localhost:3001
+      - APP_URL_WEB=https://localhost:3000
     depends_on:
       db:
         condition: service_healthy
       minio:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     networks:
       - lootopia-network
     command: sh -c "npm run db:dev && cd apps/api && npm run start"
@@ -136,6 +144,16 @@ services:
       - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
     depends_on:
       - api
+    networks:
+      - lootopia-network
+    restart: unless-stopped
+
+  mailpit:
+    container_name: lootopia_mailpit
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
     networks:
       - lootopia-network
     restart: unless-stopped
