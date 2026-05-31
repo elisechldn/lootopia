@@ -24,7 +24,7 @@ export default async function HuntOnBoardingPage({ params }: { params: Promise<{
   const { id } = await params;
   const { data: hunt } = await getHuntById(Number(id));
   return (
-    <main className="flex flex-col min-h-screen bg-background">
+    <main className="flex flex-col min-h-screen bg-background pt-safe">
       <HuntHero title={hunt.title} imageUrl={assetUrl(hunt.coverImage)!}/>
 
       <div className="flex flex-col flex-1 px-4">

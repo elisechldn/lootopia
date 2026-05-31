@@ -90,7 +90,7 @@ export default function HintBubbles({ progressId, totalPoints, onProgressChanged
         <span className="shrink-0 rounded-full border border-gray-200 bg-white/90 px-2.5 py-0.5 text-sm font-black">
           Indices
         </span>
-        <div className="flex flex-row items-center gap-1.5">
+        <div className="flex flex-row items-center gap-1.5 p-1">
           {bubbles.map((bubble) => (
             <HintBubbleItem key={bubble.orderNumber} bubble={bubble} onClick={() => handleBubbleClick(bubble)} />
           ))}
