@@ -22,11 +22,12 @@ export type ParticipationType = Prisma.ParticipationGetPayload<{
 
 export type ParticipationsType = ParticipationType[];
 
-export type UserInfos = Pick<User, 'id' | 'email' | 'firstname' | 'lastname' | 'role'> & { participations: ParticipationsType; };
+export type UserInfos = Pick<User, 'id' | 'email' | 'firstname' | 'lastname' | 'role' | 'profilePicture'> & { participations: ParticipationsType; };
 
 type UserStore = {
   user: UserInfos | null;
   setUser: (user: UserInfos) => void;
+  setProfilePicture: (url: string) => void;
   logout: () => void;
 };
 
@@ -35,6 +36,10 @@ export const useUserStore = create<UserStore>()(
     (set) => ({
       user: null,
       setUser: (user) => set({ user }),
+      setProfilePicture: (url) =>
+        set((state) =>
+          state.user ? { user: { ...state.user, profilePicture: url } } : state,
+        ),
       logout: () => set({ user: null }),
     }),
     {
