@@ -14,6 +14,17 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Lootopia",
   description: "Application to hunt treasures and win prizes",
+  appleWebApp: {
+    capable: true,
+    title: "Lootopia",
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    apple: [
+      { url: "/logo_192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/logo_512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
 };
 
 export const viewport: Viewport = {

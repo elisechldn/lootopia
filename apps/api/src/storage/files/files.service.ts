@@ -2,14 +2,16 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { StorageService } from '../storage.service';
 
-export type FileKind = 'cover' | 'ar-model' | 'ar-marker';
+export type FileKind = 'cover' | 'ar-model' | 'ar-marker' | 'avatar';
 
 type Rules = {
   mimeTypes: string[];
   maxBytes: number;
   extension: (mime: string) => string;
+  keyPrefix: (userId: number) => string;
 };
 
+const TWO_MB = 2 * 1024 * 1024;
 const FIVE_MB = 5 * 1024 * 1024;
 const TEN_MB = 10 * 1024 * 1024;
 
@@ -24,16 +26,25 @@ const RULES: Record<FileKind, Rules> = {
     mimeTypes: Object.keys(IMAGE_MIME_TO_EXT),
     maxBytes: FIVE_MB,
     extension: (mime) => IMAGE_MIME_TO_EXT[mime] ?? 'bin',
+    keyPrefix: (userId) => `partners/${userId}/covers`,
   },
   'ar-marker': {
     mimeTypes: Object.keys(IMAGE_MIME_TO_EXT),
     maxBytes: FIVE_MB,
     extension: (mime) => IMAGE_MIME_TO_EXT[mime] ?? 'bin',
+    keyPrefix: (userId) => `partners/${userId}/ar-markers`,
   },
   'ar-model': {
     mimeTypes: ['model/gltf-binary', 'application/octet-stream'],
     maxBytes: TEN_MB,
     extension: () => 'glb',
+    keyPrefix: (userId) => `partners/${userId}/ar-models`,
+  },
+  avatar: {
+    mimeTypes: Object.keys(IMAGE_MIME_TO_EXT),
+    maxBytes: TWO_MB,
+    extension: (mime) => IMAGE_MIME_TO_EXT[mime] ?? 'bin',
+    keyPrefix: (userId) => `avatars/${userId}`,
   },
 };
 
@@ -70,7 +81,7 @@ export class FilesService {
     }
 
     const ext = rules.extension(file.mimetype);
-    const key = `partners/${userId}/${kind}s/${randomUUID()}.${ext}`;
+    const key = `${rules.keyPrefix(userId)}/${randomUUID()}.${ext}`;
     await this.storage.uploadObject(key, file.buffer, file.mimetype);
 
     return { key, url: this.storage.toPublicUrl(key) };

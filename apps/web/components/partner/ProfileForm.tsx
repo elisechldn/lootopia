@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/lib/stores/auth.store";
+import { Camera } from "lucide-react";
 
 interface User {
     id: number;
@@ -11,6 +12,7 @@ interface User {
     lastname: string;
     email: string;
     username: string;
+    profilePicture?: string | null;
 }
 
 interface Props {
@@ -18,7 +20,7 @@ interface Props {
 }
 
 export default function ProfileForm({ user }: Props) {
-    const { user: storeUser, setUser } = useAuthStore(); // ← ajout
+    const { user: storeUser, setUser } = useAuthStore();
     const [form, setForm] = useState({
         firstname: user?.firstname ?? "",
         lastname: user?.lastname ?? "",
@@ -26,9 +28,38 @@ export default function ProfileForm({ user }: Props) {
         password: "",
         confirmPassword: "",
     });
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.profilePicture ?? null);
+    const [avatarUploading, setAvatarUploading] = useState(false);
+    const [avatarError, setAvatarError] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setAvatarError(null);
+        setAvatarUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await fetch("/api/avatar", { method: "POST", body: formData });
+            if (!res.ok) {
+                const json = await res.json().catch(() => ({}));
+                throw new Error(json.message ?? "Échec de l'upload");
+            }
+            const json = await res.json();
+            const url: string = json.data?.url ?? json.url;
+            setAvatarUrl(url);
+            if (storeUser) setUser({ ...storeUser, profilePicture: url });
+        } catch (err) {
+            setAvatarError(err instanceof Error ? err.message : "Erreur lors de l'upload de l'avatar");
+        } finally {
+            setAvatarUploading(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+    };
 
     const handleChange = (field: keyof typeof form, value: string) => {
         setForm(prev => ({ ...prev, [field]: value }));
@@ -90,6 +121,42 @@ export default function ProfileForm({ user }: Props) {
 
     return (
         <div className="space-y-6">
+            {/* Avatar */}
+            <div className="bg-card border border-border rounded-xl p-6 flex items-center gap-6">
+                <div className="relative group">
+                    <div className="w-20 h-20 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary flex-shrink-0">
+                        {avatarUrl ? (
+                            // biome-ignore lint/performance/noImgElement: avatar URL from trusted MinIO bucket
+                            <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                            <span>{(user?.firstname?.[0] ?? "").toUpperCase()}{(user?.lastname?.[0] ?? "").toUpperCase()}</span>
+                        )}
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={avatarUploading}
+                        className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity disabled:cursor-wait"
+                        aria-label="Changer l'avatar"
+                    >
+                        <Camera size={20} className="text-white" />
+                    </button>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        onChange={handleAvatarChange}
+                    />
+                </div>
+                <div>
+                    <p className="text-sm font-medium text-foreground">Photo de profil</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">JPG, PNG ou WebP · Max 2 Mo</p>
+                    {avatarUploading && <p className="text-xs text-primary mt-1">Upload en cours…</p>}
+                    {avatarError && <p className="text-xs text-destructive mt-1">{avatarError}</p>}
+                </div>
+            </div>
+
             {/* Identité */}
             <div className="bg-card border border-border rounded-xl p-6 space-y-4">
                 <h2 className="text-sm font-semibold text-foreground">Informations personnelles</h2>

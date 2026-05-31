@@ -1,14 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LogOut, Trophy, CheckCircle, Clock, Gift } from 'lucide-react';
-import TopBar                                 from '@/components/ui/TobBar/TopBar';
-import TabNavigation                          from '@/components/ui/TabNavigation/TabNavigation';
+import { Camera, LogOut, Trophy, CheckCircle, Clock, Gift } from 'lucide-react';
+import TopBar           from '@/components/ui/TopBar';
+import TabNavigation    from '@/components/ui/TabNavigation';
 import { useUserStore } from '@/store/userStore';
 import { getMyParticipationsAction } from '@/lib/actions/participation.actions';
 import { logoutAction } from '@/lib/actions/auth.actions';
+import { uploadAvatarAction } from '@/lib/actions/profile.actions';
 import { assetUrl } from '@/lib/assets';
 import { type Prisma } from '@repo/types';
 
@@ -44,9 +45,12 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, logout } = useUserStore();
+  const { user, logout, setProfilePicture } = useUserStore();
   const [participations, setParticipations] = useState<Participation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!user) {
@@ -58,6 +62,24 @@ export default function ProfilePage() {
       setLoading(false);
     });
   }, []);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarError(null);
+    setAvatarUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const { url } = await uploadAvatarAction(formData);
+      setProfilePicture(url);
+    } catch (err) {
+      setAvatarError(err instanceof Error ? err.message : "Erreur lors de l'upload");
+    } finally {
+      setAvatarUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleLogout = async () => {
     await logoutAction();
@@ -71,15 +93,40 @@ export default function ProfilePage() {
     <div className="flex flex-col h-screen">
       <TopBar />
 
-      <div className="flex-1 overflow-y-auto pt-14 pb-16">
+      <div className="flex-1 overflow-y-auto pt-topbar">
         {/* En-tête profil */}
-        <div className="px-4 py-6 flex items-center gap-4 border-b border-border">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary">
-            {user.firstname[0]}{user.lastname[0]}
+        <div className="px-4 pb-6 flex items-center gap-4 border-b border-border">
+          <div className="relative group flex-shrink-0">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary overflow-hidden">
+              {user.profilePicture ? (
+                // biome-ignore lint/performance/noImgElement: avatar URL from trusted MinIO bucket
+                <img src={user.profilePicture} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <span>{user.firstname[0]}{user.lastname[0]}</span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={avatarUploading}
+              className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-active:opacity-100 transition-opacity disabled:cursor-wait"
+              aria-label="Changer l'avatar"
+            >
+              <Camera size={16} className="text-white" />
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={handleAvatarChange}
+            />
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-lg">{user.firstname} {user.lastname}</p>
             <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+            {avatarUploading && <p className="text-xs text-primary mt-0.5">Upload en cours…</p>}
+            {avatarError && <p className="text-xs text-destructive mt-0.5">{avatarError}</p>}
           </div>
           <button
             onClick={handleLogout}

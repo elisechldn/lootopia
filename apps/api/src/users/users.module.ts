@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { requireEnv } from '../config/env';
+import { FilesModule } from '../storage/files/files.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { requireEnv } from '../config/env';
       secret: requireEnv('JWT_SECRET'),
       signOptions: { expiresIn: '7d' },
     }),
+    FilesModule,
   ],
   controllers: [UsersController],
   providers: [UsersService],

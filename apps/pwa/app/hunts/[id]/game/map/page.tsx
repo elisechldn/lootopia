@@ -229,7 +229,7 @@ export default function GameMapPage({ params }: Props) {
         <div className="mt-auto space-y-1">
           <button
             onClick={() => void handleEnterAR()}
-            className="w-full rounded-xl bg-green-500 py-4 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600"
+            className="w-full rounded-xl bg-green-500 py-4 mb-5 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600"
           >
             Utiliser la caméra AR
           </button>
