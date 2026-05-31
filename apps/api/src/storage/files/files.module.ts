@@ -12,5 +12,6 @@ import { requireEnv } from '../../config/env';
   ],
   controllers: [FilesController],
   providers: [FilesService],
+  exports: [FilesService],
 })
 export class FilesModule {}

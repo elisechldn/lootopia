@@ -44,4 +44,10 @@ export class StorageService {
   toPublicUrl(key: string): string {
     return `${this.publicUrl}/${this.bucket}/${key}`;
   }
+
+  keyFromPublicUrl(url: string): string | null {
+    const prefix = `${this.publicUrl}/${this.bucket}/`;
+    if (!url.startsWith(prefix)) return null;
+    return url.slice(prefix.length);
+  }
 }
