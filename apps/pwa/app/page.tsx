@@ -3,13 +3,14 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Loader2 }   from 'lucide-react';
-import TopBar        from '@/components/ui/TobBar/TopBar';
-import TabNavigation from '@/components/ui/TabNavigation/TabNavigation';
+import TopBar        from '@/components/ui/TopBar';
+import TabNavigation from '@/components/ui/TabNavigation';
 import ViewToggle    from '@/components/hunt/ViewToggle';
 import { HuntList }  from '@/components/hunt/HuntList';
 import { HuntMap }      from '@/components/hunt/HuntMap';
 import { useUserStore } from '@/store/userStore';
 import { getNearbyHunts, type NearbyHunt } from '@/services/hunt.service';
+import Link from "next/link";
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -49,11 +50,10 @@ function HomeContent() {
   const greeting = user ? `Bonjour ${user.firstname} !` : '';
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col">
       <TopBar greeting={greeting} />
-
       {/* Offset du TopBar fixé */}
-      <div className="flex flex-col flex-1 overflow-hidden pt-14">
+      <div className="flex flex-col flex-1 pt-topbar">
         {/* Toggle Liste / Carte */}
         <div className="px-4 py-2 border-b border-border flex items-center justify-between">
           <ViewToggle value={view} onChange={setView} />
@@ -79,7 +79,6 @@ function HomeContent() {
           />
         )}
       </div>
-
       <TabNavigation />
     </div>
   );
