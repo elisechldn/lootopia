@@ -31,4 +31,5 @@ export default async function ProfilePage() {
             <ProfileForm user={user} />
         </div>
     );
+
 }
