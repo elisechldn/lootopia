@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, User, Settings } from 'lucide-react';
-import styles from './TabNavigation.module.css';
 
 const TABS = [
   { label: 'Accueil', href: '/', icon: Home },
@@ -15,7 +14,7 @@ export default function TabNavigation() {
   const pathname = usePathname();
 
   return (
-    <nav className={styles.tabBar}>
+    <nav className="fixed bottom-0 w-full py-5 flex flex-row items-start  bg-background border-t border-gray-500/20 z-[100]">
       {TABS.map((tab) => {
         const isActive = tab.href === '/' ? pathname === '/' : pathname.startsWith(tab.href.split('?')[0]!) && tab.href !== '/?view=map';
         const Icon = tab.icon;
@@ -23,11 +22,12 @@ export default function TabNavigation() {
           <Link
             key={tab.label}
             href={tab.href}
-            className={`${styles.tab} ${isActive ? styles.active : ''}`}
             aria-label={tab.label}
+            data-active={isActive}
+            className="group flex-1 flex flex-col items-center justify-center gap-1 h-full cursor-pointer text-foreground opacity-50 data-[active=true]:opacity-100 transition-opacity duration-200"
           >
-            <Icon size={22} className={styles.icon} />
-            <span className={styles.label}>{tab.label}</span>
+            <Icon size={22} className="block opacity-60 group-data-[active=true]:opacity-100" />
+            <span className="text-[11px] font-medium">{tab.label}</span>
           </Link>
         );
       })}
