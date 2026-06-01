@@ -29,7 +29,7 @@ export default async function LeaderboardPage({ params }: Props) {
   const entries = await getLeaderboard(Number(id));
 
   return (
-    <main className="flex min-h-screen flex-col bg-background">
+    <main className="flex min-h-screen flex-col bg-background pt-safe">
       <header className="flex items-center gap-3 border-b border-border px-4 py-4">
         <Link
           href={`/hunts/${id}`}

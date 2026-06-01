@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Play } from 'lucide-react';
+import { CheckCircle, Loader2, Play } from 'lucide-react';
 import { Button }        from '@/components/ui/Button';
 import { useUserStore }  from '@/store/userStore';
 import { startHunt } from '@/services/participation.service';
@@ -34,6 +34,9 @@ export default function PlayButton({ huntId }: PlayButtonProps) {
   }, []);
 
   const alreadyStarted = user?.participations.some((p) => p.refHunt === +huntId) ?? false;
+  const alreadyCompleted = user?.participations.some(
+    (p) => p.refHunt === +huntId && p.status === 'COMPLETED'
+  ) ?? false;
 
   const handlePlay = async () => {
     if (!user) {
@@ -56,6 +59,15 @@ export default function PlayButton({ huntId }: PlayButtonProps) {
   };
 
   if (!mounted) return null;
+
+  if (alreadyCompleted) {
+    return (
+      <div className="flex items-center justify-center gap-3 rounded-xl border border-green-500/30 bg-green-500/10 px-4 py-5 text-green-600 dark:text-green-400">
+        <CheckCircle size={22} className="shrink-0" />
+        <p className="font-semibold text-base">Vous avez terminé cette chasse</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2">

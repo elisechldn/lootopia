@@ -148,6 +148,9 @@ a {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
+@utility top-safe-4 {
+  top: calc(1rem + env(safe-area-inset-top));
+}
 
 @layer base {
   * {

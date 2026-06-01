@@ -3,12 +3,13 @@
 import { use, useEffect, useMemo, useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Navigation, Trophy, Loader2 } from 'lucide-react';
+import { Navigation, Trophy, Loader2, MapPin, ScanLine, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { getHuntById } from '@/services/hunt.service';
 import { getParticipationById, type GameParticipation } from '@/services/participation.service';
 import { haversineDistance, formatDistance } from '@/lib/geo';
 import type { HuntGetPayload } from '@repo/types';
 import HintBubbles from '@/components/game/hints/HintBubbles';
+import HintModal from '@/components/game/hints/HintModal';
 
 const GameLeafletMap = dynamic(() => import('@/components/game/GameLeafletMap'), { ssr: false });
 
@@ -35,6 +36,7 @@ export default function GameMapPage({ params }: Props) {
   const [inZone, setInZone] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cameraPermissionDenied, setCameraPermissionDenied] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
   const [, startClueTransition] = useTransition();
 
   // Fetch hunt + participation
@@ -169,10 +171,18 @@ export default function GameMapPage({ params }: Props) {
   }
 
   return (
+    <>
     <div className="flex h-screen flex-col">
       {/* Map */}
       <div className="relative h-[42vh] w-full sm:h-[50vh]">
         <GameLeafletMap userCoords={userCoords} />
+        <button
+          onClick={() => setShowExitModal(true)}
+          className="absolute top-safe-4 left-4 z-[500] flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white transition-colors hover:bg-black/50"
+          aria-label="Retour"
+        >
+          <ArrowLeft size={18}/>
+        </button>
       </div>
 
       {/* Hints strip — horizontal row below map */}
@@ -202,6 +212,26 @@ export default function GameMapPage({ params }: Props) {
               Étape {currentStep.orderNumber} / {hunt?.steps.length}
             </p>
             <p className="font-semibold">{currentStep.title}</p>
+          </div>
+        )}
+
+        {/* Step type instruction */}
+        {currentStep && (
+          <div className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-sm ${
+            currentStep.arMode === 'MARKER'
+              ? 'border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400'
+              : 'border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-blue-400'
+          }`}>
+            {currentStep.arMode === 'MARKER' ? (
+              <ScanLine size={18} className="shrink-0 mt-0.5" />
+            ) : (
+              <MapPin size={18} className="shrink-0 mt-0.5" />
+            )}
+            <p>
+              {currentStep.arMode === 'MARKER'
+                ? "Rendez-vous dans la prochaine zone, puis trouvez l'objet à scanner avec votre caméra."
+                : 'Trouvez et rendez-vous dans la prochaine zone.'}
+            </p>
           </div>
         )}
 
@@ -246,5 +276,34 @@ export default function GameMapPage({ params }: Props) {
         </div>
       </div>
     </div>
+
+      {showExitModal && (
+        <HintModal onClose={() => setShowExitModal(false)}>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <AlertTriangle size={22} className="shrink-0 text-amber-500" />
+              <h2 className="font-bold text-base">Quitter la chasse ?</h2>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Le temps de la chasse continuera de tourner tant que vous n&apos;avez pas terminé le parcours.
+            </p>
+            <div className="flex gap-3 mt-1">
+              <button
+                onClick={() => setShowExitModal(false)}
+                className="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold transition-colors hover:bg-muted"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => router.replace('/')}
+                className="flex-1 rounded-xl bg-destructive py-2.5 text-sm font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90"
+              >
+                Quitter
+              </button>
+            </div>
+          </div>
+        </HintModal>
+      )}
+    </>
   );
 }
