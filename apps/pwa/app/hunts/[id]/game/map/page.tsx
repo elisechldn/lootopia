@@ -11,7 +11,7 @@ import { assetUrl } from '@/lib/assets';
 import type { HuntGetPayload } from '@repo/types';
 import HintBubbles from '@/components/game/hints/HintBubbles';
 import HintModal from '@/components/game/hints/HintModal';
-import Image from "next/image";
+import Image from 'next/image';
 
 const GameLeafletMap = dynamic(() => import('@/components/game/GameLeafletMap'), { ssr: false });
 
@@ -200,7 +200,7 @@ export default function GameMapPage({ params }: Props) {
       )}
 
       {/* Info + action — fills remaining space */}
-      <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-y-auto bg-background px-4 py-3 pb-[env(safe-area-inset-bottom,1rem)] sm:px-5 sm:py-4">
+      <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-y-auto bg-background px-4 py-3 pb-[calc(5rem+env(safe-area-inset-bottom,1rem))] sm:px-5 sm:py-4">
 
         {/* Hunt title */}
         <div>
@@ -238,15 +238,18 @@ export default function GameMapPage({ params }: Props) {
               </p>
             </div>
             {currentStep.arMode === 'MARKER' && assetUrl(currentStep.markerImageUrl) && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <Image
-                  width={50}
-                  height={50}
-                  objectFit={'COVER'}
-                src={assetUrl(currentStep.markerImageUrl)!}
-                alt="Objet à scanner"
-                className="h-24 w-24 rounded-lg object-contain self-center border border-amber-500/20 bg-white/50"
-              />
+              <div className="flex flex-col items-center gap-1">
+                <div className="h-24 w-24 rounded-lg overflow-hidden self-center border border-amber-500/20 bg-white/50 relative">
+                  <Image
+                    src={assetUrl(currentStep.markerImageUrl)!}
+                    alt="Aperçu de l'objet à scanner"
+                    fill
+                    className="object-cover scale-[2.5]"
+                    style={{ transformOrigin: 'center' }}
+                  />
+                </div>
+                <span className="text-[10px] opacity-60">Aperçu partiel</span>
+              </div>
             )}
           </div>
         )}
@@ -271,27 +274,28 @@ export default function GameMapPage({ params }: Props) {
           </div>
         </div>
 
-        {/* AR trigger button — always accessible regardless of GPS zone */}
-        <div className="mt-auto space-y-1">
-          <button
-            onClick={() => void handleEnterAR()}
-            className="w-full rounded-xl bg-green-500 py-4 mb-5 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600"
-          >
-            Utiliser la caméra AR
-          </button>
-          {!inZone && (
-            <p className="text-center text-xs text-muted-foreground">
-              Approchez-vous de la zone pour valider l&apos;étape après scan
-            </p>
-          )}
-          {cameraPermissionDenied && (
-            <p className="text-center text-xs text-amber-600">
-              Permission caméra refusée. Activez-la dans les réglages du navigateur (Site → Caméra → Autoriser).
-            </p>
-          )}
-        </div>
       </div>
     </div>
+
+      {/* AR trigger button — fixed above safe area */}
+      <div className="fixed bottom-0 left-0 right-0 z-[500] bg-background/95 backdrop-blur-sm px-4 pt-3 pb-safe-3 space-y-1 border-t border-border">
+        <button
+          onClick={() => void handleEnterAR()}
+          className="w-full rounded-xl bg-green-500 py-4 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600"
+        >
+          Utiliser la caméra AR
+        </button>
+        {!inZone && (
+          <p className="text-center text-xs text-muted-foreground">
+            Approchez-vous de la zone pour valider l&apos;étape après scan
+          </p>
+        )}
+        {cameraPermissionDenied && (
+          <p className="text-center text-xs text-amber-600">
+            Permission caméra refusée. Activez-la dans les réglages du navigateur (Site → Caméra → Autoriser).
+          </p>
+        )}
+      </div>
 
       {showExitModal && (
         <HintModal onClose={() => setShowExitModal(false)}>
