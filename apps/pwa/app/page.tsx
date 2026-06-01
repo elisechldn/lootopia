@@ -50,7 +50,7 @@ function HomeContent() {
   const greeting = user ? `Bonjour ${user.firstname} !` : '';
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen">
       <TopBar greeting={greeting} />
       {/* Offset du TopBar fixé */}
       <div className="flex flex-col flex-1 pt-topbar">

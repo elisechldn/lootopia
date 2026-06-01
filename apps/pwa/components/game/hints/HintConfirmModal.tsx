@@ -7,12 +7,13 @@ import type { BubbleInfo } from './types';
 interface Props {
   bubble: BubbleInfo;
   totalPoints: number;
+  participationPoints: number;
   onConfirm: () => void;
   onCancel: () => void;
   isPending: boolean;
 }
 
-export default function HintConfirmModal({ bubble, totalPoints, onConfirm, onCancel, isPending }: Props) {
+export default function HintConfirmModal({ bubble, totalPoints, participationPoints, onConfirm, onCancel, isPending }: Props) {
   const isSolution = bubble.isLast;
 
   return (
@@ -48,7 +49,7 @@ export default function HintConfirmModal({ bubble, totalPoints, onConfirm, onCan
         <span className={['text-xs font-semibold', isSolution ? 'text-red-500' : 'text-orange-500'].join(' ')}>
           {isSolution ? '−∞ pts' : `−${bubble.penaltyCost} pts`}
         </span>
-        <span className="ml-auto text-[11px] text-gray-400">Score actuel : {totalPoints} pts</span>
+        <span className="ml-auto text-[11px] text-gray-400">Score actuel : {participationPoints} pts</span>
       </div>
 
       {/* Buttons */}

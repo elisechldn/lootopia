@@ -357,6 +357,39 @@ export class HuntsService {
   }
 
   async upsertSteps(huntId: number, steps: Array<Record<string, unknown>>) {
+    // Validation des points et pénalités avant toute persistence
+    for (const [i, s] of steps.entries()) {
+      const stepPoints = Number(s.points ?? 0);
+      const stepLabel = `Étape ${i + 1}`;
+
+      if (stepPoints < 0) {
+        throw new BadRequestException(
+          `${stepLabel} : les points ne peuvent pas être négatifs`,
+        );
+      }
+
+      const clues = Array.isArray(s.clues)
+        ? (s.clues as Array<{ penaltyCost?: number }>)
+        : [];
+
+      let totalPenalty = 0;
+      for (const [j, c] of clues.entries()) {
+        const penalty = Number(c.penaltyCost ?? 0);
+        if (penalty < 0) {
+          throw new BadRequestException(
+            `${stepLabel}, indice ${j + 1} : le coût de pénalité ne peut pas être négatif`,
+          );
+        }
+        totalPenalty += penalty;
+      }
+
+      if (totalPenalty > stepPoints) {
+        throw new BadRequestException(
+          `${stepLabel} : la somme des pénalités (${totalPenalty} pts) dépasse les points de l'étape (${stepPoints} pts)`,
+        );
+      }
+    }
+
     const incomingIds = steps
       .filter((s) => s.id != null)
       .map((s) => Number(s.id));

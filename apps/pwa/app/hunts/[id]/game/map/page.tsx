@@ -191,6 +191,7 @@ export default function GameMapPage({ params }: Props) {
           <HintBubbles
             progressId={currentProgress.id}
             totalPoints={currentProgress.totalPoints}
+            participationPoints={participation?.totalPoints ?? 0}
             onProgressChanged={handleProgressChanged}
           />
         </div>

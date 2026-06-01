@@ -10,10 +10,11 @@ import type { BubbleInfo, ContentClue } from './types';
 interface Props {
   progressId: number;
   totalPoints: number;
+  participationPoints: number;
   onProgressChanged: () => void;
 }
 
-export default function HintBubbles({ progressId, totalPoints, onProgressChanged }: Props) {
+export default function HintBubbles({ progressId, totalPoints, participationPoints, onProgressChanged }: Props) {
   const [data, setData] = useState<CluePlayerData | null>(null);
   const [isPending, startTransition] = useTransition();
   const [confirmBubble, setConfirmBubble] = useState<BubbleInfo | null>(null);
@@ -101,6 +102,7 @@ export default function HintBubbles({ progressId, totalPoints, onProgressChanged
         <HintConfirmModal
           bubble={confirmBubble}
           totalPoints={currentPoints}
+          participationPoints={participationPoints}
           onConfirm={handleConfirm}
           onCancel={() => setConfirmBubble(null)}
           isPending={isPending}

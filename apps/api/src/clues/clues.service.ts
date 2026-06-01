@@ -28,8 +28,31 @@ export class CluesService {
     role: string,
     dto: CreateClueDto,
   ) {
-
     await this.checkStepOwnership(stepId, userId, role);
+
+    const penaltyCost = dto.penaltyCost ?? 0;
+
+    if (penaltyCost < 0) {
+      throw new BadRequestException('Le coût de pénalité ne peut pas être négatif');
+    }
+
+    const step = await this.prisma.step.findUnique({
+      where: { id: stepId },
+      select: { points: true },
+    });
+    if (!step) throw new NotFoundException('Étape introuvable');
+
+    const existingPenalty = await this.prisma.clue.aggregate({
+      where: { refStep: stepId },
+      _sum: { penaltyCost: true },
+    });
+    const usedPenalty = existingPenalty._sum.penaltyCost ?? 0;
+
+    if (usedPenalty + penaltyCost > step.points) {
+      throw new BadRequestException(
+        `Budget pénalité dépassé. Disponible : ${step.points - usedPenalty} pts sur ${step.points} pts`,
+      );
+    }
 
     const maxOrder = await this.prisma.clue.aggregate({
       where: { refStep: stepId },
@@ -40,7 +63,7 @@ export class CluesService {
     return this.prisma.clue.create({
       data: {
         message: dto.message,
-        penaltyCost: dto.penaltyCost ?? 0,
+        penaltyCost,
         orderNumber,
         refStep: stepId,
       },
@@ -61,6 +84,37 @@ export class CluesService {
     dto: UpdateClueDto,
   ) {
     await this.checkClueOwnership(clueId, userId, role);
+
+    if (dto.penaltyCost !== undefined) {
+      if (dto.penaltyCost < 0) {
+        throw new BadRequestException('Le coût de pénalité ne peut pas être négatif');
+      }
+
+      const clue = await this.prisma.clue.findUnique({
+        where: { id: clueId },
+        select: { refStep: true },
+      });
+      if (!clue) throw new NotFoundException('Indice introuvable');
+
+      const step = await this.prisma.step.findUnique({
+        where: { id: clue.refStep },
+        select: { points: true },
+      });
+      if (!step) throw new NotFoundException('Étape introuvable');
+
+      const otherPenalties = await this.prisma.clue.aggregate({
+        where: { refStep: clue.refStep, id: { not: clueId } },
+        _sum: { penaltyCost: true },
+      });
+      const usedPenalty = otherPenalties._sum.penaltyCost ?? 0;
+
+      if (usedPenalty + dto.penaltyCost > step.points) {
+        throw new BadRequestException(
+          `Budget pénalité dépassé. Disponible : ${step.points - usedPenalty} pts sur ${step.points} pts`,
+        );
+      }
+    }
+
     return this.prisma.clue.update({
       where: { id: clueId },
       data: {
