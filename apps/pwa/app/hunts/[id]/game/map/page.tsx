@@ -7,9 +7,11 @@ import { Navigation, Trophy, Loader2, MapPin, ScanLine, ArrowLeft, AlertTriangle
 import { getHuntById } from '@/services/hunt.service';
 import { getParticipationById, type GameParticipation } from '@/services/participation.service';
 import { haversineDistance, formatDistance } from '@/lib/geo';
+import { assetUrl } from '@/lib/assets';
 import type { HuntGetPayload } from '@repo/types';
 import HintBubbles from '@/components/game/hints/HintBubbles';
 import HintModal from '@/components/game/hints/HintModal';
+import Image from "next/image";
 
 const GameLeafletMap = dynamic(() => import('@/components/game/GameLeafletMap'), { ssr: false });
 
@@ -218,21 +220,34 @@ export default function GameMapPage({ params }: Props) {
 
         {/* Step type instruction */}
         {currentStep && (
-          <div className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-sm ${
+          <div className={`flex flex-col gap-2 rounded-xl border px-4 py-3 text-sm ${
             currentStep.arMode === 'MARKER'
               ? 'border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400'
               : 'border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-blue-400'
           }`}>
-            {currentStep.arMode === 'MARKER' ? (
-              <ScanLine size={18} className="shrink-0 mt-0.5" />
-            ) : (
-              <MapPin size={18} className="shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3">
+              {currentStep.arMode === 'MARKER' ? (
+                <ScanLine size={18} className="shrink-0 mt-0.5" />
+              ) : (
+                <MapPin size={18} className="shrink-0 mt-0.5" />
+              )}
+              <p>
+                {currentStep.arMode === 'MARKER'
+                  ? "Rendez-vous dans la prochaine zone, puis trouvez l'objet à scanner avec votre caméra."
+                  : 'Trouvez et rendez-vous dans la prochaine zone.'}
+              </p>
+            </div>
+            {currentStep.arMode === 'MARKER' && assetUrl(currentStep.markerImageUrl) && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <Image
+                  width={50}
+                  height={50}
+                  objectFit={'COVER'}
+                src={assetUrl(currentStep.markerImageUrl)!}
+                alt="Objet à scanner"
+                className="h-24 w-24 rounded-lg object-contain self-center border border-amber-500/20 bg-white/50"
+              />
             )}
-            <p>
-              {currentStep.arMode === 'MARKER'
-                ? "Rendez-vous dans la prochaine zone, puis trouvez l'objet à scanner avec votre caméra."
-                : 'Trouvez et rendez-vous dans la prochaine zone.'}
-            </p>
           </div>
         )}
 
