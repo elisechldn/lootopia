@@ -8,36 +8,48 @@ export class StatsController {
     @Get('all')
     public async getStats(@Query() query: {  }) { 
         console.log('Received stats request with query:', query);
-        
 
-
-        // 1. Statistiques des Chasses (Hunts)
+        // --- 1. Statistiques des Chasses ---
         const huntsByStatus = await this.prisma.hunt.groupBy({
             by: ['status'],
             _count: { id: true },
         });
 
-        // Top 5 des chasses les plus populaires (avec Prisma _count)
         const popularHunts = await this.prisma.hunt.findMany({
             select: {
                 title: true,
-                _count: {
-                    select: { participations: true }
-                }
+                _count: { select: { participations: true } }
             },
-            orderBy: {
-                participations: { _count: 'desc' }
-            },
+            orderBy: { participations: { _count: 'desc' } },
             take: 5,
         });
 
-        // 2. Statistiques des Participations (Taux de complétion)
+        // --- 2. Statistiques des Participations ---
         const participationsByStatus = await this.prisma.participation.groupBy({
             by: ['status'],
             _count: { id: true },
         });
 
-        // 3. Statistiques des Utilisateurs
+        // Nouveau : Score moyen des parties complétées
+        const averageScoreAgg = await this.prisma.participation.aggregate({
+            where: { status: 'COMPLETED' },
+            _avg: { totalPoints: true }
+        });
+
+        // Nouveau : Activité récente (5 dernières participations mises à jour)
+        const recentParticipations = await this.prisma.participation.findMany({
+            take: 5,
+            orderBy: { updatedAt: 'desc' },
+            select: {
+                status: true,
+                updatedAt: true,
+                totalPoints: true,
+                user: { select: { username: true } },
+                hunt: { select: { title: true } }
+            }
+        });
+
+        // --- 3. Statistiques des Utilisateurs ---
         const usersByRole = await this.prisma.user.groupBy({
             by: ['role'],
             _count: { id: true },
@@ -46,12 +58,17 @@ export class StatsController {
         const usersByCountry = await this.prisma.user.groupBy({
             by: ['country'],
             _count: { id: true },
-            orderBy: {
-                _count: { id: 'desc' }
-            }
+            orderBy: { _count: { id: 'desc' } }
         });
 
-        // 4. Statistiques de Jeu (Étapes et Réalité Augmentée)
+        // Nouveau : Utilisateurs inscrits dans les 30 derniers jours
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const newUsersCount = await this.prisma.user.count({
+            where: { createdAt: { gte: thirtyDaysAgo } }
+        });
+
+        // --- 4. Statistiques de Jeu ---
         const stepsByArMode = await this.prisma.step.groupBy({
             by: ['arMode'],
             _count: { id: true },
@@ -59,7 +76,7 @@ export class StatsController {
 
         const totalCluesUsed = await this.prisma.clueUsage.count();
 
-        // Formatage de la réponse pour le frontend
+        // Formatage de la réponse
         return {
             hunts: {
                 total: huntsByStatus.reduce((acc, curr) => acc + curr._count.id, 0),
@@ -68,17 +85,26 @@ export class StatsController {
             },
             participations: {
                 total: participationsByStatus.reduce((acc, curr) => acc + curr._count.id, 0),
-                byStatus: participationsByStatus.map(p => ({ status: p.status, count: p._count.id }))
+                byStatus: participationsByStatus.map(p => ({ status: p.status, count: p._count.id })),
+                averageScore: averageScoreAgg._avg.totalPoints ? Math.round(averageScoreAgg._avg.totalPoints) : 0
             },
             users: {
                 total: usersByRole.reduce((acc, curr) => acc + curr._count.id, 0),
+                newLast30Days: newUsersCount,
                 byRole: usersByRole.map(u => ({ role: u.role, count: u._count.id })),
                 topCountries: usersByCountry.map(u => ({ country: u.country, count: u._count.id }))
             },
             gameplay: {
                 arModesDistribution: stepsByArMode.map(s => ({ mode: s.arMode, count: s._count.id })),
                 totalCluesUsed: totalCluesUsed
-            }
+            },
+            recentActivity: recentParticipations.map(p => ({
+                username: p.user.username,
+                huntTitle: p.hunt.title,
+                status: p.status,
+                points: p.totalPoints,
+                date: p.updatedAt
+            }))
         };
     }
 }
