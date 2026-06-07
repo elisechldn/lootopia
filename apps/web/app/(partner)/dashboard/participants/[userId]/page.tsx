@@ -1,12 +1,17 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import PlayerStatsDashboard, { type PlayerParticipation } from "@/components/partner/PlayerStatsDashboard";
 
 async function getPlayerParticipations(userId: string): Promise<PlayerParticipation[]> {
+    const token = (await cookies()).get("auth_token")?.value;
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/participations/player/${userId}`,
-        { cache: "no-store" },
+        `${process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL}/participations/player/${userId}`,
+        {
+            cache: "no-store",
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        },
     );
     if (!res.ok) return [];
     const json = await res.json();
