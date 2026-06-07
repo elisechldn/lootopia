@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation';
 import { CheckCircle, Loader2, Play } from 'lucide-react';
 import { Button }        from '@/components/ui/Button';
 import { useUserStore }  from '@/store/userStore';
-import { startHunt } from '@/services/participation.service';
-import { getMyParticipationsAction } from "@/lib/actions/participation.actions";
+import { getMyParticipationsAction, startHuntAction } from "@/lib/actions/participation.actions";
 
 type PlayButtonProps = {
   huntId: string;
@@ -50,7 +49,7 @@ export default function PlayButton({ huntId }: PlayButtonProps) {
     try {
       const doe = DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> };
       if (typeof doe.requestPermission === 'function') await doe.requestPermission();
-      const participation = await startHunt(user.id, Number(huntId));
+      const participation = await startHuntAction(Number(huntId));
       router.push(`/hunts/${huntId}/game/map?participationId=${participation.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Impossible de démarrer');

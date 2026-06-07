@@ -52,8 +52,8 @@ export default function HuntForm({ initialData }: Props) {
         title: initialData?.title ?? "",
         shortDescription: initialData?.shortDescription ?? "",
         fullDescription: initialData?.description ?? "",
-        startDate: initialData?.startDate ? new Date(initialData.startDate).toISOString().split("T")[0] : "",
-        endDate: initialData?.endDate ? new Date(initialData.endDate).toISOString().split("T")[0] : "",
+        startDate: initialData?.startDate ? initialData.startDate.slice(0, 10) : "",
+        endDate: initialData?.endDate ? initialData.endDate.slice(0, 10) : "",
         locationCenter: initialData?.latitude && initialData?.longitude ? `${initialData?.latitude} ${initialData?.longitude}` : null,
         // country: initialData?.location?.split(", ")[1] ?? "France",
         // city: initialData?.location?.split(", ")[0] ?? "",
@@ -117,8 +117,8 @@ export default function HuntForm({ initialData }: Props) {
         console.log("steps -> ", steps);
         try {
             const url = isEditing
-                ? `${process.env.NEXT_PUBLIC_API_URL}/hunts/${initialData!.id}`
-                : `${process.env.NEXT_PUBLIC_API_URL}/hunts`;
+                ? `/api/hunts/${initialData!.id}`
+                : `/api/hunts`;
             const method = isEditing ? "PUT" : "POST";
 
             const res = await fetch(url, {
@@ -166,7 +166,7 @@ export default function HuntForm({ initialData }: Props) {
                     return rest;
                 });
 
-                const stepsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hunts/${huntId}/steps`, {
+                const stepsRes = await fetch(`/api/hunts/${huntId}/steps`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ steps: stepsPayload }),

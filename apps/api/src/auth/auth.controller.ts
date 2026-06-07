@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpCode } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -37,7 +37,9 @@ export class AuthController {
   @HttpCode(200)
   async forgotPassword(@Body() body: { email: string }) {
     await this.authService.forgotPassword(body.email);
-    return { message: 'Si cet email existe, un lien de réinitialisation a été envoyé.' };
+    return {
+      message: 'Si cet email existe, un lien de réinitialisation a été envoyé.',
+    };
   }
 
   @Post('reset-password')

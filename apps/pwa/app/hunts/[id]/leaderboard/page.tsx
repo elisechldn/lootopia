@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowLeft, Trophy, Medal, Clock, Star } from 'lucide-react';
-import { getLeaderboard } from '@/services/participation.service';
+import { getLeaderboardAction } from '@/lib/actions/participation.actions';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -26,7 +26,7 @@ function getRankStyle(rank: number) {
 
 export default async function LeaderboardPage({ params }: Props) {
   const { id } = await params;
-  const entries = await getLeaderboard(Number(id));
+  const entries = await getLeaderboardAction(Number(id));
 
   return (
     <main className="flex min-h-screen flex-col bg-background pt-safe">
