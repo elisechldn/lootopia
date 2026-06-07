@@ -73,10 +73,9 @@ export default function HintBubbles({ progressId, totalPoints, participationPoin
           penaltyCost: result.clue.penaltyCost,
           isLast: result.isLastClue,
         });
-        if (result.isLastClue) {
-          onProgressChanged();
-        } else {
-          setCurrentPoints((prev) => Math.max(0, prev - result.clue.penaltyCost));
+        setCurrentPoints((prev) => Math.max(0, prev - result.clue.penaltyCost));
+        onProgressChanged();
+        if (!result.isLastClue) {
           loadClues();
         }
       } catch {

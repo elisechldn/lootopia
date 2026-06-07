@@ -91,6 +91,21 @@ export default function GameMapPage({ params }: Props) {
     return participation.progresses.find((p) => p.statut === 'IN_PROGRESS') ?? null;
   }, [participation]);
 
+  // Live overall score: banked points from completed steps, plus the running
+  // penalty delta of the in-progress step (currentProgress.totalPoints already
+  // nets out penalties applied so far, vs. the step's base point value).
+  const livePoints = useMemo(() => {
+    const banked =
+      participation?.progresses
+        .filter((p) => p.statut === 'COMPLETED')
+        .reduce((sum, p) => sum + p.totalPoints, 0) ?? 0;
+
+    const currentPenaltyDelta =
+      currentProgress && currentStep ? currentProgress.totalPoints - currentStep.points : 0;
+
+    return banked + currentPenaltyDelta;
+  }, [participation, currentProgress, currentStep]);
+
   // Haversine geofence check
   useEffect(() => {
     if (!userCoords || !currentStep?.latitude || !currentStep?.longitude) return;
@@ -194,7 +209,7 @@ export default function GameMapPage({ params }: Props) {
           <HintBubbles
             progressId={currentProgress.id}
             totalPoints={currentProgress.totalPoints}
-            participationPoints={participation?.totalPoints ?? 0}
+            participationPoints={livePoints}
             onProgressChanged={handleProgressChanged}
           />
         </div>
