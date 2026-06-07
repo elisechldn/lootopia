@@ -3,6 +3,70 @@
 import { cookies } from 'next/headers';
 import { API_URL } from '@/lib/api';
 import { type UserInfos } from '@/store/userStore';
+import {
+  type GameParticipation,
+  type LeaderboardEntry,
+} from '@/services/participation.service';
+
+function unwrap(body: unknown) {
+  return (body as { data?: unknown })?.data ?? body;
+}
+
+async function authHeaders(): Promise<Record<string, string>> {
+  const token = (await cookies()).get('auth_token')?.value;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+export async function getParticipationByIdAction(
+  participationId: number,
+): Promise<GameParticipation> {
+  const res = await fetch(`${API_URL}/participations/${participationId}`, {
+    headers: await authHeaders(),
+    cache: 'no-store',
+  });
+  if (!res.ok) throw new Error('Participation introuvable');
+  return unwrap(await res.json()) as GameParticipation;
+}
+
+export async function startHuntAction(huntId: number): Promise<GameParticipation> {
+  const res = await fetch(`${API_URL}/participations`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+    body: JSON.stringify({ huntId }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error((body as { message?: string })?.message ?? 'Impossible de démarrer la chasse');
+  }
+  return unwrap(await res.json()) as GameParticipation;
+}
+
+export async function validateStepAction(
+  participationId: number,
+  stepId: number,
+  lat: number,
+  lon: number,
+) {
+  const res = await fetch(`${API_URL}/participations/${participationId}/steps/${stepId}/validate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+    body: JSON.stringify({ latitude: lat, longitude: lon }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error((body as { message?: string })?.message ?? 'Validation échouée');
+  }
+  return unwrap(await res.json());
+}
+
+export async function getLeaderboardAction(huntId: number): Promise<LeaderboardEntry[]> {
+  const res = await fetch(`${API_URL}/participations/hunt/${huntId}/leaderboard`, {
+    headers: await authHeaders(),
+    cache: 'no-store',
+  });
+  if (!res.ok) return [];
+  return unwrap(await res.json()) as LeaderboardEntry[];
+}
 
 export async function getMyParticipationsAction(): Promise<UserInfos['participations']> {
   const token = (await cookies()).get('auth_token')?.value;

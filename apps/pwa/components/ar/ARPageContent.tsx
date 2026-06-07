@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { ArrowLeft } from "lucide-react";
 import ARCameraLoader from "./ARCameraLoader";
-import { getParticipationById, validateStep } from "@/services/participation.service";
+import { getParticipationByIdAction, validateStepAction } from "@/lib/actions/participation.actions";
 import { getHuntById } from "@/services/hunt.service";
 import { useUserStore } from "@/store/userStore";
 import StepValidationOverlay, { type StepValidationResult } from "./StepValidationOverlay";
@@ -36,7 +36,7 @@ export default function ARPageContent({ huntId }: Props) {
       setArMode("GPS");
       return;
     }
-    getParticipationById(+participationId)
+    getParticipationByIdAction(+participationId)
       .then((p) => {
         const step = p.hunt?.steps.find((s) => s.id === +stepId);
         setArMode(step?.arMode ?? "GPS");
@@ -52,7 +52,7 @@ export default function ARPageContent({ huntId }: Props) {
     if (isValidating || !participationId || !stepId || !user) return;
     setIsValidating(true);
     try {
-      const res = await validateStep(+participationId, +stepId, user.id, lat, lon) as { status?: string; totalPoints?: number };
+      const res = await validateStepAction(+participationId, +stepId, lat, lon) as { status?: string; totalPoints?: number };
       setStepResult({ success: true, message: 'Étape validée !', points: res?.totalPoints ?? 0 });
     } catch (err) {
       setStepResult({

@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Navigation, Trophy, Loader2, MapPin, ScanLine, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { getHuntById } from '@/services/hunt.service';
-import { getParticipationById, type GameParticipation } from '@/services/participation.service';
+import { type GameParticipation } from '@/services/participation.service';
+import { getParticipationByIdAction } from '@/lib/actions/participation.actions';
 import { haversineDistance, formatDistance } from '@/lib/geo';
 import { assetUrl } from '@/lib/assets';
 import type { HuntGetPayload } from '@repo/types';
@@ -46,7 +47,7 @@ export default function GameMapPage({ params }: Props) {
     if (!participationId) return;
     Promise.all([
       getHuntById(+huntId),
-      getParticipationById(+participationId),
+      getParticipationByIdAction(+participationId),
     ]).then(([huntRes, participationRes]) => {
       setHunt(huntRes.data as HuntWithSteps);
       console.log("participationRes => ", participationRes)
@@ -135,7 +136,7 @@ export default function GameMapPage({ params }: Props) {
   const handleProgressChanged = () => {
     if (!participationId) return;
     startClueTransition(async () => {
-      const updated = await getParticipationById(+participationId);
+      const updated = await getParticipationByIdAction(+participationId);
       setParticipation(updated);
     });
   };
