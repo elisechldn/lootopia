@@ -90,7 +90,7 @@ export default function ProfileForm({ user }: Props) {
             if (form.password) body.password = form.password;
 
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/users/${user?.id}`,
+                `/api/users/${user?.id}`,
                 {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
