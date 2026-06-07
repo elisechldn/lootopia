@@ -2,18 +2,19 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
-  Headers,
   Param,
   Patch,
   Post,
   Query,
-  UnauthorizedException,
+  Request,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtService } from '@nestjs/jwt';
 import { memoryStorage } from 'multer';
 import { CreateUserDto, UpdateUserDto } from '@repo/types';
 import { UsersService } from './users.service';
@@ -26,27 +27,18 @@ const TWO_MB = 2 * 1024 * 1024;
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
     private readonly filesService: FilesService,
     private readonly storageService: StorageService,
   ) {}
 
   @Get('me')
-  getMe(@Headers('authorization') authorization: string) {
-    if (!authorization?.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Token manquant ou invalide');
-    }
-    const token = authorization.slice(7);
-    let payload: { sub: number };
-    try {
-      payload = this.jwtService.verify(token);
-    } catch {
-      throw new UnauthorizedException('Token invalide ou expiré');
-    }
-    return this.usersService.findMe(payload.sub);
+  @UseGuards(AuthGuard('jwt'))
+  getMe(@Request() req: { user: { sub: number } }) {
+    return this.usersService.findMe(req.user.sub);
   }
 
   @Post('me/avatar')
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),
@@ -54,25 +46,17 @@ export class UsersController {
     }),
   )
   async uploadAvatar(
-    @Headers('authorization') authorization: string,
+    @Request() req: { user: { sub: number } },
     @UploadedFile() file: Express.Multer.File,
   ) {
-    if (!authorization?.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Token manquant ou invalide');
-    }
-    let payload: { sub: number };
-    try {
-      payload = this.jwtService.verify(authorization.slice(7));
-    } catch {
-      throw new UnauthorizedException('Token invalide ou expiré');
-    }
-    const current = await this.usersService.findOne(payload.sub);
+    const userId = req.user.sub;
+    const current = await this.usersService.findOne(userId);
     if (current.profilePicture) {
       const oldKey = this.storageService.keyFromPublicUrl(current.profilePicture);
       if (oldKey) await this.storageService.deleteObject(oldKey).catch(() => null);
     }
-    const { url } = await this.filesService.upload(payload.sub, 'avatar', file);
-    await this.usersService.update(payload.sub, { profilePicture: url });
+    const { url } = await this.filesService.upload(userId, 'avatar', file);
+    await this.usersService.update(userId, { profilePicture: url });
     return { url };
   }
 
@@ -95,12 +79,24 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @UseGuards(AuthGuard('jwt'))
+  update(
+    @Request() req: { user: { sub: number } },
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    if (req.user.sub !== +id) {
+      throw new ForbiddenException('Vous ne pouvez modifier que votre propre profil');
+    }
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @UseGuards(AuthGuard('jwt'))
+  remove(@Request() req: { user: { sub: number } }, @Param('id') id: string) {
+    if (req.user.sub !== +id) {
+      throw new ForbiddenException('Vous ne pouvez supprimer que votre propre compte');
+    }
     return this.usersService.remove(+id);
   }
 }

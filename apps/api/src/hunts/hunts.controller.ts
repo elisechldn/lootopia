@@ -2,19 +2,30 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
   Put,
   Query,
+  Request,
+  UseGuards,
   HttpCode,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { HuntsService } from './hunts.service';
 import { CreateHuntDto } from './dto/create-hunt.dto';
 
 @Controller('hunts')
 export class HuntsController {
   constructor(private readonly huntsService: HuntsService) {}
+
+  private async assertOwnership(huntId: number, userId: number) {
+    const hunt = (await this.huntsService.findOne(huntId)) as { refUser: number } | null;
+    if (!hunt || hunt.refUser !== userId) {
+      throw new ForbiddenException('Vous ne gérez pas cette chasse');
+    }
+  }
 
   @Get()
   findAll(@Query('userId') userId?: string) {
@@ -54,26 +65,38 @@ export class HuntsController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() dto: CreateHuntDto) {
-    return this.huntsService.create(dto);
+  @UseGuards(AuthGuard('jwt'))
+  create(@Request() req: { user: { sub: number } }, @Body() dto: CreateHuntDto) {
+    return this.huntsService.create({ ...dto, refUser: req.user.sub });
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: Partial<CreateHuntDto>) {
+  @UseGuards(AuthGuard('jwt'))
+  async update(
+    @Request() req: { user: { sub: number } },
+    @Param('id') id: string,
+    @Body() dto: Partial<CreateHuntDto>,
+  ) {
+    await this.assertOwnership(Number(id), req.user.sub);
     return this.huntsService.update(Number(id), dto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  @UseGuards(AuthGuard('jwt'))
+  async remove(@Request() req: { user: { sub: number } }, @Param('id') id: string) {
+    await this.assertOwnership(Number(id), req.user.sub);
     return this.huntsService.remove(Number(id));
   }
 
   @Post(':id/steps')
-  upsertSteps(
+  @UseGuards(AuthGuard('jwt'))
+  async upsertSteps(
+    @Request() req: { user: { sub: number } },
     @Param('id') id: string,
     @Body() body: { steps: Array<Record<string, unknown>> },
   ): Promise<unknown> {
+    await this.assertOwnership(Number(id), req.user.sub);
     return this.huntsService.upsertSteps(Number(id), body.steps);
   }
 }

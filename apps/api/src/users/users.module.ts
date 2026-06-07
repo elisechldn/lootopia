@@ -1,18 +1,12 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { requireEnv } from '../config/env';
+import { AuthModule } from '../auth/auth.module';
 import { FilesModule } from '../storage/files/files.module';
 
 @Module({
-  imports: [
-    JwtModule.register({
-      secret: requireEnv('JWT_SECRET'),
-      signOptions: { expiresIn: '7d' },
-    }),
-    FilesModule,
-  ],
+  imports: [PassportModule, AuthModule, FilesModule],
   controllers: [UsersController],
   providers: [UsersService],
 })
