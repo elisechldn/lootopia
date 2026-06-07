@@ -144,6 +144,8 @@ export class HuntsService {
                     ) AS distance
                 FROM "hunts"
                 WHERE status = 'ACTIVE'
+                  AND ("start_date" IS NULL OR "start_date" <= now())
+                  AND ("end_date" IS NULL OR "end_date" >= now())
                   AND "location_center" IS NOT NULL
                   AND ST_DWithin(
                       "location_center",
