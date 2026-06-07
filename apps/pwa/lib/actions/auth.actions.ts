@@ -1,8 +1,10 @@
 'use server';
 
-import { cookies } from 'next/headers';
-import { type UserInfos } from '@/store/userStore';
 import { API_URL } from '@/lib/api';
+import { registerPlayer } from '@/services/auth.service';
+import { type UserInfos } from '@/store/userStore';
+import { cookies } from 'next/headers';
+import { redirect } from "next/navigation";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -73,4 +75,27 @@ export async function logoutAction() {
 
 export async function getAuthToken(): Promise<string | null> {
   return (await cookies()).get('auth_token')?.value ?? null;
+}
+
+export async function registerAction(formData: FormData) {
+  "use server";
+
+  const firstname = String(formData.get("firstname") ?? "");
+  const lastname = String(formData.get("lastname") ?? "");
+  const email = String(formData.get("email") ?? "");
+  const password = String(formData.get("password") ?? "");
+  const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+  if (password !== confirmPassword) {
+    redirect(`/register?error=${encodeURIComponent("Les mots de passe ne correspondent pas")}`);
+  }
+
+  try {
+    await registerPlayer({ firstname, lastname, email, password });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Erreur lors de l'inscription";
+    redirect(`/register?error=${encodeURIComponent(message)}`);
+  }
+
+  redirect("/register/confirm");
 }
