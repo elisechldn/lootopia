@@ -15,7 +15,7 @@ import { logInfo } from 'src/loggeur';
 export class ParticipationsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async startHunt(dto: StartHuntDto) {
+  async startHunt(dto: StartHuntDto, userId: number) {
     const hunt = await this.prisma.hunt.findUnique({
       where: { id: dto.huntId },
       include: { steps: { orderBy: { orderNumber: 'asc' } } },
@@ -47,19 +47,19 @@ export class ParticipationsService {
     }
 
     const existing = await this.prisma.participation.findUnique({
-      where: { refUser_refHunt: { refUser: dto.userId, refHunt: dto.huntId } },
+      where: { refUser_refHunt: { refUser: userId, refHunt: dto.huntId } },
     });
 
     if (existing) {
       logInfo(
         'info',
-        `L'utilisateur ${dto.userId} a déjà une participation pour la chasse ${dto.huntId} avec le statut ${existing.status}`,
+        `L'utilisateur ${userId} a déjà une participation pour la chasse ${dto.huntId} avec le statut ${existing.status}`,
         'ParticipationsService',
       );
       if (existing.status === 'COMPLETED') {
         logInfo(
           'error',
-          `L'utilisateur ${dto.userId} a déjà complété la chasse ${dto.huntId}`,
+          `L'utilisateur ${userId} a déjà complété la chasse ${dto.huntId}`,
           'ParticipationsService',
         );
         throw new ConflictException('Vous avez déjà complété cette chasse');
@@ -67,7 +67,7 @@ export class ParticipationsService {
 
       logInfo(
         'info',
-        `Récupération de la participation existante ${existing.id} pour l'utilisateur ${dto.userId} et la chasse ${dto.huntId}`,
+        `Récupération de la participation existante ${existing.id} pour l'utilisateur ${userId} et la chasse ${dto.huntId}`,
         'ParticipationsService',
       );
       return this.prisma.participation.findUnique({
@@ -81,7 +81,7 @@ export class ParticipationsService {
 
     const participation = await this.prisma.participation.create({
       data: {
-        refUser: dto.userId,
+        refUser: userId,
         refHunt: dto.huntId,
         status: 'IN_PROGRESS',
       },
@@ -100,7 +100,7 @@ export class ParticipationsService {
 
     logInfo(
       'info',
-      `Nouvelle participation ${participation.id} créée pour l'utilisateur ${dto.userId} et la chasse ${dto.huntId}`,
+      `Nouvelle participation ${participation.id} créée pour l'utilisateur ${userId} et la chasse ${dto.huntId}`,
       'ParticipationsService',
     );
     return this.prisma.participation.findUnique({
@@ -150,9 +150,9 @@ export class ParticipationsService {
       });
   }
 
-  async findByPartner(partnerId: number | null) {
+  async findByPartner(partnerId: number) {
     return this.prisma.participation.findMany({
-      where: partnerId ? { hunt: { refUser: partnerId } } : undefined,
+      where: { hunt: { refUser: partnerId } },
       include: {
         user: {
           select: {
@@ -201,7 +201,7 @@ export class ParticipationsService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, userId: number) {
     const participation = await this.prisma.participation.findUnique({
       where: { id },
       include: {
@@ -216,26 +216,20 @@ export class ParticipationsService {
         progresses: { include: { clueUsages: true } },
       },
     });
-    logInfo(
-      'info',
-      `Récupération de la participation ${id} pour l'utilisateur ${participation?.refUser}`,
-      'ParticipationsService',
-    );
     if (!participation) {
-      logInfo(
-        'error',
-        `Participation ${id} introuvable`,
-        'ParticipationsService',
-      );
+      logInfo('error', `Participation ${id} introuvable`, 'ParticipationsService');
       throw new NotFoundException('Participation introuvable');
     }
-    console.log('PARTICI => ', participation);
+    if (participation.refUser !== userId) {
+      throw new ForbiddenException();
+    }
     return participation;
   }
 
   async validateStep(
     participationId: number,
     stepId: number,
+    userId: number,
     dto: ValidateStepDto,
   ) {
     const participation = await this.prisma.participation.findUnique({
@@ -254,10 +248,10 @@ export class ParticipationsService {
       );
       throw new NotFoundException('Participation introuvable');
     }
-    if (participation.refUser !== dto.userId) {
+    if (participation.refUser !== userId) {
       logInfo(
         'error',
-        `L'utilisateur ${dto.userId} n'est pas autorisé à valider l'étape ${stepId} pour la participation ${participationId}`,
+        `L'utilisateur ${userId} n'est pas autorisé à valider l'étape ${stepId} pour la participation ${participationId}`,
         'ParticipationsService',
       );
       throw new ForbiddenException();
@@ -337,68 +331,53 @@ export class ParticipationsService {
       .reduce((sum, c) => sum + c.penaltyCost, 0);
     const pointsEarned = Math.max(0, step.points - totalPenalty);
 
-    // Marque le Progress courant comme complété
-    await this.prisma.progress.update({
-      where: { id: currentProgress.id },
-      data: {
-        statut: 'COMPLETED',
-        totalPoints: pointsEarned,
-        completedAt: new Date(),
-      },
-    });
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        // Verrou optimiste : P2025 si déjà COMPLETED par une requête concurrente
+        await tx.progress.update({
+          where: { id: currentProgress.id, statut: 'IN_PROGRESS' },
+          data: { statut: 'COMPLETED', totalPoints: pointsEarned, completedAt: new Date() },
+        });
 
-    // Détermine l'étape suivante
-    const currentOrder = step.orderNumber;
-    const nextStep = participation.hunt.steps.find(
-      (s) => s.orderNumber === currentOrder + 1,
-    );
-
-    if (nextStep) {
-      await this.prisma.progress.create({
-        data: {
-          refParticipation: participationId,
-          refStep: nextStep.id,
-          statut: 'IN_PROGRESS',
-          totalPoints: nextStep.points,
-        },
-      });
-      return this.prisma.participation.findUnique({
-        where: { id: participationId },
-        include: { progresses: true },
-      });
-    }
-
-    // Dernière étape : chasse terminée
-    const allProgresses = await this.prisma.progress.findMany({
-      where: { refParticipation: participationId, statut: 'COMPLETED' },
-    });
-    const totalPoints = allProgresses.reduce(
-      (sum, p) => sum + p.totalPoints,
-      0,
-    );
-
-    return this.prisma.participation
-      .update({
-        where: { id: participationId },
-        data: {
-          status: 'COMPLETED',
-          endTime: new Date(),
-          totalPoints,
-        },
-        include: {
-          hunt: {
-            select: { title: true, rewardType: true, rewardValue: true },
-          },
-        },
-      })
-      .then((updated) => {
-        logInfo(
-          'info',
-          `Participation ${participationId} complétée avec ${totalPoints} points`,
-          'ParticipationsService',
+        const nextStep = participation.hunt.steps.find(
+          (s) => s.orderNumber === step.orderNumber + 1,
         );
+
+        if (nextStep) {
+          await tx.progress.create({
+            data: {
+              refParticipation: participationId,
+              refStep: nextStep.id,
+              statut: 'IN_PROGRESS',
+              totalPoints: nextStep.points,
+            },
+          });
+          return tx.participation.findUnique({
+            where: { id: participationId },
+            include: { progresses: true },
+          });
+        }
+
+        // Dernière étape : chasse terminée
+        const allProgresses = await tx.progress.findMany({
+          where: { refParticipation: participationId, statut: 'COMPLETED' },
+        });
+        const totalPoints = allProgresses.reduce((sum, p) => sum + p.totalPoints, 0);
+        const updated = await tx.participation.update({
+          where: { id: participationId },
+          data: { status: 'COMPLETED', endTime: new Date(), totalPoints },
+          include: { hunt: { select: { title: true, rewardType: true, rewardValue: true } } },
+        });
+        logInfo('info', `Participation ${participationId} complétée avec ${totalPoints} points`, 'ParticipationsService');
         return updated;
       });
+    } catch (e: unknown) {
+      const code = (e as { code?: string }).code;
+      if (code === 'P2025') {
+        throw new ConflictException('Cette étape a déjà été validée');
+      }
+      throw e;
+    }
   }
 
   async requestClue(

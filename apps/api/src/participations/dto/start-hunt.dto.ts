@@ -1,4 +1,7 @@
+import { IsInt, Min } from 'class-validator';
+
 export class StartHuntDto {
-    userId: number;
-    huntId: number;
+  @IsInt()
+  @Min(1)
+  huntId: number;
 }
