@@ -226,9 +226,9 @@ export default function HuntForm({ initialData }: Props) {
                             className="px-4 py-2 text-sm font-medium text-foreground/80 bg-card border border-gray-300 rounded-lg hover:bg-muted/50 transition-colors disabled:opacity-50">
                         {saving ? "Enregistrement..." : "Enregistrer"}
                     </button>
-                    <button className="px-4 py-2 text-sm font-medium text-foreground/80 bg-card border border-gray-300 rounded-lg hover:bg-muted/50 transition-colors">
-                        Dupliquer
-                    </button>
+                    {/*<button className="px-4 py-2 text-sm font-medium text-foreground/80 bg-card border border-gray-300 rounded-lg hover:bg-muted/50 transition-colors">*/}
+                    {/*    Dupliquer*/}
+                    {/*</button>*/}
                     <button onClick={() => handleSave("ACTIVE")} disabled={saving}
                             className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50">
                         Publier la chasse
