@@ -30,6 +30,11 @@ export async function loginAction(email: string, password: string,): Promise<{ u
   const json = await res.json();
   const { access_token, user } = json.data as { access_token: string; user: UserInfos };
 
+  // Cloisonnement : la PWA est réservée aux PLAYER et ADMIN.
+  if (user.role !== 'PLAYER' && user.role !== 'ADMIN') {
+    throw new Error('Ce compte partenaire doit utiliser le portail web.');
+  }
+
   (await cookies()).set('auth_token', access_token, COOKIE_OPTIONS);
 
   return { user };

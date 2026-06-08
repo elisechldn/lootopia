@@ -17,7 +17,11 @@ export async function loginAction(_prevState: unknown, formData: FormData) {
     const password = formData.get('password') as string;
 
     try {
-        const { access_token } = await apiLogin(email, password);
+        const { access_token, user } = await apiLogin(email, password);
+        // Cloisonnement : le portail web est réservé aux PARTNER et ADMIN.
+        if (user.role !== 'PARTNER' && user.role !== 'ADMIN') {
+            return { error: "Ce compte joueur doit utiliser l'application mobile." };
+        }
         (await cookies()).set('auth_token', access_token, cookieOptions);
     } catch (e: unknown) {
         return { error: e instanceof Error ? e.message : 'Erreur de connexion' };

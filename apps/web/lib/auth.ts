@@ -15,7 +15,6 @@ export async function getSession() {
 }
 
 export async function apiLogin(email: string, password: string) {
-    console.log("API_URL --> ", API_URL)
     const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
