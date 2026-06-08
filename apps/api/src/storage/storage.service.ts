@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { requireEnv } from '../config/env';
 
 @Injectable()
@@ -24,7 +28,11 @@ export class StorageService {
     });
   }
 
-  async uploadObject(key: string, body: Buffer, contentType: string): Promise<void> {
+  async uploadObject(
+    key: string,
+    body: Buffer,
+    contentType: string,
+  ): Promise<void> {
     await this.client.send(
       new PutObjectCommand({
         Bucket: this.bucket,

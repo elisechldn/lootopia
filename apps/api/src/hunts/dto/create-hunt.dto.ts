@@ -1,13 +1,13 @@
 import { HuntStatus } from '@repo/types';
 import { Type } from 'class-transformer';
 import {
-    IsEnum,
-    IsInt,
-    IsNotEmpty,
-    IsNumber,
-    IsOptional,
-    IsString,
-    Min,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
 } from 'class-validator';
 
 export class CreateHuntDto {

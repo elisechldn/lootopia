@@ -5,8 +5,8 @@ import { ParticipationsService } from './participations.service';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-    imports: [PassportModule, AuthModule],
-    controllers: [ParticipationsController],
-    providers: [ParticipationsService],
+  imports: [PassportModule, AuthModule],
+  controllers: [ParticipationsController],
+  providers: [ParticipationsService],
 })
 export class ParticipationsModule {}

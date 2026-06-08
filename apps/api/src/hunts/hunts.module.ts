@@ -5,8 +5,8 @@ import { HuntsService } from './hunts.service';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-    imports: [PassportModule, AuthModule],
-    controllers: [HuntsController],
-    providers: [HuntsService],
+  imports: [PassportModule, AuthModule],
+  controllers: [HuntsController],
+  providers: [HuntsService],
 })
 export class HuntsModule {}

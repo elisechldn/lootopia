@@ -13,7 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtService } from '@nestjs/jwt';
 import { memoryStorage } from 'multer';
 import { FileKind, FilesService } from './files.service';
-import { AuthGuard } from "@nestjs/passport";
+import { AuthGuard } from '@nestjs/passport';
 
 const ALLOWED_KINDS: FileKind[] = ['cover', 'ar-model', 'ar-marker'];
 const TEN_MB = 10 * 1024 * 1024;
@@ -45,7 +45,9 @@ export class FilesController {
       throw new UnauthorizedException('Token invalide ou expiré');
     }
     if (!ALLOWED_KINDS.includes(kind as FileKind)) {
-      throw new BadRequestException(`Champ "kind" requis (${ALLOWED_KINDS.join(', ')})`);
+      throw new BadRequestException(
+        `Champ "kind" requis (${ALLOWED_KINDS.join(', ')})`,
+      );
     }
     return this.filesService.upload(payload.sub, kind as FileKind, file);
   }
