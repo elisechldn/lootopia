@@ -1,12 +1,13 @@
 import {
-    Body,
-    Controller,
-    Get,
-    HttpCode,
-    Param,
-    Post,
-    Request,
-    UseGuards,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { StartHuntDto } from './dto/start-hunt.dto';
@@ -38,8 +39,11 @@ export class ParticipationsController {
   }
 
   @Get('player/:userId')
-  findByPlayer(@Param('userId') userId: string) {
-    return this.participationsService.findByPlayer(Number(userId));
+  findByPlayer(
+    @Request() req: { user: { sub: number; role: string } },
+    @Param('userId', ParseIntPipe) userId: number,
+  ) {
+    return this.participationsService.findByPlayer(userId, req.user);
   }
 
   @Get('hunt/:huntId/leaderboard')
@@ -48,8 +52,11 @@ export class ParticipationsController {
   }
 
   @Get(':id')
-  findOne(@Request() req: { user: { sub: number } }, @Param('id') id: string) {
-    return this.participationsService.findOne(Number(id), req.user.sub);
+  findOne(
+    @Request() req: { user: { sub: number; role: string } },
+    @Param('id') id: string,
+  ) {
+    return this.participationsService.findOne(Number(id), req.user);
   }
 
   @Post(':id/steps/:stepId/validate')

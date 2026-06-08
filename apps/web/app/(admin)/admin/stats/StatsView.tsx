@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
 // ── Types ─────────────────────────────────────────────────────────────────
-type StatsData = {
+export type StatsData = {
     hunts: {
         total: number;
         byStatus: { status: string; count: number }[];
@@ -12,11 +10,11 @@ type StatsData = {
     participations: {
         total: number;
         byStatus: { status: string; count: number }[];
-        averageScore: number; // NOUVEAU
+        averageScore: number;
     };
     users: {
         total: number;
-        newLast30Days: number; // NOUVEAU
+        newLast30Days: number;
         byRole: { role: string; count: number }[];
         topCountries: { country: string; count: number }[];
     };
@@ -24,7 +22,7 @@ type StatsData = {
         arModesDistribution: { mode: string; count: number }[];
         totalCluesUsed: number;
     };
-    recentActivity: { // NOUVEAU
+    recentActivity: {
         username: string;
         huntTitle: string;
         status: string;
@@ -33,56 +31,7 @@ type StatsData = {
     }[];
 };
 
-export default function StatsPage() {
-    const [data, setData] = useState<StatsData | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-                const response = await fetch(`${apiUrl}/stats/all`);
-                if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-                
-                const result = await response.json();
-                setData(result.data); 
-            } catch (err) {
-                console.error("Erreur de récupération:", err);
-                setError("Impossible de charger l'écosystème Lootopia.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchStats();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="p-8 max-w-7xl mx-auto animate-pulse space-y-6">
-                <div className="h-10 bg-muted rounded w-1/3"></div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="h-40 bg-muted rounded-2xl col-span-2"></div>
-                    <div className="h-40 bg-muted rounded-2xl"></div>
-                    <div className="h-64 bg-muted rounded-2xl"></div>
-                    <div className="h-64 bg-muted rounded-2xl col-span-2"></div>
-                </div>
-            </div>
-        );
-    }
-
-    if (error || !data) {
-        return (
-            <div className="p-8 max-w-7xl mx-auto">
-                <div className="p-6 bg-destructive/10 text-destructive border border-destructive/20 rounded-2xl font-medium">
-                    {error}
-                </div>
-            </div>
-        );
-    }
-
-    // Fonction utilitaire pour formater la date
+export default function StatsView({ data }: { data: StatsData }) {
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(date);
@@ -95,7 +44,7 @@ export default function StatsPage() {
                 <div>
                     <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Écosystème Lootopia</h1>
                     <p className="text-muted-foreground mt-1 text-sm">
-                        Vue d'ensemble et télémétrie en temps réel de votre plateforme.
+                        Vue d&apos;ensemble et télémétrie en temps réel de votre plateforme.
                     </p>
                 </div>
                 <div className="flex gap-6 items-end">
@@ -113,7 +62,7 @@ export default function StatsPage() {
 
             {/* Bento Grid Layout */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
+
                 {/* LIGNE 1 : Activité des Chasses (2 col) + Gameplay (1 col) */}
                 <div className="md:col-span-2 bg-card border border-border rounded-3xl p-6 shadow-sm hover:shadow-md transition-all">
                     <div className="flex justify-between items-center mb-6">
@@ -126,11 +75,11 @@ export default function StatsPage() {
                     </div>
                     <div className="space-y-4">
                         {data.hunts.byStatus.map((statusItem) => (
-                            <ProgressBar 
+                            <ProgressBar
                                 key={statusItem.status}
-                                label={statusItem.status} 
-                                value={statusItem.count} 
-                                total={data.hunts.total} 
+                                label={statusItem.status}
+                                value={statusItem.count}
+                                total={data.hunts.total}
                                 colorClass="bg-blue-500"
                             />
                         ))}
@@ -188,7 +137,7 @@ export default function StatsPage() {
                 </div>
 
                 <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 bg-card border border-border rounded-3xl p-6 shadow-sm hover:shadow-md transition-all">
-                    
+
                     {/* Colonne Participations */}
                     <div>
                         <h2 className="text-lg font-bold flex items-center gap-2 mb-6">
@@ -206,11 +155,11 @@ export default function StatsPage() {
                         </div>
                         <div className="space-y-3">
                             {data.participations.byStatus.map(status => (
-                                <ProgressBar 
+                                <ProgressBar
                                     key={status.status}
-                                    label={status.status} 
-                                    value={status.count} 
-                                    total={data.participations.total} 
+                                    label={status.status}
+                                    value={status.count}
+                                    total={data.participations.total}
                                     colorClass={status.status === 'COMPLETED' ? 'bg-green-500' : status.status === 'ABANDONED' ? 'bg-red-500' : 'bg-primary'}
                                 />
                             ))}
@@ -222,7 +171,7 @@ export default function StatsPage() {
                         <h2 className="text-lg font-bold flex items-center gap-2 mb-6">
                             <UsersIcon /> Base Utilisateurs
                         </h2>
-                        
+
                         <div className="mb-6">
                             <h3 className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">Répartition par rôle</h3>
                             <div className="flex flex-wrap gap-2">
@@ -241,7 +190,7 @@ export default function StatsPage() {
                                 {data.users.topCountries.slice(0, 3).map((country, idx) => (
                                     <div key={idx} className="flex justify-between items-center text-sm">
                                         <span className="flex items-center gap-2">
-                                            <span className="text-muted-foreground font-mono">{idx + 1}.</span> 
+                                            <span className="text-muted-foreground font-mono">{idx + 1}.</span>
                                             {country.country}
                                         </span>
                                         <span className="font-semibold bg-muted px-2 py-0.5 rounded text-xs">{country.count}</span>

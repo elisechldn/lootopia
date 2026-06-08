@@ -77,11 +77,14 @@ export class StepsService {
   async uploadMarkerFiles(
     stepId: number,
     userId: number,
+    role: string,
     imageFile: Express.Multer.File | undefined,
     patternFile: Express.Multer.File | undefined,
   ): Promise<UploadMarkerResponseDto> {
     if (!imageFile && !patternFile) {
-      throw new BadRequestException('Au moins un fichier (image ou .patt) est requis');
+      throw new BadRequestException(
+        'Au moins un fichier (image ou .patt) est requis',
+      );
     }
 
     if (imageFile) this.validateImageFile(imageFile);
@@ -94,7 +97,7 @@ export class StepsService {
     if (!step) {
       throw new NotFoundException('Étape introuvable');
     }
-    if (step.hunt.refUser !== userId) {
+    if (role !== 'ADMIN' && step.hunt.refUser !== userId) {
       throw new ForbiddenException();
     }
 
@@ -112,13 +115,21 @@ export class StepsService {
     if (imageFile) {
       const ext = IMAGE_MIME_TO_EXT[imageFile.mimetype] ?? 'bin';
       const imageKey = `partners/${userId}/ar-markers/${stepId}/${uuid}.${ext}`;
-      await this.storage.uploadObject(imageKey, imageFile.buffer, imageFile.mimetype);
+      await this.storage.uploadObject(
+        imageKey,
+        imageFile.buffer,
+        imageFile.mimetype,
+      );
       markerImageUrl = imageKey;
     }
 
     if (patternFile) {
       const pattKey = `partners/${userId}/ar-markers/${stepId}/${uuid}.patt`;
-      await this.storage.uploadObject(pattKey, patternFile.buffer, 'text/plain');
+      await this.storage.uploadObject(
+        pattKey,
+        patternFile.buffer,
+        'text/plain',
+      );
       markerPatternUrl = pattKey;
     }
 
@@ -155,7 +166,9 @@ export class StepsService {
       throw new BadRequestException('Fichier .patt manquant');
     }
     if (!file.originalname.endsWith('.patt')) {
-      throw new BadRequestException('Le fichier pattern doit avoir l\'extension .patt');
+      throw new BadRequestException(
+        "Le fichier pattern doit avoir l'extension .patt",
+      );
     }
     if (file.size > ONE_MB) {
       throw new BadRequestException('Fichier .patt trop volumineux (max 1 Mo)');

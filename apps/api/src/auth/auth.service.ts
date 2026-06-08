@@ -61,9 +61,13 @@ export class AuthService {
       where: { email: dto.email },
     });
     if (existing) {
-        logInfo('error', `Tentative d'inscription avec un email déjà utilisé: ${dto.email} (un qui a oublie sont mdp :) )`, 'AuthService');
-        throw new ConflictException('Email déjà utilisé')
-    };
+      logInfo(
+        'error',
+        `Tentative d'inscription avec un email déjà utilisé: ${dto.email} (un qui a oublie sont mdp :) )`,
+        'AuthService',
+      );
+      throw new ConflictException('Email déjà utilisé');
+    }
 
     const hash = await bcrypt.hash(dto.password, 10);
     // logInfo('warn', `leak de mot de passe: ${dto.password}`, 'AuthService'); a ne jamais active
@@ -77,7 +81,11 @@ export class AuthService {
         role: (dto.role === 'PLAYER' ? 'PLAYER' : 'PARTNER') as never,
       },
     });
-    logInfo('info', `Nouvel utilisateur enregistré: ${user.email} (ID: ${user.id})`, 'AuthService');
+    logInfo(
+      'info',
+      `Nouvel utilisateur enregistré: ${user.email} (ID: ${user.id})`,
+      'AuthService',
+    );
 
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
@@ -90,17 +98,24 @@ export class AuthService {
       },
     });
 
-    const appUrl = (dto.role === 'PLAYER')
-      ? (process.env.APP_URL_PWA ?? 'https://localhost:3001')
-      : (process.env.APP_URL_WEB ?? 'https://localhost:3000');
+    const appUrl =
+      dto.role === 'PLAYER'
+        ? (process.env.APP_URL_PWA ?? 'https://localhost:3001')
+        : (process.env.APP_URL_WEB ?? 'https://localhost:3000');
 
-    this.mail.sendEmailVerification(
-      { email: user.email, firstname: user.firstname },
-      verificationToken,
-      appUrl,
-    ).catch(() => {
-      logInfo('error', `Échec envoi email de vérification pour: ${user.email}`, 'AuthService');
-    });
+    this.mail
+      .sendEmailVerification(
+        { email: user.email, firstname: user.firstname },
+        verificationToken,
+        appUrl,
+      )
+      .catch(() => {
+        logInfo(
+          'error',
+          `Échec envoi email de vérification pour: ${user.email}`,
+          'AuthService',
+        );
+      });
 
     return { message: 'Vérifiez votre email pour activer votre compte.' };
   }
@@ -129,20 +144,34 @@ export class AuthService {
       },
     });
     if (!user) {
-        logInfo('error', `Tentative de connexion avec un email non reconnu: ${email} (raté mon coco)`, 'AuthService');
+      logInfo(
+        'error',
+        `Tentative de connexion avec un email non reconnu: ${email} (raté mon coco)`,
+        'AuthService',
+      );
 
-        throw new UnauthorizedException('Identifiants invalides')
-    };
+      throw new UnauthorizedException('Identifiants invalides');
+    }
 
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {
-        logInfo('error', `Tentative de connexion avec un mot de passe incorrect pour l'email: ${email} (encore raté)`, 'AuthService');
-        throw new UnauthorizedException('Identifiants invalides');
+      logInfo(
+        'error',
+        `Tentative de connexion avec un mot de passe incorrect pour l'email: ${email} (encore raté)`,
+        'AuthService',
+      );
+      throw new UnauthorizedException('Identifiants invalides');
     }
 
     if (!user.emailVerified) {
-      logInfo('warn', `Tentative de connexion avec email non vérifié: ${email}`, 'AuthService');
-      throw new UnauthorizedException('Veuillez confirmer votre email avant de vous connecter.');
+      logInfo(
+        'warn',
+        `Tentative de connexion avec email non vérifié: ${email}`,
+        'AuthService',
+      );
+      throw new UnauthorizedException(
+        'Veuillez confirmer votre email avant de vous connecter.',
+      );
     }
 
     await this.prisma.user.update({
@@ -150,7 +179,11 @@ export class AuthService {
       data: { lastConnection: new Date() },
     });
 
-    logInfo('info', `Utilisateur connecté: ${user.email} (ID: ${user.id})`, 'AuthService');
+    logInfo(
+      'info',
+      `Utilisateur connecté: ${user.email} (ID: ${user.id})`,
+      'AuthService',
+    );
     return this.signToken(user);
   }
 
@@ -175,7 +208,11 @@ export class AuthService {
       },
     });
 
-    logInfo('info', `Email vérifié pour: ${user.email} (ID: ${user.id})`, 'AuthService');
+    logInfo(
+      'info',
+      `Email vérifié pour: ${user.email} (ID: ${user.id})`,
+      'AuthService',
+    );
     return this.signToken(user);
   }
 
@@ -194,15 +231,30 @@ export class AuthService {
       data: { resetToken: token, resetTokenExpiry: expiry },
     });
 
-    logInfo('info', `Token de réinitialisation généré pour: ${user.email}`, 'AuthService');
+    logInfo(
+      'info',
+      `Token de réinitialisation généré pour: ${user.email}`,
+      'AuthService',
+    );
 
-    const appUrl = user.role === 'PLAYER'
-      ? (process.env.APP_URL_PWA ?? 'https://localhost:3001')
-      : (process.env.APP_URL_WEB ?? 'https://localhost:3000');
+    const appUrl =
+      user.role === 'PLAYER'
+        ? (process.env.APP_URL_PWA ?? 'https://localhost:3001')
+        : (process.env.APP_URL_WEB ?? 'https://localhost:3000');
 
-    this.mail.sendPasswordReset({ email: user.email, firstname: user.firstname }, token, appUrl).catch(() => {
-      logInfo('error', `Échec envoi email de réinitialisation pour: ${user.email}`, 'AuthService');
-    });
+    this.mail
+      .sendPasswordReset(
+        { email: user.email, firstname: user.firstname },
+        token,
+        appUrl,
+      )
+      .catch(() => {
+        logInfo(
+          'error',
+          `Échec envoi email de réinitialisation pour: ${user.email}`,
+          'AuthService',
+        );
+      });
   }
 
   async resetPassword(token: string, newPassword: string) {
@@ -231,7 +283,11 @@ export class AuthService {
       },
     });
 
-    logInfo('info', `Mot de passe réinitialisé pour: ${user.email} (ID: ${user.id})`, 'AuthService');
+    logInfo(
+      'info',
+      `Mot de passe réinitialisé pour: ${user.email} (ID: ${user.id})`,
+      'AuthService',
+    );
   }
 
   private signToken(user: UserWithParticipations) {
@@ -241,7 +297,11 @@ export class AuthService {
       role: user.role,
     };
 
-    logInfo('info', `Token généré pour l'utilisateur: ${user.email} (ID: ${user.id})`, 'AuthService');
+    logInfo(
+      'info',
+      `Token généré pour l'utilisateur: ${user.email} (ID: ${user.id})`,
+      'AuthService',
+    );
     return {
       access_token: this.jwt.sign(payload),
       user: {

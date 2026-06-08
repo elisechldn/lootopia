@@ -52,13 +52,14 @@ export class StepsController {
   )
   uploadMarkerFiles(
     @Param('id', ParseIntPipe) id: number,
-    @Request() req: { user: { sub: number } },
+    @Request() req: { user: { sub: number; role: string } },
     @UploadedFiles()
     files: { image?: Express.Multer.File[]; pattern?: Express.Multer.File[] },
   ) {
     return this.stepsService.uploadMarkerFiles(
       id,
       req.user.sub,
+      req.user.role,
       files.image?.[0],
       files.pattern?.[0],
     );

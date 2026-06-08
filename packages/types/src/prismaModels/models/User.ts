@@ -314,6 +314,7 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   hunts?: Prisma.HuntListRelationFilter
   participations?: Prisma.ParticipationListRelationFilter
+  arItems?: Prisma.ArItemListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -336,6 +337,7 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   hunts?: Prisma.HuntOrderByRelationAggregateInput
   participations?: Prisma.ParticipationOrderByRelationAggregateInput
+  arItems?: Prisma.ArItemOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -361,6 +363,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   hunts?: Prisma.HuntListRelationFilter
   participations?: Prisma.ParticipationListRelationFilter
+  arItems?: Prisma.ArItemListRelationFilter
 }, "id" | "username" | "email" | "resetToken" | "emailVerificationToken">
 
 export type UserOrderByWithAggregationInput = {
@@ -430,6 +433,7 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   hunts?: Prisma.HuntCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -452,6 +456,7 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   hunts?: Prisma.HuntUncheckedCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUpdateInput = {
@@ -473,6 +478,7 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hunts?: Prisma.HuntUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -495,6 +501,7 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hunts?: Prisma.HuntUncheckedUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -554,6 +561,11 @@ export type UserUncheckedUpdateManyInput = {
   emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type UserScalarRelationFilter = {
@@ -629,6 +641,22 @@ export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
+export type UserCreateNestedOneWithoutArItemsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutArItemsInput, Prisma.UserUncheckedCreateWithoutArItemsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArItemsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutArItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutArItemsInput, Prisma.UserUncheckedCreateWithoutArItemsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArItemsInput
+  upsert?: Prisma.UserUpsertWithoutArItemsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutArItemsInput, Prisma.UserUpdateWithoutArItemsInput>, Prisma.UserUncheckedUpdateWithoutArItemsInput>
+}
+
 export type UserCreateNestedOneWithoutHuntsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutHuntsInput, Prisma.UserUncheckedCreateWithoutHuntsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutHuntsInput
@@ -661,6 +689,108 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
+export type UserCreateWithoutArItemsInput = {
+  username: string
+  firstname: string
+  lastname: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  profilePicture?: string | null
+  lastConnection?: Date | string | null
+  country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hunts?: Prisma.HuntCreateNestedManyWithoutUserInput
+  participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutArItemsInput = {
+  id?: number
+  username: string
+  firstname: string
+  lastname: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  profilePicture?: string | null
+  lastConnection?: Date | string | null
+  country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hunts?: Prisma.HuntUncheckedCreateNestedManyWithoutUserInput
+  participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutArItemsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutArItemsInput, Prisma.UserUncheckedCreateWithoutArItemsInput>
+}
+
+export type UserUpsertWithoutArItemsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutArItemsInput, Prisma.UserUncheckedUpdateWithoutArItemsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutArItemsInput, Prisma.UserUncheckedCreateWithoutArItemsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutArItemsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutArItemsInput, Prisma.UserUncheckedUpdateWithoutArItemsInput>
+}
+
+export type UserUpdateWithoutArItemsInput = {
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.StringFieldUpdateOperationsInput | string
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hunts?: Prisma.HuntUpdateManyWithoutUserNestedInput
+  participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutArItemsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.StringFieldUpdateOperationsInput | string
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hunts?: Prisma.HuntUncheckedUpdateManyWithoutUserNestedInput
+  participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutHuntsInput = {
   username: string
   firstname: string
@@ -679,6 +809,7 @@ export type UserCreateWithoutHuntsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutHuntsInput = {
@@ -700,6 +831,7 @@ export type UserUncheckedCreateWithoutHuntsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutHuntsInput = {
@@ -736,6 +868,7 @@ export type UserUpdateWithoutHuntsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHuntsInput = {
@@ -757,6 +890,7 @@ export type UserUncheckedUpdateWithoutHuntsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutParticipationsInput = {
@@ -777,6 +911,7 @@ export type UserCreateWithoutParticipationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hunts?: Prisma.HuntCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutParticipationsInput = {
@@ -798,6 +933,7 @@ export type UserUncheckedCreateWithoutParticipationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hunts?: Prisma.HuntUncheckedCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutParticipationsInput = {
@@ -834,6 +970,7 @@ export type UserUpdateWithoutParticipationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hunts?: Prisma.HuntUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutParticipationsInput = {
@@ -855,6 +992,7 @@ export type UserUncheckedUpdateWithoutParticipationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hunts?: Prisma.HuntUncheckedUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 
@@ -865,11 +1003,13 @@ export type UserUncheckedUpdateWithoutParticipationsInput = {
 export type UserCountOutputType = {
   hunts: number
   participations: number
+  arItems: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hunts?: boolean | UserCountOutputTypeCountHuntsArgs
   participations?: boolean | UserCountOutputTypeCountParticipationsArgs
+  arItems?: boolean | UserCountOutputTypeCountArItemsArgs
 }
 
 /**
@@ -896,6 +1036,13 @@ export type UserCountOutputTypeCountParticipationsArgs<ExtArgs extends runtime.T
   where?: Prisma.ParticipationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountArItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ArItemWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -917,6 +1064,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   hunts?: boolean | Prisma.User$huntsArgs<ExtArgs>
   participations?: boolean | Prisma.User$participationsArgs<ExtArgs>
+  arItems?: boolean | Prisma.User$arItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -984,6 +1132,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hunts?: boolean | Prisma.User$huntsArgs<ExtArgs>
   participations?: boolean | Prisma.User$participationsArgs<ExtArgs>
+  arItems?: boolean | Prisma.User$arItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -994,6 +1143,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     hunts: Prisma.$HuntPayload<ExtArgs>[]
     participations: Prisma.$ParticipationPayload<ExtArgs>[]
+    arItems: Prisma.$ArItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1409,6 +1559,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   hunts<T extends Prisma.User$huntsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$huntsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HuntPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   participations<T extends Prisma.User$participationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$participationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  arItems<T extends Prisma.User$arItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$arItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1893,6 +2044,30 @@ export type User$participationsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.ParticipationScalarFieldEnum | Prisma.ParticipationScalarFieldEnum[]
+}
+
+/**
+ * User.arItems
+ */
+export type User$arItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ArItem
+   */
+  select?: Prisma.ArItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ArItem
+   */
+  omit?: Prisma.ArItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ArItemInclude<ExtArgs> | null
+  where?: Prisma.ArItemWhereInput
+  orderBy?: Prisma.ArItemOrderByWithRelationInput | Prisma.ArItemOrderByWithRelationInput[]
+  cursor?: Prisma.ArItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ArItemScalarFieldEnum | Prisma.ArItemScalarFieldEnum[]
 }
 
 /**

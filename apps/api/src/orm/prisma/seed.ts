@@ -158,7 +158,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'PARIS2025-PROMO10',
-      coverImage: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800',
       refUser: alice.id,
     },
   });
@@ -179,7 +180,8 @@ async function main() {
       status: 'DRAFT',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'LYON2025-PROMO15',
-      coverImage: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
       refUser: bob.id,
     },
   });
@@ -201,7 +203,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'FREE_ITEM',
       rewardValue: 'Dégustation offerte au Château Margaux',
-      coverImage: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800',
       refUser: alice.id,
     },
   });
@@ -223,7 +226,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'BADGE',
       rewardValue: 'Badge Explorateur Alsacien',
-      coverImage: 'https://images.unsplash.com/photo-1543512214-318c7553f230?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1543512214-318c7553f230?w=800',
       refUser: bob.id,
     },
   });
@@ -244,7 +248,8 @@ async function main() {
       status: 'FINISHED',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'MER2025-PROMO20',
-      coverImage: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=800',
       refUser: alice.id,
     },
   });
@@ -265,7 +270,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'FREE_ITEM',
       rewardValue: 'Visite guidée nocturne exclusive',
-      coverImage: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1548013146-72479768bada?w=800',
       refUser: bob.id,
     },
   });
@@ -286,7 +292,8 @@ async function main() {
       status: 'DRAFT',
       rewardType: 'BADGE',
       rewardValue: 'Badge Astronaute Toulousain',
-      coverImage: 'https://images.unsplash.com/photo-1574068468668-a05a11f871da?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1574068468668-a05a11f871da?w=800',
       refUser: alice.id,
     },
   });
@@ -307,7 +314,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'COTE2025-PROMO10',
-      coverImage: 'https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=800',
       refUser: bob.id,
     },
   });
@@ -328,7 +336,8 @@ async function main() {
       status: 'FINISHED',
       rewardType: 'FREE_ITEM',
       rewardValue: 'Accès privatif aux appartements du roi',
-      coverImage: 'https://images.unsplash.com/photo-1591289009723-aef0a1a8a211?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1591289009723-aef0a1a8a211?w=800',
       refUser: alice.id,
     },
   });
@@ -349,7 +358,8 @@ async function main() {
       status: 'DRAFT',
       rewardType: 'BADGE',
       rewardValue: 'Badge Mécanicien des Machines',
-      coverImage: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=800',
       refUser: bob.id,
     },
   });
@@ -363,14 +373,15 @@ async function main() {
       title: 'Le Plaisir du Valibout',
       shortDescription: 'Une expérience AR en trois actes gastronomiques.',
       description:
-        'Partez à la découverte du Valibout en trois étapes : l\'entrée, le plat et le dessert. Une chasse en réalité augmentée pour les fins gourmets explorateurs.',
+        "Partez à la découverte du Valibout en trois étapes : l'entrée, le plat et le dessert. Une chasse en réalité augmentée pour les fins gourmets explorateurs.",
       startDate: new Date('2026-04-01'),
       endDate: new Date('2026-12-31'),
       radius: 500,
       status: 'ACTIVE',
       rewardType: 'BADGE',
       rewardValue: 'Badge Gourmet du Valibout',
-      coverImage: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800',
       refUser: alice.id,
     },
   });
@@ -382,16 +393,18 @@ async function main() {
     update: {},
     create: {
       title: 'Portes ouvertes de Sup De Vinci',
-      shortDescription: 'Découvrez les formations et labs de l\'école en explorant le campus.',
+      shortDescription:
+        "Découvrez les formations et labs de l'école en explorant le campus.",
       description:
-        'Partez à la découverte du campus parisien de Sup De Vinci, école d\'informatique et du numérique. Résolvez des énigmes liées au développement, à l\'IA et au cybersécurité pour décrocher votre badge Futur Étudiant.',
+        "Partez à la découverte du campus parisien de Sup De Vinci, école d'informatique et du numérique. Résolvez des énigmes liées au développement, à l'IA et au cybersécurité pour décrocher votre badge Futur Étudiant.",
       startDate: new Date('2026-05-15'),
       endDate: new Date('2026-05-15'),
       radius: 300,
       status: 'ACTIVE',
       rewardType: 'BADGE',
       rewardValue: 'Badge Futur Étudiant Sup De Vinci',
-      coverImage: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800',
       refUser: alice.id,
     },
   });
@@ -689,7 +702,7 @@ async function main() {
     // Sup De Vinci
     {
       orderNumber: 1,
-      title: "Accueil & Inscription",
+      title: 'Accueil & Inscription',
       lat: 48.893536,
       lon: 2.238728,
       radius: 30,
@@ -698,7 +711,7 @@ async function main() {
     },
     {
       orderNumber: 2,
-      title: "Atelier Développement Web",
+      title: 'Atelier Développement Web',
       lat: 48.893494,
       lon: 2.238763,
       radius: 25,
@@ -707,7 +720,7 @@ async function main() {
     },
     {
       orderNumber: 3,
-      title: "Lab Intelligence Artificielle",
+      title: 'Lab Intelligence Artificielle',
       lat: 48.893363,
       lon: 2.238465,
       radius: 25,
@@ -774,164 +787,599 @@ async function main() {
 
   const stepClueSeeds: StepClueSeed[] = [
     // Paris
-    { refHunt: huntParis.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'Regarde vers le sud depuis le Champ-de-Mars.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'La dame de fer a les pieds dans le gazon.', penaltyCost: 20 },
-    ]},
-    { refHunt: huntParis.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Le plus grand musée du monde borde ce jardin royal.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'La pyramide de verre marque l\'entrée principale.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntParis.id, stepOrder: 3, clues: [
-      { orderNumber: 1, message: 'Elle se dresse sur l\'île de la Cité, au cœur de la Seine.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Ses deux tours gothiques veillent sur Paris depuis 850 ans.', penaltyCost: 20 },
-    ]},
-    { refHunt: huntParis.id, stepOrder: 4, clues: [
-      { orderNumber: 1, message: 'Compte les marches blanches jusqu\'au sommet.', penaltyCost: 15 },
-      { orderNumber: 2, message: 'Son dôme blanc domine la butte depuis Montmartre.', penaltyCost: 25 },
-    ]},
+    {
+      refHunt: huntParis.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Regarde vers le sud depuis le Champ-de-Mars.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'La dame de fer a les pieds dans le gazon.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntParis.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Le plus grand musée du monde borde ce jardin royal.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "La pyramide de verre marque l'entrée principale.",
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntParis.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "Elle se dresse sur l'île de la Cité, au cœur de la Seine.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Ses deux tours gothiques veillent sur Paris depuis 850 ans.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntParis.id,
+      stepOrder: 4,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "Compte les marches blanches jusqu'au sommet.",
+          penaltyCost: 15,
+        },
+        {
+          orderNumber: 2,
+          message: 'Son dôme blanc domine la butte depuis Montmartre.',
+          penaltyCost: 25,
+        },
+      ],
+    },
 
     // Lyon
-    { refHunt: huntLyon.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'Les traboules percent les immeubles Renaissance de part en part.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Ce quartier médiéval borde la rive droite de la Saône.', penaltyCost: 20 },
-    ]},
-    { refHunt: huntLyon.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'La basilique brille en or sur la colline.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Cherche la mosaïque côté est du parvis.', penaltyCost: 25 },
-    ]},
-    { refHunt: huntLyon.id, stepOrder: 3, clues: [
-      { orderNumber: 1, message: 'La plus grande place piétonne de France accueille la statue d\'un roi.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Louis XIV trône au centre, regarde vers le nord.', penaltyCost: 15 },
-    ]},
+    {
+      refHunt: huntLyon.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Les traboules percent les immeubles Renaissance de part en part.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Ce quartier médiéval borde la rive droite de la Saône.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntLyon.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'La basilique brille en or sur la colline.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Cherche la mosaïque côté est du parvis.',
+          penaltyCost: 25,
+        },
+      ],
+    },
+    {
+      refHunt: huntLyon.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "La plus grande place piétonne de France accueille la statue d'un roi.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Louis XIV trône au centre, regarde vers le nord.',
+          penaltyCost: 15,
+        },
+      ],
+    },
 
     // Bordeaux
-    { refHunt: huntBordeaux.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'Son reflet se lit dans le miroir d\'eau, le plus grand du monde.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Trois pavillons symétriques face à la Garonne.', penaltyCost: 20 },
-    ]},
-    { refHunt: huntBordeaux.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Son clocher isolé s\'appelle la tour Pey-Berland.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Napoléon y a épousé Marie-Louise par procuration.', penaltyCost: 20 },
-    ]},
+    {
+      refHunt: huntBordeaux.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Son reflet se lit dans le miroir d'eau, le plus grand du monde.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Trois pavillons symétriques face à la Garonne.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntBordeaux.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "Son clocher isolé s'appelle la tour Pey-Berland.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Napoléon y a épousé Marie-Louise par procuration.',
+          penaltyCost: 20,
+        },
+      ],
+    },
 
     // Strasbourg
-    { refHunt: huntStrasbourg.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'Sa flèche unique culmine à 142 mètres, dominant toute l\'Alsace.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'L\'horloge astronomique sonne à 12h30 précises.', penaltyCost: 20 },
-    ]},
-    { refHunt: huntStrasbourg.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Les canaux encerclent ce quartier de maisons à colombages colorées.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Les tanneurs séchaient leurs peaux aux fenêtres de ces maisons.', penaltyCost: 15 },
-    ]},
+    {
+      refHunt: huntStrasbourg.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Sa flèche unique culmine à 142 mètres, dominant toute l'Alsace.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "L'horloge astronomique sonne à 12h30 précises.",
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntStrasbourg.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Les canaux encerclent ce quartier de maisons à colombages colorées.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Les tanneurs séchaient leurs peaux aux fenêtres de ces maisons.',
+          penaltyCost: 15,
+        },
+      ],
+    },
 
     // Marseille
-    { refHunt: huntMarseille.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'Le ferry-boat traverse ce port depuis 1880.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Les pointus sont ces barques traditionnelles peintes aux couleurs vives.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntMarseille.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'L\'eau turquoise est accessible uniquement à pied ou en bateau.', penaltyCost: 15 },
-      { orderNumber: 2, message: 'Les falaises calcaires plongent directement dans la Méditerranée.', penaltyCost: 25 },
-    ]},
-    { refHunt: huntMarseille.id, stepOrder: 3, clues: [
-      { orderNumber: 1, message: 'La Bonne Mère veille sur tous les marins depuis son promontoire.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Son intérieur est entièrement revêtu de marbres colorés.', penaltyCost: 20 },
-    ]},
+    {
+      refHunt: huntMarseille.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Le ferry-boat traverse ce port depuis 1880.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Les pointus sont ces barques traditionnelles peintes aux couleurs vives.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntMarseille.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "L'eau turquoise est accessible uniquement à pied ou en bateau.",
+          penaltyCost: 15,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Les falaises calcaires plongent directement dans la Méditerranée.',
+          penaltyCost: 25,
+        },
+      ],
+    },
+    {
+      refHunt: huntMarseille.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'La Bonne Mère veille sur tous les marins depuis son promontoire.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Son intérieur est entièrement revêtu de marbres colorés.',
+          penaltyCost: 20,
+        },
+      ],
+    },
 
     // Mont-Saint-Michel
-    { refHunt: huntMSM.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'La digue-route permet d\'accéder au rocher à marée basse.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'La Grande Rue mène directement jusqu\'à l\'abbaye.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntMSM.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Saint Michel terrasse le dragon au sommet de la flèche.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Le cloître suspend ses colonnes entre ciel et mer.', penaltyCost: 20 },
-    ]},
-    { refHunt: huntMSM.id, stepOrder: 3, clues: [
-      { orderNumber: 1, message: 'Les marées montent deux fois par jour ici.', penaltyCost: 20 },
-      { orderNumber: 2, message: 'La réponse est gravée sur le rempart nord.', penaltyCost: 40 },
-    ]},
+    {
+      refHunt: huntMSM.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "La digue-route permet d'accéder au rocher à marée basse.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "La Grande Rue mène directement jusqu'à l'abbaye.",
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntMSM.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Saint Michel terrasse le dragon au sommet de la flèche.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Le cloître suspend ses colonnes entre ciel et mer.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntMSM.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Les marées montent deux fois par jour ici.',
+          penaltyCost: 20,
+        },
+        {
+          orderNumber: 2,
+          message: 'La réponse est gravée sur le rempart nord.',
+          penaltyCost: 40,
+        },
+      ],
+    },
 
     // Toulouse
-    { refHunt: huntToulouse.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'Sa façade rose en brique chauffe au soleil du Midi.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Les capitouls gouvernaient la ville depuis ce bâtiment.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntToulouse.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Une réplique de la station spatiale internationale y est exposée.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Ariane 5 se dresse fièrement à l\'entrée du parc.', penaltyCost: 15 },
-    ]},
+    {
+      refHunt: huntToulouse.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Sa façade rose en brique chauffe au soleil du Midi.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Les capitouls gouvernaient la ville depuis ce bâtiment.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntToulouse.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Une réplique de la station spatiale internationale y est exposée.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "Ariane 5 se dresse fièrement à l'entrée du parc.",
+          penaltyCost: 15,
+        },
+      ],
+    },
 
     // Nice
-    { refHunt: huntNice.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'Les galets remplacent le sable sur cette célèbre plage.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Les palmiers longent 7 kilomètres de bord de mer.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntNice.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Les façades baroques ocre et rose colorent les ruelles étroites.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Le marché du Cours Saleya embaume de fleurs et de socca.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntNice.id, stepOrder: 3, clues: [
-      { orderNumber: 1, message: 'La cascade artificielle dévale les falaises au-dessus de la mer.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Du sommet, le port Lympia s\'étend à l\'est.', penaltyCost: 20 },
-    ]},
+    {
+      refHunt: huntNice.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Les galets remplacent le sable sur cette célèbre plage.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Les palmiers longent 7 kilomètres de bord de mer.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntNice.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Les façades baroques ocre et rose colorent les ruelles étroites.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Le marché du Cours Saleya embaume de fleurs et de socca.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntNice.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'La cascade artificielle dévale les falaises au-dessus de la mer.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "Du sommet, le port Lympia s'étend à l'est.",
+          penaltyCost: 20,
+        },
+      ],
+    },
 
     // Versailles
-    { refHunt: huntVersailles.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'Dix-sept miroirs reflètent la lumière venant des jardins.', penaltyCost: 15 },
-      { orderNumber: 2, message: 'Le traité de 1919 y fut signé, mettant fin à la Grande Guerre.', penaltyCost: 25 },
-    ]},
-    { refHunt: huntVersailles.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Le Nôtre a dessiné ces perspectives à la règle et au compas.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Le Grand Canal s\'étend sur 1 500 mètres vers l\'ouest.', penaltyCost: 20 },
-    ]},
-    { refHunt: huntVersailles.id, stepOrder: 3, clues: [
-      { orderNumber: 1, message: 'Louis XIV aimait le rose dans ses appartements privés.', penaltyCost: 15 },
-      { orderNumber: 2, message: 'Ce petit palais fut offert à Marie de Maintenon.', penaltyCost: 25 },
-    ]},
+    {
+      refHunt: huntVersailles.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Dix-sept miroirs reflètent la lumière venant des jardins.',
+          penaltyCost: 15,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Le traité de 1919 y fut signé, mettant fin à la Grande Guerre.',
+          penaltyCost: 25,
+        },
+      ],
+    },
+    {
+      refHunt: huntVersailles.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Le Nôtre a dessiné ces perspectives à la règle et au compas.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "Le Grand Canal s'étend sur 1 500 mètres vers l'ouest.",
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntVersailles.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Louis XIV aimait le rose dans ses appartements privés.',
+          penaltyCost: 15,
+        },
+        {
+          orderNumber: 2,
+          message: 'Ce petit palais fut offert à Marie de Maintenon.',
+          penaltyCost: 25,
+        },
+      ],
+    },
 
     // Valibout
-    { refHunt: huntValibout.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'L\'amuse-bouche se cache près du portail en bois.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Cherche la table dressée sous le grand chêne.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntValibout.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Le plat de résistance attend à l\'ombre du bâtiment principal.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Regarde sous la cloche argentée posée sur la pierre.', penaltyCost: 20 },
-    ]},
-    { refHunt: huntValibout.id, stepOrder: 3, clues: [
-      { orderNumber: 1, message: 'Le dessert se déguste au bord du petit étang.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Le marqueur AR est collé sous le banc en fer forgé.', penaltyCost: 20 },
-    ]},
+    {
+      refHunt: huntValibout.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "L'amuse-bouche se cache près du portail en bois.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Cherche la table dressée sous le grand chêne.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntValibout.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Le plat de résistance attend à l'ombre du bâtiment principal.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Regarde sous la cloche argentée posée sur la pierre.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntValibout.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Le dessert se déguste au bord du petit étang.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Le marqueur AR est collé sous le banc en fer forgé.',
+          penaltyCost: 20,
+        },
+      ],
+    },
 
     // Sup De Vinci
-    { refHunt: huntSupDeVinci.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'Le premier contact avec l\'école se fait derrière la grande porte vitrée à l\'entrée du bâtiment.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Cherche le panneau "Bienvenue" portant le logo de l\'école — il indique le bureau des inscriptions.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntSupDeVinci.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Dans cette salle, les étudiants apprennent à bâtir des sites web. Cherche la machine affichant un éditeur de code.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Le tableau blanc mentionne HTML, CSS et JavaScript — tu es au bon endroit.', penaltyCost: 20 },
-    ]},
-    { refHunt: huntSupDeVinci.id, stepOrder: 3, clues: [
-      { orderNumber: 1, message: 'Dans ce laboratoire, les machines entraînent des modèles de machine learning. Repère les GPUs sous les bureaux.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Le poster sur le mur montre un réseau de neurones artificiels — l\'indice final est collé derrière lui.', penaltyCost: 25 },
-    ]},
+    {
+      refHunt: huntSupDeVinci.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Le premier contact avec l'école se fait derrière la grande porte vitrée à l'entrée du bâtiment.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Cherche le panneau "Bienvenue" portant le logo de l\'école — il indique le bureau des inscriptions.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntSupDeVinci.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Dans cette salle, les étudiants apprennent à bâtir des sites web. Cherche la machine affichant un éditeur de code.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Le tableau blanc mentionne HTML, CSS et JavaScript — tu es au bon endroit.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntSupDeVinci.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Dans ce laboratoire, les machines entraînent des modèles de machine learning. Repère les GPUs sous les bureaux.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            "Le poster sur le mur montre un réseau de neurones artificiels — l'indice final est collé derrière lui.",
+          penaltyCost: 25,
+        },
+      ],
+    },
 
     // Nantes
-    { refHunt: huntNantes.id, stepOrder: 1, clues: [
-      { orderNumber: 1, message: 'La grande créature mécanique souffle de la vapeur toutes les heures.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Son billet se prend à la billetterie des Machines de l\'île.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntNantes.id, stepOrder: 2, clues: [
-      { orderNumber: 1, message: 'Trois niveaux de créatures marines tournent sur eux-mêmes.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'La pieuvre géante occupe le niveau supérieur.', penaltyCost: 15 },
-    ]},
-    { refHunt: huntNantes.id, stepOrder: 3, clues: [
-      { orderNumber: 1, message: 'Les ducs de Bretagne y résidaient avant l\'union à la France.', penaltyCost: 10 },
-      { orderNumber: 2, message: 'Le puits de la cathédrale gothique se trouve dans la cour intérieure.', penaltyCost: 20 },
-    ]},
+    {
+      refHunt: huntNantes.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'La grande créature mécanique souffle de la vapeur toutes les heures.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            "Son billet se prend à la billetterie des Machines de l'île.",
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntNantes.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Trois niveaux de créatures marines tournent sur eux-mêmes.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'La pieuvre géante occupe le niveau supérieur.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntNantes.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Les ducs de Bretagne y résidaient avant l'union à la France.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Le puits de la cathédrale gothique se trouve dans la cour intérieure.',
+          penaltyCost: 20,
+        },
+      ],
+    },
   ];
 
   for (const { refHunt, stepOrder, clues } of stepClueSeeds) {

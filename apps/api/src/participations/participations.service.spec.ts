@@ -56,14 +56,18 @@ describe('ParticipationsService.findOne', () => {
 
   it('throws NotFoundException when participation not found', async () => {
     mockPrisma.participation.findUnique.mockResolvedValue(null);
-    await expect(service.findOne(999, 42)).rejects.toThrow(NotFoundException);
+    await expect(
+      service.findOne(999, { sub: 42, role: 'PLAYER' }),
+    ).rejects.toThrow(NotFoundException);
   });
 
   it('returns participation with hunt.steps including arMode, markerImageUrl, markerPatternUrl', async () => {
     mockPrisma.participation.findUnique.mockResolvedValue(mockParticipation);
-    const result = await service.findOne(1, 42);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const steps = (result as any).hunt.steps as typeof mockParticipation.hunt.steps;
+    const result = await service.findOne(1, { sub: 42, role: 'PLAYER' });
+
+    const steps = (
+      result as { hunt: { steps: typeof mockParticipation.hunt.steps } }
+    ).hunt.steps;
     expect(steps).toHaveLength(2);
     expect(steps[0]).toMatchObject({
       arMode: 'MARKER',
@@ -74,9 +78,10 @@ describe('ParticipationsService.findOne', () => {
 
   it('GPS steps return arMode: GPS, markerImageUrl: null, markerPatternUrl: null', async () => {
     mockPrisma.participation.findUnique.mockResolvedValue(mockParticipation);
-    const result = await service.findOne(1, 42);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const gpsStep = (result as any).hunt.steps[1] as typeof mockGpsStep;
+    const result = await service.findOne(1, { sub: 42, role: 'PLAYER' });
+
+    const gpsStep = (result as { hunt: { steps: (typeof mockGpsStep)[] } }).hunt
+      .steps[1];
     expect(gpsStep).toMatchObject({
       arMode: 'GPS',
       markerImageUrl: null,

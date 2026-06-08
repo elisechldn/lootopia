@@ -3,9 +3,11 @@ model ArItem {
   filename      String
   filepath      String   @unique
   hasAnimations Boolean  @default(false) @map("has_animations")
+  refUser       Int?     @map("ref_user")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
+  owner User?  @relation(fields: [refUser], references: [id], onDelete: SetNull)
   steps Step[]
 
   @@map("ar_items")

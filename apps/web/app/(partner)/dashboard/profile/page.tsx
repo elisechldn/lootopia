@@ -2,27 +2,23 @@ import ProfileForm from "@/components/partner/ProfileForm";
 import { cookies } from "next/headers";
 import { logoutAction } from "@/lib/actions/auth.actions";
 
-async function getSession() {
+const API_URL = process.env.API_URL ?? 'http://localhost:8000';
+
+async function getCurrentUser() {
     const token = (await cookies()).get('auth_token')?.value;
     if (!token) return null;
-    try {
-        const parts = token.split('.');
-        if (parts.length < 2 || !parts[1]) return null;
-        return JSON.parse(atob(parts[1]));
-    } catch { return null; }
-}
-
-async function getUser(id: number) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`, { cache: 'no-store' });
+    const res = await fetch(`${API_URL}/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store',
+    });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data ?? null;
 }
 
 export default async function ProfilePage() {
-    const session = await getSession();
-    if (!session) return null;
-    const user = await getUser(session.sub);
+    const user = await getCurrentUser();
+    if (!user) return null;
     return (
         <div className="p-8 max-w-2xl">
             <div className="mb-8 flex items-start justify-between gap-4">
@@ -42,5 +38,4 @@ export default async function ProfilePage() {
             <ProfileForm user={user} />
         </div>
     );
-
 }

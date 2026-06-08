@@ -19,6 +19,7 @@ model User {
 
   hunts          Hunt[]
   participations Participation[]
+  arItems        ArItem[]
 
   @@map("users")
 }

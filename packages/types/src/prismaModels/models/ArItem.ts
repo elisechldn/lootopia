@@ -20,8 +20,18 @@ export type ArItemModel = runtime.Types.Result.DefaultSelection<Prisma.$ArItemPa
 
 export type AggregateArItem = {
   _count: ArItemCountAggregateOutputType | null
+  _avg: ArItemAvgAggregateOutputType | null
+  _sum: ArItemSumAggregateOutputType | null
   _min: ArItemMinAggregateOutputType | null
   _max: ArItemMaxAggregateOutputType | null
+}
+
+export type ArItemAvgAggregateOutputType = {
+  refUser: number | null
+}
+
+export type ArItemSumAggregateOutputType = {
+  refUser: number | null
 }
 
 export type ArItemMinAggregateOutputType = {
@@ -29,6 +39,7 @@ export type ArItemMinAggregateOutputType = {
   filename: string | null
   filepath: string | null
   hasAnimations: boolean | null
+  refUser: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +49,7 @@ export type ArItemMaxAggregateOutputType = {
   filename: string | null
   filepath: string | null
   hasAnimations: boolean | null
+  refUser: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,17 +59,27 @@ export type ArItemCountAggregateOutputType = {
   filename: number
   filepath: number
   hasAnimations: number
+  refUser: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type ArItemAvgAggregateInputType = {
+  refUser?: true
+}
+
+export type ArItemSumAggregateInputType = {
+  refUser?: true
+}
+
 export type ArItemMinAggregateInputType = {
   id?: true
   filename?: true
   filepath?: true
   hasAnimations?: true
+  refUser?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -67,6 +89,7 @@ export type ArItemMaxAggregateInputType = {
   filename?: true
   filepath?: true
   hasAnimations?: true
+  refUser?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -76,6 +99,7 @@ export type ArItemCountAggregateInputType = {
   filename?: true
   filepath?: true
   hasAnimations?: true
+  refUser?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -119,6 +143,18 @@ export type ArItemAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ArItemAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ArItemSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ArItemMinAggregateInputType
@@ -149,6 +185,8 @@ export type ArItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: ArItemCountAggregateInputType | true
+  _avg?: ArItemAvgAggregateInputType
+  _sum?: ArItemSumAggregateInputType
   _min?: ArItemMinAggregateInputType
   _max?: ArItemMaxAggregateInputType
 }
@@ -158,9 +196,12 @@ export type ArItemGroupByOutputType = {
   filename: string
   filepath: string
   hasAnimations: boolean
+  refUser: number | null
   createdAt: Date
   updatedAt: Date
   _count: ArItemCountAggregateOutputType | null
+  _avg: ArItemAvgAggregateOutputType | null
+  _sum: ArItemSumAggregateOutputType | null
   _min: ArItemMinAggregateOutputType | null
   _max: ArItemMaxAggregateOutputType | null
 }
@@ -188,8 +229,10 @@ export type ArItemWhereInput = {
   filename?: Prisma.StringFilter<"ArItem"> | string
   filepath?: Prisma.StringFilter<"ArItem"> | string
   hasAnimations?: Prisma.BoolFilter<"ArItem"> | boolean
+  refUser?: Prisma.IntNullableFilter<"ArItem"> | number | null
   createdAt?: Prisma.DateTimeFilter<"ArItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ArItem"> | Date | string
+  owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   steps?: Prisma.StepListRelationFilter
 }
 
@@ -198,8 +241,10 @@ export type ArItemOrderByWithRelationInput = {
   filename?: Prisma.SortOrder
   filepath?: Prisma.SortOrder
   hasAnimations?: Prisma.SortOrder
+  refUser?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  owner?: Prisma.UserOrderByWithRelationInput
   steps?: Prisma.StepOrderByRelationAggregateInput
 }
 
@@ -211,8 +256,10 @@ export type ArItemWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ArItemWhereInput | Prisma.ArItemWhereInput[]
   filename?: Prisma.StringFilter<"ArItem"> | string
   hasAnimations?: Prisma.BoolFilter<"ArItem"> | boolean
+  refUser?: Prisma.IntNullableFilter<"ArItem"> | number | null
   createdAt?: Prisma.DateTimeFilter<"ArItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ArItem"> | Date | string
+  owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   steps?: Prisma.StepListRelationFilter
 }, "id" | "filepath">
 
@@ -221,11 +268,14 @@ export type ArItemOrderByWithAggregationInput = {
   filename?: Prisma.SortOrder
   filepath?: Prisma.SortOrder
   hasAnimations?: Prisma.SortOrder
+  refUser?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ArItemCountOrderByAggregateInput
+  _avg?: Prisma.ArItemAvgOrderByAggregateInput
   _max?: Prisma.ArItemMaxOrderByAggregateInput
   _min?: Prisma.ArItemMinOrderByAggregateInput
+  _sum?: Prisma.ArItemSumOrderByAggregateInput
 }
 
 export type ArItemScalarWhereWithAggregatesInput = {
@@ -236,6 +286,7 @@ export type ArItemScalarWhereWithAggregatesInput = {
   filename?: Prisma.StringWithAggregatesFilter<"ArItem"> | string
   filepath?: Prisma.StringWithAggregatesFilter<"ArItem"> | string
   hasAnimations?: Prisma.BoolWithAggregatesFilter<"ArItem"> | boolean
+  refUser?: Prisma.IntNullableWithAggregatesFilter<"ArItem"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ArItem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ArItem"> | Date | string
 }
@@ -247,6 +298,7 @@ export type ArItemCreateInput = {
   hasAnimations?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  owner?: Prisma.UserCreateNestedOneWithoutArItemsInput
   steps?: Prisma.StepCreateNestedManyWithoutArItemInput
 }
 
@@ -255,6 +307,7 @@ export type ArItemUncheckedCreateInput = {
   filename: string
   filepath: string
   hasAnimations?: boolean
+  refUser?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.StepUncheckedCreateNestedManyWithoutArItemInput
@@ -267,6 +320,7 @@ export type ArItemUpdateInput = {
   hasAnimations?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneWithoutArItemsNestedInput
   steps?: Prisma.StepUpdateManyWithoutArItemNestedInput
 }
 
@@ -275,6 +329,7 @@ export type ArItemUncheckedUpdateInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   filepath?: Prisma.StringFieldUpdateOperationsInput | string
   hasAnimations?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.StepUncheckedUpdateManyWithoutArItemNestedInput
@@ -285,6 +340,7 @@ export type ArItemCreateManyInput = {
   filename: string
   filepath: string
   hasAnimations?: boolean
+  refUser?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -303,6 +359,7 @@ export type ArItemUncheckedUpdateManyInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   filepath?: Prisma.StringFieldUpdateOperationsInput | string
   hasAnimations?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -312,8 +369,13 @@ export type ArItemCountOrderByAggregateInput = {
   filename?: Prisma.SortOrder
   filepath?: Prisma.SortOrder
   hasAnimations?: Prisma.SortOrder
+  refUser?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ArItemAvgOrderByAggregateInput = {
+  refUser?: Prisma.SortOrder
 }
 
 export type ArItemMaxOrderByAggregateInput = {
@@ -321,6 +383,7 @@ export type ArItemMaxOrderByAggregateInput = {
   filename?: Prisma.SortOrder
   filepath?: Prisma.SortOrder
   hasAnimations?: Prisma.SortOrder
+  refUser?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -330,13 +393,28 @@ export type ArItemMinOrderByAggregateInput = {
   filename?: Prisma.SortOrder
   filepath?: Prisma.SortOrder
   hasAnimations?: Prisma.SortOrder
+  refUser?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ArItemSumOrderByAggregateInput = {
+  refUser?: Prisma.SortOrder
 }
 
 export type ArItemNullableScalarRelationFilter = {
   is?: Prisma.ArItemWhereInput | null
   isNot?: Prisma.ArItemWhereInput | null
+}
+
+export type ArItemListRelationFilter = {
+  every?: Prisma.ArItemWhereInput
+  some?: Prisma.ArItemWhereInput
+  none?: Prisma.ArItemWhereInput
+}
+
+export type ArItemOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -349,6 +427,14 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type ArItemCreateNestedOneWithoutStepsInput = {
@@ -367,6 +453,48 @@ export type ArItemUpdateOneWithoutStepsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ArItemUpdateToOneWithWhereWithoutStepsInput, Prisma.ArItemUpdateWithoutStepsInput>, Prisma.ArItemUncheckedUpdateWithoutStepsInput>
 }
 
+export type ArItemCreateNestedManyWithoutOwnerInput = {
+  create?: Prisma.XOR<Prisma.ArItemCreateWithoutOwnerInput, Prisma.ArItemUncheckedCreateWithoutOwnerInput> | Prisma.ArItemCreateWithoutOwnerInput[] | Prisma.ArItemUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.ArItemCreateOrConnectWithoutOwnerInput | Prisma.ArItemCreateOrConnectWithoutOwnerInput[]
+  createMany?: Prisma.ArItemCreateManyOwnerInputEnvelope
+  connect?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+}
+
+export type ArItemUncheckedCreateNestedManyWithoutOwnerInput = {
+  create?: Prisma.XOR<Prisma.ArItemCreateWithoutOwnerInput, Prisma.ArItemUncheckedCreateWithoutOwnerInput> | Prisma.ArItemCreateWithoutOwnerInput[] | Prisma.ArItemUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.ArItemCreateOrConnectWithoutOwnerInput | Prisma.ArItemCreateOrConnectWithoutOwnerInput[]
+  createMany?: Prisma.ArItemCreateManyOwnerInputEnvelope
+  connect?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+}
+
+export type ArItemUpdateManyWithoutOwnerNestedInput = {
+  create?: Prisma.XOR<Prisma.ArItemCreateWithoutOwnerInput, Prisma.ArItemUncheckedCreateWithoutOwnerInput> | Prisma.ArItemCreateWithoutOwnerInput[] | Prisma.ArItemUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.ArItemCreateOrConnectWithoutOwnerInput | Prisma.ArItemCreateOrConnectWithoutOwnerInput[]
+  upsert?: Prisma.ArItemUpsertWithWhereUniqueWithoutOwnerInput | Prisma.ArItemUpsertWithWhereUniqueWithoutOwnerInput[]
+  createMany?: Prisma.ArItemCreateManyOwnerInputEnvelope
+  set?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+  disconnect?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+  delete?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+  connect?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+  update?: Prisma.ArItemUpdateWithWhereUniqueWithoutOwnerInput | Prisma.ArItemUpdateWithWhereUniqueWithoutOwnerInput[]
+  updateMany?: Prisma.ArItemUpdateManyWithWhereWithoutOwnerInput | Prisma.ArItemUpdateManyWithWhereWithoutOwnerInput[]
+  deleteMany?: Prisma.ArItemScalarWhereInput | Prisma.ArItemScalarWhereInput[]
+}
+
+export type ArItemUncheckedUpdateManyWithoutOwnerNestedInput = {
+  create?: Prisma.XOR<Prisma.ArItemCreateWithoutOwnerInput, Prisma.ArItemUncheckedCreateWithoutOwnerInput> | Prisma.ArItemCreateWithoutOwnerInput[] | Prisma.ArItemUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.ArItemCreateOrConnectWithoutOwnerInput | Prisma.ArItemCreateOrConnectWithoutOwnerInput[]
+  upsert?: Prisma.ArItemUpsertWithWhereUniqueWithoutOwnerInput | Prisma.ArItemUpsertWithWhereUniqueWithoutOwnerInput[]
+  createMany?: Prisma.ArItemCreateManyOwnerInputEnvelope
+  set?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+  disconnect?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+  delete?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+  connect?: Prisma.ArItemWhereUniqueInput | Prisma.ArItemWhereUniqueInput[]
+  update?: Prisma.ArItemUpdateWithWhereUniqueWithoutOwnerInput | Prisma.ArItemUpdateWithWhereUniqueWithoutOwnerInput[]
+  updateMany?: Prisma.ArItemUpdateManyWithWhereWithoutOwnerInput | Prisma.ArItemUpdateManyWithWhereWithoutOwnerInput[]
+  deleteMany?: Prisma.ArItemScalarWhereInput | Prisma.ArItemScalarWhereInput[]
+}
+
 export type ArItemCreateWithoutStepsInput = {
   id?: string
   filename: string
@@ -374,6 +502,7 @@ export type ArItemCreateWithoutStepsInput = {
   hasAnimations?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  owner?: Prisma.UserCreateNestedOneWithoutArItemsInput
 }
 
 export type ArItemUncheckedCreateWithoutStepsInput = {
@@ -381,6 +510,7 @@ export type ArItemUncheckedCreateWithoutStepsInput = {
   filename: string
   filepath: string
   hasAnimations?: boolean
+  refUser?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -408,9 +538,108 @@ export type ArItemUpdateWithoutStepsInput = {
   hasAnimations?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneWithoutArItemsNestedInput
 }
 
 export type ArItemUncheckedUpdateWithoutStepsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  filepath?: Prisma.StringFieldUpdateOperationsInput | string
+  hasAnimations?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ArItemCreateWithoutOwnerInput = {
+  id?: string
+  filename: string
+  filepath: string
+  hasAnimations?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  steps?: Prisma.StepCreateNestedManyWithoutArItemInput
+}
+
+export type ArItemUncheckedCreateWithoutOwnerInput = {
+  id?: string
+  filename: string
+  filepath: string
+  hasAnimations?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  steps?: Prisma.StepUncheckedCreateNestedManyWithoutArItemInput
+}
+
+export type ArItemCreateOrConnectWithoutOwnerInput = {
+  where: Prisma.ArItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ArItemCreateWithoutOwnerInput, Prisma.ArItemUncheckedCreateWithoutOwnerInput>
+}
+
+export type ArItemCreateManyOwnerInputEnvelope = {
+  data: Prisma.ArItemCreateManyOwnerInput | Prisma.ArItemCreateManyOwnerInput[]
+  skipDuplicates?: boolean
+}
+
+export type ArItemUpsertWithWhereUniqueWithoutOwnerInput = {
+  where: Prisma.ArItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.ArItemUpdateWithoutOwnerInput, Prisma.ArItemUncheckedUpdateWithoutOwnerInput>
+  create: Prisma.XOR<Prisma.ArItemCreateWithoutOwnerInput, Prisma.ArItemUncheckedCreateWithoutOwnerInput>
+}
+
+export type ArItemUpdateWithWhereUniqueWithoutOwnerInput = {
+  where: Prisma.ArItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.ArItemUpdateWithoutOwnerInput, Prisma.ArItemUncheckedUpdateWithoutOwnerInput>
+}
+
+export type ArItemUpdateManyWithWhereWithoutOwnerInput = {
+  where: Prisma.ArItemScalarWhereInput
+  data: Prisma.XOR<Prisma.ArItemUpdateManyMutationInput, Prisma.ArItemUncheckedUpdateManyWithoutOwnerInput>
+}
+
+export type ArItemScalarWhereInput = {
+  AND?: Prisma.ArItemScalarWhereInput | Prisma.ArItemScalarWhereInput[]
+  OR?: Prisma.ArItemScalarWhereInput[]
+  NOT?: Prisma.ArItemScalarWhereInput | Prisma.ArItemScalarWhereInput[]
+  id?: Prisma.StringFilter<"ArItem"> | string
+  filename?: Prisma.StringFilter<"ArItem"> | string
+  filepath?: Prisma.StringFilter<"ArItem"> | string
+  hasAnimations?: Prisma.BoolFilter<"ArItem"> | boolean
+  refUser?: Prisma.IntNullableFilter<"ArItem"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"ArItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ArItem"> | Date | string
+}
+
+export type ArItemCreateManyOwnerInput = {
+  id?: string
+  filename: string
+  filepath: string
+  hasAnimations?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ArItemUpdateWithoutOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  filepath?: Prisma.StringFieldUpdateOperationsInput | string
+  hasAnimations?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  steps?: Prisma.StepUpdateManyWithoutArItemNestedInput
+}
+
+export type ArItemUncheckedUpdateWithoutOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  filepath?: Prisma.StringFieldUpdateOperationsInput | string
+  hasAnimations?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  steps?: Prisma.StepUncheckedUpdateManyWithoutArItemNestedInput
+}
+
+export type ArItemUncheckedUpdateManyWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   filepath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -455,8 +684,10 @@ export type ArItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   filename?: boolean
   filepath?: boolean
   hasAnimations?: boolean
+  refUser?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  owner?: boolean | Prisma.ArItem$ownerArgs<ExtArgs>
   steps?: boolean | Prisma.ArItem$stepsArgs<ExtArgs>
   _count?: boolean | Prisma.ArItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["arItem"]>
@@ -466,8 +697,10 @@ export type ArItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   filename?: boolean
   filepath?: boolean
   hasAnimations?: boolean
+  refUser?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  owner?: boolean | Prisma.ArItem$ownerArgs<ExtArgs>
 }, ExtArgs["result"]["arItem"]>
 
 export type ArItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -475,8 +708,10 @@ export type ArItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   filename?: boolean
   filepath?: boolean
   hasAnimations?: boolean
+  refUser?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  owner?: boolean | Prisma.ArItem$ownerArgs<ExtArgs>
 }, ExtArgs["result"]["arItem"]>
 
 export type ArItemSelectScalar = {
@@ -484,21 +719,28 @@ export type ArItemSelectScalar = {
   filename?: boolean
   filepath?: boolean
   hasAnimations?: boolean
+  refUser?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ArItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "filepath" | "hasAnimations" | "createdAt" | "updatedAt", ExtArgs["result"]["arItem"]>
+export type ArItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "filepath" | "hasAnimations" | "refUser" | "createdAt" | "updatedAt", ExtArgs["result"]["arItem"]>
 export type ArItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  owner?: boolean | Prisma.ArItem$ownerArgs<ExtArgs>
   steps?: boolean | Prisma.ArItem$stepsArgs<ExtArgs>
   _count?: boolean | Prisma.ArItemCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type ArItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type ArItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ArItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  owner?: boolean | Prisma.ArItem$ownerArgs<ExtArgs>
+}
+export type ArItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  owner?: boolean | Prisma.ArItem$ownerArgs<ExtArgs>
+}
 
 export type $ArItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ArItem"
   objects: {
+    owner: Prisma.$UserPayload<ExtArgs> | null
     steps: Prisma.$StepPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -506,6 +748,7 @@ export type $ArItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     filename: string
     filepath: string
     hasAnimations: boolean
+    refUser: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["arItem"]>
@@ -902,6 +1145,7 @@ readonly fields: ArItemFieldRefs;
  */
 export interface Prisma__ArItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  owner<T extends Prisma.ArItem$ownerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ArItem$ownerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   steps<T extends Prisma.ArItem$stepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ArItem$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -936,6 +1180,7 @@ export interface ArItemFieldRefs {
   readonly filename: Prisma.FieldRef<"ArItem", 'String'>
   readonly filepath: Prisma.FieldRef<"ArItem", 'String'>
   readonly hasAnimations: Prisma.FieldRef<"ArItem", 'Boolean'>
+  readonly refUser: Prisma.FieldRef<"ArItem", 'Int'>
   readonly createdAt: Prisma.FieldRef<"ArItem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ArItem", 'DateTime'>
 }
@@ -1192,6 +1437,10 @@ export type ArItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    */
   data: Prisma.ArItemCreateManyInput | Prisma.ArItemCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ArItemIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1262,6 +1511,10 @@ export type ArItemUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many ArItems to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ArItemIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1328,6 +1581,25 @@ export type ArItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many ArItems to delete.
    */
   limit?: number
+}
+
+/**
+ * ArItem.owner
+ */
+export type ArItem$ownerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

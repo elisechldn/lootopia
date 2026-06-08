@@ -33,7 +33,9 @@ export class CluesService {
     const penaltyCost = dto.penaltyCost ?? 0;
 
     if (penaltyCost < 0) {
-      throw new BadRequestException('Le coût de pénalité ne peut pas être négatif');
+      throw new BadRequestException(
+        'Le coût de pénalité ne peut pas être négatif',
+      );
     }
 
     const step = await this.prisma.step.findUnique({
@@ -70,7 +72,10 @@ export class CluesService {
     });
   }
 
-  async findByStep(stepId: number) {
+  async findByStep(stepId: number, userId: number, role: string) {
+    // Liste complète (avec messages) réservée au partenaire propriétaire / ADMIN.
+    // Les joueurs passent par getPlayerClues (indices révélés uniquement).
+    await this.checkStepOwnership(stepId, userId, role);
     return this.prisma.clue.findMany({
       where: { refStep: stepId },
       orderBy: { orderNumber: 'asc' },
@@ -87,7 +92,9 @@ export class CluesService {
 
     if (dto.penaltyCost !== undefined) {
       if (dto.penaltyCost < 0) {
-        throw new BadRequestException('Le coût de pénalité ne peut pas être négatif');
+        throw new BadRequestException(
+          'Le coût de pénalité ne peut pas être négatif',
+        );
       }
 
       const clue = await this.prisma.clue.findUnique({

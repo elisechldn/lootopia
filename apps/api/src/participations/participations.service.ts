@@ -9,7 +9,8 @@ import { Prisma } from '@repo/types';
 import { PrismaService } from '../orm/prisma/prisma.service';
 import { StartHuntDto } from './dto/start-hunt.dto';
 import { ValidateStepDto } from './dto/validate-step.dto';
-import { logInfo } from 'src/loggeur';
+import { logInfo } from '../loggeur';
+import { assertOwns, type Requester } from '../auth/ownership';
 
 @Injectable()
 export class ParticipationsService {
@@ -175,9 +176,14 @@ export class ParticipationsService {
     });
   }
 
-  async findByPlayer(userId: number) {
+  async findByPlayer(userId: number, requester: Requester) {
+    // ADMIN voit tout ; un PARTNER ne voit que les participations sur SES chasses.
+    const where: Prisma.ParticipationWhereInput =
+      requester.role === 'ADMIN'
+        ? { refUser: userId }
+        : { refUser: userId, hunt: { refUser: requester.sub } };
     return this.prisma.participation.findMany({
-      where: { refUser: userId },
+      where,
       include: {
         user: {
           select: { id: true, firstname: true, lastname: true, email: true },
@@ -188,7 +194,12 @@ export class ParticipationsService {
         progresses: {
           include: {
             step: {
-              select: { id: true, orderNumber: true, title: true, points: true },
+              select: {
+                id: true,
+                orderNumber: true,
+                title: true,
+                points: true,
+              },
             },
             clueUsages: {
               include: { clue: { select: { id: true, penaltyCost: true } } },
@@ -201,7 +212,7 @@ export class ParticipationsService {
     });
   }
 
-  async findOne(id: number, userId: number) {
+  async findOne(id: number, requester: Requester) {
     const participation = await this.prisma.participation.findUnique({
       where: { id },
       include: {
@@ -217,12 +228,14 @@ export class ParticipationsService {
       },
     });
     if (!participation) {
-      logInfo('error', `Participation ${id} introuvable`, 'ParticipationsService');
+      logInfo(
+        'error',
+        `Participation ${id} introuvable`,
+        'ParticipationsService',
+      );
       throw new NotFoundException('Participation introuvable');
     }
-    if (participation.refUser !== userId) {
-      throw new ForbiddenException();
-    }
+    assertOwns(participation.refUser, requester);
     return participation;
   }
 
@@ -336,7 +349,11 @@ export class ParticipationsService {
         // Verrou optimiste : P2025 si déjà COMPLETED par une requête concurrente
         await tx.progress.update({
           where: { id: currentProgress.id, statut: 'IN_PROGRESS' },
-          data: { statut: 'COMPLETED', totalPoints: pointsEarned, completedAt: new Date() },
+          data: {
+            statut: 'COMPLETED',
+            totalPoints: pointsEarned,
+            completedAt: new Date(),
+          },
         });
 
         const nextStep = participation.hunt.steps.find(
@@ -362,13 +379,24 @@ export class ParticipationsService {
         const allProgresses = await tx.progress.findMany({
           where: { refParticipation: participationId, statut: 'COMPLETED' },
         });
-        const totalPoints = allProgresses.reduce((sum, p) => sum + p.totalPoints, 0);
+        const totalPoints = allProgresses.reduce(
+          (sum, p) => sum + p.totalPoints,
+          0,
+        );
         const updated = await tx.participation.update({
           where: { id: participationId },
           data: { status: 'COMPLETED', endTime: new Date(), totalPoints },
-          include: { hunt: { select: { title: true, rewardType: true, rewardValue: true } } },
+          include: {
+            hunt: {
+              select: { title: true, rewardType: true, rewardValue: true },
+            },
+          },
         });
-        logInfo('info', `Participation ${participationId} complétée avec ${totalPoints} points`, 'ParticipationsService');
+        logInfo(
+          'info',
+          `Participation ${participationId} complétée avec ${totalPoints} points`,
+          'ParticipationsService',
+        );
         return updated;
       });
     } catch (e: unknown) {
