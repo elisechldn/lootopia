@@ -82,6 +82,7 @@ export const ArItemScalarFieldEnum = {
   filename: 'filename',
   filepath: 'filepath',
   hasAnimations: 'hasAnimations',
+  refUser: 'refUser',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
