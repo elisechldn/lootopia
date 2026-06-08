@@ -1,4 +1,6 @@
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/auth';
 import PartnerSidebar from "@/components/partner/PartnerSidebar";
 import AuthProvider from "@/components/partner/AuthProvider";
 import ThemeWrapper from "@/components/partner/ThemeWrapper";
@@ -6,17 +8,13 @@ import ThemeWrapper from "@/components/partner/ThemeWrapper";
 const API_URL = process.env.API_URL ?? 'http://localhost:8000';
 
 async function getSessionWithProfile() {
-    const token = (await cookies()).get('auth_token')?.value;
-    if (!token) return null;
-    let session: { sub: number; email: string; role: string; firstname?: string; lastname?: string } | null = null;
-    try {
-        const parts = token.split('.');
-        if (parts.length < 2 || !parts[1]) return null;
-        session = JSON.parse(atob(parts[1]));
-    } catch { return null; }
+    const session = await getSession();
     if (!session) return null;
+    if (session.role !== 'PARTNER' && session.role !== 'ADMIN') return null;
+
+    const token = (await cookies()).get('auth_token')?.value;
     try {
-        const res = await fetch(`${API_URL}/users/${session.sub}`, {
+        const res = await fetch(`${API_URL}/users/me`, {
             headers: { Authorization: `Bearer ${token}` },
             cache: 'no-store',
         });
@@ -25,12 +23,15 @@ async function getSessionWithProfile() {
             const profile = json.data ?? null;
             return { ...session, profilePicture: profile?.profilePicture ?? null };
         }
-    } catch { /* ignore, fallback to session without avatar */ }
+    } catch {
+
+    }
     return session;
 }
 
 export default async function PartnerLayout({ children }: { children: React.ReactNode }) {
     const session = await getSessionWithProfile();
+    if (!session) redirect('/login');
     return (
         <AuthProvider user={session}>
             <ThemeWrapper>
