@@ -48,7 +48,10 @@ export class ArItemController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
-    return this.arItemService.remove(id);
+  remove(
+    @Request() req: { user: { sub: number; role: string } },
+    @Param('id') id: string,
+  ) {
+    return this.arItemService.remove(id, req.user);
   }
 }

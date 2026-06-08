@@ -9,6 +9,7 @@ import { Prisma } from '@repo/types';
 import type { ArItemModel } from '@repo/types';
 import { PrismaService } from '../orm/prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
+import { assertOwns, type Requester } from '../auth/ownership';
 
 const TEN_MB = 10 * 1024 * 1024;
 
@@ -41,6 +42,7 @@ export class ArItemService {
           filename: file.originalname,
           filepath,
           hasAnimations: false,
+          refUser: userId,
         },
       });
       return arItem;
@@ -54,20 +56,10 @@ export class ArItemService {
     if (role === 'ADMIN') {
       return this.prisma.arItem.findMany({ orderBy: { createdAt: 'desc' } });
     }
-    return this.prisma.$queryRaw<ArItemModel[]>(Prisma.sql`
-      SELECT DISTINCT
-        ai.id,
-        ai.filename,
-        ai.filepath,
-        ai."has_animations"  AS "hasAnimations",
-        ai."created_at"      AS "createdAt",
-        ai."updated_at"      AS "updatedAt"
-      FROM "ar_items" ai
-      INNER JOIN "steps" s ON s."ref_ar_item" = ai.id
-      INNER JOIN "hunts" h ON s."ref_hunt" = h.id
-      WHERE h."ref_user" = ${userId}
-      ORDER BY ai."created_at" DESC
-    `);
+    return this.prisma.arItem.findMany({
+      where: { refUser: userId },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async getUsage(
@@ -91,7 +83,12 @@ export class ArItemService {
     };
   }
 
-  async remove(id: string) {
+  async remove(id: string, requester: Requester) {
+    const arItem = await this.prisma.arItem.findUniqueOrThrow({
+      where: { id },
+    });
+    assertOwns(arItem.refUser, requester);
+
     const usage = await this.getUsage(id);
     if (usage.stepsCount > 0) {
       throw new ConflictException({
@@ -100,9 +97,6 @@ export class ArItemService {
         huntsCount: usage.huntsCount,
       });
     }
-    const arItem = await this.prisma.arItem.findUniqueOrThrow({
-      where: { id },
-    });
     await this.prisma.arItem.delete({ where: { id } });
     await this.storage.deleteObject(arItem.filepath).catch(() => {});
   }
