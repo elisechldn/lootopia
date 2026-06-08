@@ -62,37 +62,43 @@ describe('StepsService', () => {
 
   describe('uploadMarkerFiles', () => {
     it('throws 400 when no files provided', async () => {
-      await expect(service.uploadMarkerFiles(1, 1, undefined, undefined)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.uploadMarkerFiles(1, 1, 'PARTNER', undefined, undefined),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('throws 400 for non-image MIME type', async () => {
       const file = makeImageFile({ mimetype: 'application/pdf' });
-      await expect(service.uploadMarkerFiles(1, 1, file, undefined)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.uploadMarkerFiles(1, 1, 'PARTNER', file, undefined),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('throws 400 for missing image buffer', async () => {
       const file = makeImageFile({ buffer: undefined as unknown as Buffer });
-      await expect(service.uploadMarkerFiles(1, 1, file, undefined)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.uploadMarkerFiles(1, 1, 'PARTNER', file, undefined),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('throws 400 for invalid pattern extension', async () => {
       const patt = makePatternFile({ originalname: 'marker.txt' });
-      await expect(service.uploadMarkerFiles(1, 1, undefined, patt)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.uploadMarkerFiles(1, 1, 'PARTNER', undefined, patt),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('throws 404 when step not found', async () => {
       mockPrisma.step.findUnique.mockResolvedValue(null);
-      await expect(service.uploadMarkerFiles(1, 1, makeImageFile(), makePatternFile())).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.uploadMarkerFiles(
+          1,
+          1,
+          'PARTNER',
+          makeImageFile(),
+          makePatternFile(),
+        ),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('throws 403 when user does not own the step', async () => {
@@ -102,9 +108,15 @@ describe('StepsService', () => {
         markerPatternUrl: null,
         hunt: { refUser: 999 },
       });
-      await expect(service.uploadMarkerFiles(1, 1, makeImageFile(), makePatternFile())).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(
+        service.uploadMarkerFiles(
+          1,
+          1,
+          'PARTNER',
+          makeImageFile(),
+          makePatternFile(),
+        ),
+      ).rejects.toThrow(ForbiddenException);
     });
 
     it('returns markerImageUrl and markerPatternUrl when both files provided', async () => {
@@ -117,7 +129,13 @@ describe('StepsService', () => {
       mockStorage.uploadObject.mockResolvedValue(undefined);
       mockPrisma.step.update.mockResolvedValue({});
 
-      const result = await service.uploadMarkerFiles(1, 1, makeImageFile(), makePatternFile());
+      const result = await service.uploadMarkerFiles(
+        1,
+        1,
+        'PARTNER',
+        makeImageFile(),
+        makePatternFile(),
+      );
       expect(result).toHaveProperty('markerImageUrl');
       expect(result).toHaveProperty('markerPatternUrl');
       expect(mockStorage.uploadObject).toHaveBeenCalledTimes(2);
@@ -136,9 +154,17 @@ describe('StepsService', () => {
       mockStorage.uploadObject.mockResolvedValue(undefined);
       mockPrisma.step.update.mockResolvedValue({});
 
-      const result = await service.uploadMarkerFiles(1, 1, makeImageFile(), undefined);
+      const result = await service.uploadMarkerFiles(
+        1,
+        1,
+        'PARTNER',
+        makeImageFile(),
+        undefined,
+      );
       expect(result).toHaveProperty('markerImageUrl');
-      expect(result.markerPatternUrl).toBe('partners/1/ar-markers/1/existing.patt');
+      expect(result.markerPatternUrl).toBe(
+        'partners/1/ar-markers/1/existing.patt',
+      );
       expect(mockStorage.uploadObject).toHaveBeenCalledTimes(1);
     });
   });
