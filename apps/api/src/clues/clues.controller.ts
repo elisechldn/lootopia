@@ -37,8 +37,15 @@ export class CluesController {
   }
 
   @Get('steps/:stepId/clues')
-  findByStep(@Param('stepId') stepId: string) {
-    return this.cluesService.findByStep(Number(stepId));
+  findByStep(
+    @Request() req: { user: { sub: number; role: string } },
+    @Param('stepId') stepId: string,
+  ) {
+    return this.cluesService.findByStep(
+      Number(stepId),
+      req.user.sub,
+      req.user.role,
+    );
   }
 
   @Patch('clues/:clueId')
