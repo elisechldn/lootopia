@@ -11,6 +11,7 @@ import { FilesModule } from './storage/files/files.module';
 import { ArItemModule } from './ar-item/ar-item.module';
 import { CluesModule } from './clues/clues.module';
 import { StepsModule } from './steps/steps.module';
+import { StatsController } from './stats/stats.controller';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { StepsModule } from './steps/steps.module';
     CluesModule,
     StepsModule,
   ],
-  controllers: [],
+  controllers: [StatsController],
   providers: [PrismaService],
 })
 export class AppModule {}
