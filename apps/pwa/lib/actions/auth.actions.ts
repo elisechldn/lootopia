@@ -82,6 +82,25 @@ export async function getAuthToken(): Promise<string | null> {
   return (await cookies()).get('auth_token')?.value ?? null;
 }
 
+export async function getMeAction(): Promise<UserInfos | null> {
+  const token = (await cookies()).get('auth_token')?.value;
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API_URL}/users/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      (await cookies()).delete('auth_token');
+      return null;
+    }
+    const json = await res.json();
+    return (json.data ?? json) as UserInfos;
+  } catch {
+    return null;
+  }
+}
+
 export async function registerAction(formData: FormData) {
   "use server";
 
