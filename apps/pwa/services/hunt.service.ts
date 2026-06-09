@@ -16,6 +16,7 @@ export type NearbyHunt = {
   title: string;
   shortDescription: string | null;
   rewardType: string | null;
+  coverImage: string | null;
   startDate: string | null;
   endDate: string | null;
   createdAt: string;

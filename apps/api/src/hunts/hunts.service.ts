@@ -132,6 +132,7 @@ export class HuntsService {
                     "short_description"   AS "shortDescription",
                     "reward_type"         AS "rewardType",
                     "reward_value"        AS "rewardValue",
+                    "cover_image"         AS "coverImage",
                     radius,
                     "start_date"          AS "startDate",
                     "end_date"            AS "endDate",
