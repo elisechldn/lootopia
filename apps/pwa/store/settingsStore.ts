@@ -9,7 +9,7 @@ type ARSettings = {
   searchRadius: number;
 };
 
-const DEFAULTS: ARSettings = {
+export const SETTINGS_DEFAULTS: ARSettings = {
   smoothingFactor: 0.85,
   orientationChangeThreshold: 0.02,
   gpsMinDistance: 10,
@@ -25,9 +25,9 @@ type SettingsStore = ARSettings & {
 export const useSettingsStore = create<SettingsStore>()(
   persist(
     (set) => ({
-      ...DEFAULTS,
+      ...SETTINGS_DEFAULTS,
       set: (patch) => set(patch),
-      reset: () => set(DEFAULTS),
+      reset: () => set(SETTINGS_DEFAULTS),
     }),
     {
       name: 'pwa_settings',

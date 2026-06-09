@@ -2,7 +2,7 @@
 
 import TopBar from '@/components/ui/TopBar';
 import TabNavigation from '@/components/ui/TabNavigation';
-import { useSettingsStore } from '@/store/settingsStore';
+import { useSettingsStore, SETTINGS_DEFAULTS } from '@/store/settingsStore';
 
 type SettingKey = 'smoothingFactor' | 'orientationChangeThreshold' | 'gpsMinDistance' | 'gpsMinAccuracy' | 'searchRadius';
 
@@ -148,8 +148,13 @@ function SettingSlider({
   return (
     <div className="px-4 py-4 space-y-2">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium">{label}</span>
-        <span className="text-sm font-mono text-primary tabular-nums">{displayValue}</span>
+        <div className="flex items-baseline gap-2 min-w-0">
+          <span className="text-sm font-medium">{label}</span>
+          <span className="text-xs text-muted-foreground/60 tabular-nums shrink-0">
+            déf. {(SETTINGS_DEFAULTS[config.field] * scale).toFixed(decimals)}{unit ? ` ${unit}` : ''}
+          </span>
+        </div>
+        <span className="text-sm font-mono text-primary tabular-nums shrink-0">{displayValue}</span>
       </div>
       <input
         type="range"
