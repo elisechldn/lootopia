@@ -7,7 +7,6 @@ interface HuntHeroProps {
 }
 
 export default function HuntHero({ title, imageUrl, backHref }: HuntHeroProps) {
-    console.log("IMG -> ", imageUrl)
   return (
     <div className="relative h-64 w-full overflow-hidden bg-neutral-900">
       {imageUrl && (
