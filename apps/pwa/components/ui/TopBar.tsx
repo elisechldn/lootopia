@@ -10,7 +10,7 @@ type TopBarProps = {
 
 export default function TopBar({ greeting, onSearchClick }: TopBarProps) {
   return (
-    <header className="h-topbar fixed w-full flex flex-col px-4 bg-background">
+    <header className="h-topbar fixed top-0 z-50 w-full flex flex-col px-4 bg-background">
         <div className="h-[var(--safe-top)]" />
         <div className="flex flex-1 justify-center items-center w-full">
             <div className="text-lg font-bold text-foreground flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -21,7 +21,7 @@ export default function TopBar({ greeting, onSearchClick }: TopBarProps) {
                   <button
                     onClick={onSearchClick}
                     aria-label="Rechercher"
-                    className="flex items-center justify-center w-9 h-9 rounded-full text-foreground bg-transparent border-0 cursor-pointer transition-[background] duration-150 hover:bg-foreground/10 active:bg-foreground/20"
+                    className="flex items-center justify-center w-11 h-11 rounded-full text-foreground bg-transparent border-0 cursor-pointer transition-[background] duration-150 hover:bg-foreground/10 active:bg-foreground/20"
                   >
                     <Search size={20} />
                   </button>
@@ -29,7 +29,7 @@ export default function TopBar({ greeting, onSearchClick }: TopBarProps) {
                 <Link
                   href="/profile"
                   aria-label="Profil"
-                  className="flex items-center justify-center w-9 h-9 rounded-full text-foreground bg-transparent border-0 cursor-pointer transition-[background] duration-150 hover:bg-foreground/10 active:bg-foreground/20"
+                  className="flex items-center justify-center w-11 h-11 rounded-full text-foreground bg-transparent border-0 cursor-pointer transition-[background] duration-150 hover:bg-foreground/10 active:bg-foreground/20"
                 >
                   <UserCircle size={22} />
                 </Link>

@@ -36,6 +36,7 @@ a {
     /* Safe area pour iPhones avec encoche / Dynamic Island */
     --safe-top: env(safe-area-inset-top);
     --topbar-height: calc(50px + env(safe-area-inset-top));
+    --tabbar-height: calc(67px + env(safe-area-inset-bottom));
     --safe-bottom: env(safe-area-inset-bottom);
     --safe-left: env(safe-area-inset-left);
     --safe-right: env(safe-area-inset-right);
@@ -140,6 +141,11 @@ a {
 /* Safe-area padding utilities — utilisés partout où du contenu longe le bord de l'écran */
 @utility pt-topbar {
   padding-top: var(--topbar-height);
+}
+/* À poser sur un conteneur NON-scrollable (Safari ignore le padding-bottom
+   des conteneurs overflow en fin de scroll — bug WebKit) */
+@utility pb-tabbar {
+  padding-bottom: var(--tabbar-height);
 }
 @utility h-topbar {
   height: var(--topbar-height);

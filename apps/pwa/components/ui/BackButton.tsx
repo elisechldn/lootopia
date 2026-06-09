@@ -16,7 +16,7 @@ const VARIANT_CLASSES = {
 };
 
 export default function BackButton({ href, onClick, variant = "overlay", className = "" }: Props) {
-  const cn = `flex h-9 w-9 items-center justify-center rounded-full transition-colors ${VARIANT_CLASSES[variant]} ${className}`;
+  const cn = `flex h-11 w-11 items-center justify-center rounded-full transition-colors ${VARIANT_CLASSES[variant]} ${className}`;
 
   if (href) {
     return (

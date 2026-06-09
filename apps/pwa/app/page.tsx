@@ -66,7 +66,7 @@ function HomeContent() {
   const rotationDeg = (pullDistance / 80) * 360;
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen pb-tabbar">
       <TopBar greeting={greeting} />
       <div className="flex flex-col flex-1 pt-topbar overflow-hidden">
         {/* Toggle Liste / Carte */}

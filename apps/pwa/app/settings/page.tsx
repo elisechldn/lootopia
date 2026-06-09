@@ -79,10 +79,10 @@ export default function SettingsPage() {
   const settings = useSettingsStore();
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen pb-tabbar">
       <TopBar />
 
-      <div className="flex-1 overflow-y-auto pt-topbar pb-safe-3">
+      <div className="flex-1 overflow-y-auto pt-topbar">
         <div className="px-4 pt-4 pb-6 space-y-6">
 
           <Section title="Apparence">

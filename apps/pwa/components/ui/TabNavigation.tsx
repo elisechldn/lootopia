@@ -14,9 +14,9 @@ export default function TabNavigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 w-full py-5 flex flex-row items-start bg-background border-t border-border z-[1100]">
+    <nav className="fixed bottom-0 w-full pt-3 pb-safe-3 flex flex-row items-stretch bg-background border-t border-border z-[1100]">
       {TABS.map((tab) => {
-        const isActive = tab.href === '/' ? pathname === '/' : pathname.startsWith(tab.href.split('?')[0]!) && tab.href !== '/?view=map';
+        const isActive = tab.href === '/' ? pathname === '/' : pathname.startsWith(tab.href);
         const Icon = tab.icon;
         return (
           <Link
