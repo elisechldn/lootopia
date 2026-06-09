@@ -71,7 +71,7 @@ export default async function RegisterPage({ searchParams }: { searchParams: Pro
 
         <p className="text-center text-sm mt-6">
           Déjà un compte ?{" "}
-          <Link href="/login" className="text-primary font-medium underline underline-offset-2">
+          <Link href="/login" className="text-primary font-medium underline underline-offset-2 active:opacity-70">
             Se connecter
           </Link>
         </p>

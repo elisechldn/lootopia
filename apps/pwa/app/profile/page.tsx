@@ -131,7 +131,7 @@ export default function ProfilePage() {
           <button
             onClick={handleLogout}
             aria-label="Se déconnecter"
-            className="p-2 rounded-lg text-muted-foreground hover:text-destructive transition-colors"
+            className="p-2 rounded-lg text-muted-foreground hover:text-destructive transition-colors active:bg-destructive/10 active:text-destructive"
           >
             <LogOut size={20} />
           </button>
@@ -195,7 +195,7 @@ export default function ProfilePage() {
                     {p.status === 'COMPLETED' && (
                       <Link
                         href={`/hunts/${p.refHunt}/reward`}
-                        className="inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 hover:underline"
+                        className="inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 hover:underline active:opacity-70"
                       >
                         <Gift size={11} />
                         Récompense

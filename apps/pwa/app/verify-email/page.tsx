@@ -18,7 +18,7 @@ function VerifyEmailForm() {
     return (
       <div className="text-center space-y-4">
         <p className="text-sm text-destructive">Lien de vérification invalide.</p>
-        <Link href="/register" className="text-primary font-medium underline underline-offset-2 text-sm">
+        <Link href="/register" className="text-primary font-medium underline underline-offset-2 text-sm active:opacity-70">
           Créer un compte
         </Link>
       </div>
@@ -56,7 +56,7 @@ function VerifyEmailForm() {
           <button
             onClick={handleVerify}
             disabled={loading}
-            className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm disabled:opacity-50 transition-opacity"
+            className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm disabled:opacity-50 transition-opacity active:opacity-90"
           >
             {loading ? 'Vérification...' : 'Confirmer mon email'}
           </button>
@@ -78,7 +78,7 @@ export default function VerifyEmailPage() {
           <VerifyEmailForm />
         </Suspense>
         <p className="text-center text-sm mt-6">
-          <Link href="/login" className="text-primary font-medium underline underline-offset-2">
+          <Link href="/login" className="text-primary font-medium underline underline-offset-2 active:opacity-70">
             Retour à la connexion
           </Link>
         </p>

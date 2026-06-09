@@ -24,7 +24,7 @@ export default function TabNavigation() {
             href={tab.href}
             aria-label={tab.label}
             data-active={isActive}
-            className="group flex-1 flex flex-col items-center justify-center gap-1 h-full cursor-pointer text-foreground opacity-50 data-[active=true]:opacity-100 transition-opacity duration-200"
+            className="group flex-1 flex flex-col items-center justify-center gap-1 h-full cursor-pointer text-foreground opacity-50 data-[active=true]:opacity-100 transition-opacity duration-200 active:opacity-70"
           >
             <Icon size={22} className="block opacity-60 group-data-[active=true]:opacity-100" />
             <span className="text-[11px] font-medium">{tab.label}</span>

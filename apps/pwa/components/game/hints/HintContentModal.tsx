@@ -53,7 +53,7 @@ export default function HintContentModal({ clue, onClose }: Props) {
       {/* CTA */}
       <button
         onClick={onClose}
-        className="h-12 w-full rounded-3xl bg-green-500 text-sm font-bold text-white"
+        className="h-12 w-full rounded-3xl bg-green-500 text-sm font-bold text-white active:opacity-90"
       >
         {isSolution ? "✓ Passer à l'étape suivante" : "OK, j'ai compris !"}
       </button>

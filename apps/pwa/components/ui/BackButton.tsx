@@ -11,8 +11,8 @@ type Props = {
 };
 
 const VARIANT_CLASSES = {
-  overlay: "bg-black/30 text-white hover:bg-black/50",
-  muted: "bg-muted hover:bg-muted/80",
+  overlay: "bg-black/30 text-white hover:bg-black/50 active:bg-black/50",
+  muted: "bg-muted hover:bg-muted/80 active:bg-muted/60",
 };
 
 export default function BackButton({ href, onClick, variant = "overlay", className = "" }: Props) {

@@ -49,7 +49,7 @@ export default async function HuntOnBoardingPage({ params }: { params: Promise<{
         <div className="mt-auto pt-6 pb-safe space-y-3" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
           <Link
             href={`/hunts/${id}/leaderboard`}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-amber-400/40 bg-amber-500/10 py-3 text-sm font-semibold text-amber-600 dark:text-amber-400 transition-colors hover:bg-amber-500/20"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-amber-400/40 bg-amber-500/10 py-3 text-sm font-semibold text-amber-600 dark:text-amber-400 transition-colors hover:bg-amber-500/20 active:bg-amber-500/30"
           >
             <Trophy size={16} className="text-amber-500" />
             Classement

@@ -24,6 +24,10 @@ body {
     box-sizing: border-box;
 }
 
+button, a, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+}
+
 a {
     text-decoration: none;
 }

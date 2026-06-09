@@ -15,7 +15,7 @@ export function HuntCard({ hunt }: { hunt: NearbyHunt }) {
   const dist = formatDist(hunt.distance);
   const cover = assetUrl(hunt.coverImage);
   return (
-    <div className="bg-card border border-border rounded-[10px] overflow-hidden flex items-stretch shadow-sm">
+    <div className="bg-card border border-border rounded-[25px] overflow-hidden flex items-stretch shadow-sm">
       {/* Image */}
       <div className="relative w-[177px] shrink-0 bg-muted">
         {cover && (
@@ -45,8 +45,9 @@ export function HuntCard({ hunt }: { hunt: NearbyHunt }) {
         )}
 
         {dist && (
-          <div className="bg-muted border border-border rounded-full px-4 self-start">
-            <span className="font-semibold text-xs leading-7 tracking-[-0.5px] text-muted-foreground">
+          <div>
+              <span className="font-semibold text-xs leading-7 tracking-[-0.5px] text-muted-foreground" >zone de départ à {' '}</span>
+              <span className="bg-muted px-2 self-start border border-border rounded-full font-semibold text-xs leading-7 tracking-[-0.5px] text-muted-foreground">
               {dist}
             </span>
           </div>

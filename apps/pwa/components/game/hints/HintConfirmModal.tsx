@@ -56,14 +56,14 @@ export default function HintConfirmModal({ bubble, totalPoints, participationPoi
       <div className="flex gap-2.5">
         <button
           onClick={onCancel}
-          className="h-12 flex-1 rounded-3xl border border-gray-200 bg-white text-sm font-semibold text-gray-900"
+          className="h-12 flex-1 rounded-3xl border border-gray-200 bg-white text-sm font-semibold text-gray-900 active:bg-gray-100"
         >
           Annuler
         </button>
         <button
           onClick={onConfirm}
           disabled={isPending}
-          className={['h-12 flex-1 rounded-3xl text-sm font-semibold text-white disabled:opacity-70', isSolution ? 'bg-red-500' : 'bg-orange-500'].join(' ')}
+          className={['h-12 flex-1 rounded-3xl text-sm font-semibold text-white disabled:opacity-70 active:opacity-90', isSolution ? 'bg-red-500' : 'bg-orange-500'].join(' ')}
         >
           {isPending ? '…' : isSolution ? 'Révéler' : 'Utiliser'}
         </button>

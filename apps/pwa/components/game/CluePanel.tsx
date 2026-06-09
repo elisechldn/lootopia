@@ -72,7 +72,7 @@ export default function CluePanel({
         </p>
         <button
           onClick={onClose}
-          className="text-xs text-muted-foreground hover:text-foreground"
+          className="text-xs text-muted-foreground hover:text-foreground active:text-foreground"
         >
           ✕
         </button>
@@ -113,13 +113,13 @@ export default function CluePanel({
                     <button
                       onClick={() => handleReveal(data.nextClue!.id, true)}
                       disabled={isPending}
-                      className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                      className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white disabled:opacity-50 active:opacity-90"
                     >
                       Confirmer
                     </button>
                     <button
                       onClick={() => setConfirmLastClue(false)}
-                      className="flex-1 rounded-lg border border-border py-2 text-sm"
+                      className="flex-1 rounded-lg border border-border py-2 text-sm active:bg-muted"
                     >
                       Annuler
                     </button>
@@ -136,7 +136,7 @@ export default function CluePanel({
                     )
                   }
                   disabled={isPending}
-                  className="w-full rounded-xl border border-amber-400 bg-amber-50 dark:bg-amber-950/20 py-3 text-sm font-medium text-amber-700 dark:text-amber-300 disabled:opacity-50"
+                  className="w-full rounded-xl border border-amber-400 bg-amber-50 dark:bg-amber-950/20 py-3 text-sm font-medium text-amber-700 dark:text-amber-300 disabled:opacity-50 active:bg-amber-100 dark:active:bg-amber-900/30"
                 >
                   {isPending
                     ? 'Révélation...'

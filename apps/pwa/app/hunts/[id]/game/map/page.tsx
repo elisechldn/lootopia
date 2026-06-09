@@ -180,7 +180,7 @@ export default function GameMapPage({ params }: Props) {
         </p>
         <button
           onClick={() => router.replace('/')}
-          className="mt-4 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground"
+          className="mt-4 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground active:opacity-90"
         >
           Retour à l&apos;accueil
         </button>
@@ -196,7 +196,7 @@ export default function GameMapPage({ params }: Props) {
         <GameLeafletMap userCoords={userCoords} />
         <button
           onClick={() => setShowExitModal(true)}
-          className="absolute top-safe-4 left-4 z-[500] flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white transition-colors hover:bg-black/50"
+          className="absolute top-safe-4 left-4 z-[500] flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white transition-colors hover:bg-black/50 active:bg-black/50"
           aria-label="Retour"
         >
           <ArrowLeft size={18}/>
@@ -297,7 +297,7 @@ export default function GameMapPage({ params }: Props) {
       <div className="fixed bottom-0 left-0 right-0 z-[500] bg-background/95 backdrop-blur-sm px-4 pt-3 pb-safe-3 space-y-1 border-t border-border">
         <button
           onClick={() => void handleEnterAR()}
-          className="w-full rounded-xl bg-green-500 py-4 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600"
+          className="w-full rounded-xl bg-green-500 py-4 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600 active:bg-green-700"
         >
           Utiliser la caméra AR
         </button>
@@ -326,13 +326,13 @@ export default function GameMapPage({ params }: Props) {
             <div className="flex gap-3 mt-1">
               <button
                 onClick={() => setShowExitModal(false)}
-                className="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold transition-colors hover:bg-muted"
+                className="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold transition-colors hover:bg-muted active:bg-muted"
               >
                 Annuler
               </button>
               <button
                 onClick={() => router.replace('/')}
-                className="flex-1 rounded-xl bg-destructive py-2.5 text-sm font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90"
+                className="flex-1 rounded-xl bg-destructive py-2.5 text-sm font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90 active:opacity-90"
               >
                 Quitter
               </button>

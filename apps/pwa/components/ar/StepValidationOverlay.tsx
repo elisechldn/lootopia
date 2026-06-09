@@ -65,7 +65,7 @@ export default function StepValidationOverlay({ isValidating, result, onDismiss 
         )}
         <button
           onClick={onDismiss}
-          className="mt-2 w-full rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground"
+          className="mt-2 w-full rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground active:opacity-90"
         >
           OK
         </button>

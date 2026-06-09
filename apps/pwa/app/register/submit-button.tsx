@@ -9,7 +9,7 @@ export function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm disabled:opacity-50 transition-opacity"
+      className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm disabled:opacity-50 transition-opacity active:opacity-90"
     >
       {pending ? "Inscription..." : "Créer mon compte"}
     </button>

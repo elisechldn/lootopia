@@ -24,7 +24,7 @@ export function HuntList({ hunts, ref }: HuntListProps) {
       ) : (
         <div className="px-4 pb-4 pt-2 space-y-3 flex flex-col">
           {hunts.map((hunt) => (
-            <Link key={hunt.id} href={`/hunts/${hunt.id}`}>
+            <Link key={hunt.id} href={`/hunts/${hunt.id}`} className="block transition-transform active:scale-[0.98]">
               <HuntCard hunt={hunt} />
             </Link>
           ))}

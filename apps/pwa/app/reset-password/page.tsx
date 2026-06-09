@@ -21,7 +21,7 @@ function ResetPasswordForm() {
         <p className="text-sm text-muted-foreground">
           Ce lien de réinitialisation est invalide ou a expiré.
         </p>
-        <Link href="/forgot-password" className="text-primary font-medium underline underline-offset-2 text-sm">
+        <Link href="/forgot-password" className="text-primary font-medium underline underline-offset-2 text-sm active:opacity-70">
           Demander un nouveau lien
         </Link>
       </div>
@@ -79,7 +79,7 @@ function ResetPasswordForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm disabled:opacity-50 transition-opacity"
+        className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm disabled:opacity-50 transition-opacity active:opacity-90"
       >
         {loading ? 'Réinitialisation...' : 'Réinitialiser le mot de passe'}
       </button>
@@ -102,7 +102,7 @@ export default function ResetPasswordPage() {
         </Suspense>
 
         <p className="text-center text-sm mt-6">
-          <Link href="/login" className="text-primary font-medium underline underline-offset-2">
+          <Link href="/login" className="text-primary font-medium underline underline-offset-2 active:opacity-70">
             Retour à la connexion
           </Link>
         </p>
