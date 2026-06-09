@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { MapPin, Trophy, ChevronRight } from 'lucide-react';
-import type { NearbyHunt }              from '@/services/hunt.service';
+import type { NearbyHunt } from '@/services/hunt.service';
 import { formatRewardType } from '@/lib/reward';
 
 function formatDist(meters: number | null): string | null {
@@ -45,26 +45,31 @@ function HuntCard({ hunt }: { hunt: NearbyHunt }) {
   );
 }
 
-export function HuntList({ hunts }: { hunts: NearbyHunt[] }) {
-  if (hunts.length === 0) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-2 px-4 text-center">
-        <MapPin size={40} className="text-muted-foreground/40" />
-        <p className="font-medium">Aucune chasse à proximité</p>
-        <p className="text-sm text-muted-foreground">
-          Essayez d&apos;agrandir la zone de recherche
-        </p>
-      </div>
-    );
-  }
+interface HuntListProps {
+  hunts: NearbyHunt[];
+  ref?: React.Ref<HTMLDivElement>;
+}
 
+export function HuntList({ hunts, ref }: HuntListProps) {
   return (
-    <div className="overflow-y-auto px-4 pb-4 pt-2 space-y-3 flex flex-col">
-      {hunts.map((hunt) => (
-        <Link key={hunt.id} href={`/hunts/${hunt.id}`}>
-          <HuntCard hunt={hunt} />
-        </Link>
-      ))}
+    <div ref={ref} className="flex-1 overflow-y-auto overscroll-y-none">
+      {hunts.length === 0 ? (
+        <div className="h-full flex flex-col items-center justify-center gap-2 px-4 text-center">
+          <MapPin size={40} className="text-muted-foreground/40" />
+          <p className="font-medium">Aucune chasse à proximité</p>
+          <p className="text-sm text-muted-foreground">
+            Essayez d&apos;agrandir la zone de recherche
+          </p>
+        </div>
+      ) : (
+        <div className="px-4 pb-4 pt-2 space-y-3 flex flex-col">
+          {hunts.map((hunt) => (
+            <Link key={hunt.id} href={`/hunts/${hunt.id}`}>
+              <HuntCard hunt={hunt} />
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
