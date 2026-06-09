@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import AuthProvider from "@/components/providers/AuthProvider";
+import ThemeProvider from "@/components/providers/ThemeProvider";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -39,6 +40,12 @@ export const viewport: Viewport = {
   // Essentiel pour les smartphones modernes avec des encoches (notches) ou des bords arrondis (comme l'iPhone).
   // Cela permet au contenu de s'étendre sur toute la surface de l'écran, y compris derrière les zones "non-rectangulaires".
   viewportFit: "cover",
+  // Couleur de la barre de statut au premier paint (suit l'OS) — alignée sur --background.
+  // Après hydratation, ThemeColorSync impose la couleur du thème résolu (override manuel inclus).
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({
@@ -47,9 +54,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="antialiased">
-        <AuthProvider>{children}</AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -25,7 +25,7 @@ export default function HintModal({ onClose, children }: Props) {
     >
       <div
         className={[
-          'w-full max-w-sm rounded-2xl bg-white px-5 pb-6 pt-5 shadow-xl transition-all duration-300',
+          'w-full max-w-sm rounded-2xl bg-card px-5 pb-6 pt-5 shadow-xl transition-all duration-300',
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4',
         ].join(' ')}
         onClick={(e) => e.stopPropagation()}
