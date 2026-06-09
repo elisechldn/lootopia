@@ -30,20 +30,24 @@ export class CustomLocationBased extends LocAR.LocationBased {
   public distMoved: number;
   public accuracy: number;
 
-  constructor(scene: THREE.Scene, camera: THREE.Camera) {
+  constructor(
+    scene: THREE.Scene,
+    camera: THREE.Camera,
+    options?: { gpsMinDistance?: number; gpsMinAccuracy?: number },
+  ) {
     super(scene, camera, {
       // gpsMinDistance : déplacement minimal en mètres entre deux updates GPS.
       // Évite le jitter des objets AR causé par la fluctuation GPS à l'arrêt.
       // En dessous de cette distance, la position caméra n'est PAS mise à jour.
       // Note : le premier update passe toujours (initialise l'origine du monde).
-      gpsMinDistance: 10,
+      gpsMinDistance: options?.gpsMinDistance ?? 10,
 
       // gpsMinAccuracy : précision maximale acceptée en mètres (rayon d'incertitude).
       // Un reading avec accuracy > cette valeur est rejeté silencieusement — gpsupdate
       // ne se déclenche pas du tout. À mettre assez haut en milieu urbain / intérieur
       // car la 5G et le Wi-Fi positioning retournent souvent 30–80 m d'accuracy.
       // Valeur par défaut LoCAR : 100 m.
-      gpsMinAccuracy: 100,
+      gpsMinAccuracy: options?.gpsMinAccuracy ?? 100,
     })
   }
 

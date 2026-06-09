@@ -9,12 +9,14 @@ import ViewToggle    from '@/components/hunt/ViewToggle';
 import { HuntList }  from '@/components/hunt/HuntList';
 import { HuntMap }      from '@/components/hunt/HuntMap';
 import { useUserStore } from '@/store/userStore';
+import { useSettingsStore } from '@/store/settingsStore';
 import { getNearbyHunts, type NearbyHunt } from '@/services/hunt.service';
 import Link from "next/link";
 
 function HomeContent() {
   const searchParams = useSearchParams();
   const { user } = useUserStore();
+  const searchRadius = useSettingsStore((s) => s.searchRadius);
 
   const initialView = searchParams.get('view') === 'map' ? 'map' : 'list';
   const [view, setView] = useState<'list' | 'map'>(initialView);
@@ -41,11 +43,11 @@ function HomeContent() {
   useEffect(() => {
     console.log("COORDS UPDATE")
     if (!coords) return;
-    getNearbyHunts(coords.lat, coords.lon).then((h) => {
+    getNearbyHunts(coords.lat, coords.lon, searchRadius).then((h) => {
       setHunts(h);
       setStatus('ready');
     });
-  }, [coords]);
+  }, [coords, searchRadius]);
 
   const greeting = user ? `Bonjour ${user.firstname} !` : '';
 

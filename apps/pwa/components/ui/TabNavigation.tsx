@@ -7,7 +7,7 @@ import { Home, User, Settings } from 'lucide-react';
 const TABS = [
   { label: 'Accueil', href: '/', icon: Home },
   { label: 'Profil', href: '/profile', icon: User },
-  { label: 'Paramètres', href: '/setting', icon: Settings },
+  { label: 'Paramètres', href: '/settings', icon: Settings },
 ];
 
 export default function TabNavigation() {
