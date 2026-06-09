@@ -4,7 +4,7 @@ import TopBar from '@/components/ui/TopBar';
 import TabNavigation from '@/components/ui/TabNavigation';
 import { useSettingsStore } from '@/store/settingsStore';
 
-type SettingKey = 'smoothingFactor' | 'orientationChangeThreshold' | 'gpsMinDistance' | 'gpsMinAccuracy';
+type SettingKey = 'smoothingFactor' | 'orientationChangeThreshold' | 'gpsMinDistance' | 'gpsMinAccuracy' | 'searchRadius';
 
 type SliderConfig = {
   field: SettingKey;
@@ -15,6 +15,8 @@ type SliderConfig = {
   step: number;
   unit?: string;
   decimals?: number;
+  /** Multiplicateur pour l'affichage uniquement (ex: 0.001 pour m→km). La valeur stockée reste en unité brute. */
+  scale?: number;
 };
 
 const ORIENTATION_SLIDERS: SliderConfig[] = [
@@ -58,6 +60,17 @@ const GPS_SLIDERS: SliderConfig[] = [
     step: 5,
     unit: 'm',
     decimals: 0,
+  },
+  {
+    field: 'searchRadius',
+    label: 'Rayon de recherche',
+    description: 'Distance maximale en km pour afficher les chasses à proximité sur la carte et la liste.',
+    min: 1000,
+    max: 100000,
+    step: 1000,
+    unit: 'km',
+    decimals: 0,
+    scale: 0.001,
   },
 ];
 
@@ -129,8 +142,8 @@ function SettingSlider({
   value: number;
   onChange: (v: number) => void;
 }) {
-  const { label, description, min, max, step, unit, decimals = 2 } = config;
-  const displayValue = value.toFixed(decimals) + (unit ? ` ${unit}` : '');
+  const { label, description, min, max, step, unit, decimals = 2, scale = 1 } = config;
+  const displayValue = (value * scale).toFixed(decimals) + (unit ? ` ${unit}` : '');
 
   return (
     <div className="px-4 py-4 space-y-2">

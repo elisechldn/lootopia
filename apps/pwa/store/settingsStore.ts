@@ -6,6 +6,7 @@ type ARSettings = {
   orientationChangeThreshold: number;
   gpsMinDistance: number;
   gpsMinAccuracy: number;
+  searchRadius: number;
 };
 
 const DEFAULTS: ARSettings = {
@@ -13,6 +14,7 @@ const DEFAULTS: ARSettings = {
   orientationChangeThreshold: 0.02,
   gpsMinDistance: 10,
   gpsMinAccuracy: 100,
+  searchRadius: 20000,
 };
 
 type SettingsStore = ARSettings & {
