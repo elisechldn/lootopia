@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { ArrowLeft, Trophy, Medal, Clock, Star } from 'lucide-react';
+import { Trophy, Medal, Clock, Star } from 'lucide-react';
+import BackButton from '@/components/ui/BackButton';
 import { getLeaderboardAction } from '@/lib/actions/participation.actions';
 
 type Props = { params: Promise<{ id: string }> };
@@ -31,13 +31,7 @@ export default async function LeaderboardPage({ params }: Props) {
   return (
     <main className="flex min-h-screen flex-col bg-background pt-safe">
       <header className="flex items-center gap-3 border-b border-border px-4 py-4">
-        <Link
-          href={`/hunts/${id}`}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-muted transition-colors hover:bg-muted/80"
-          aria-label="Retour"
-        >
-          <ArrowLeft size={18} />
-        </Link>
+        <BackButton href={`/hunts/${id}`} variant="muted" />
         <h1 className="text-lg font-bold">Classement</h1>
       </header>
 

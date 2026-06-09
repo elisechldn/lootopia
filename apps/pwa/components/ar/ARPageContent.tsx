@@ -3,8 +3,8 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { ArrowLeft } from "lucide-react";
 import ARCameraLoader from "./ARCameraLoader";
+import BackButton from "@/components/ui/BackButton";
 import { getParticipationByIdAction, validateStepAction } from "@/lib/actions/participation.actions";
 import { getHuntById } from "@/services/hunt.service";
 import { useUserStore } from "@/store/userStore";
@@ -89,13 +89,10 @@ export default function ARPageContent({ huntId }: Props) {
 
   return (
     <>
-      <button
+      <BackButton
         onClick={() => router.replace(`/hunts/${huntId}/game/map?participationId=${participationId}`)}
-        className="fixed top-safe-4 left-4 z-[1000] flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white transition-colors hover:bg-black/50"
-        aria-label="Retour"
-      >
-        <ArrowLeft size={18} />
-      </button>
+        className="fixed top-safe-4 left-4 z-[1000]"
+      />
       {arMode === "MARKER" && patternUrl ? (
         <ARCameraLoader
           patternUrl={patternUrl}

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { Gift } from 'lucide-react';
 import { getHuntRewardAction } from '@/lib/actions/participation.actions';
 import { formatRewardType } from '@/lib/reward';
+import BackButton from '@/components/ui/BackButton';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -13,6 +14,7 @@ export default async function RewardPage({ params }: Props) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
+      <BackButton href={`/profile`} className="fixed top-safe-4 left-4 z-[1000]" />
       <Gift size={56} className="text-amber-500" />
       <h1 className="text-2xl font-bold">Votre récompense</h1>
       <p className="text-sm text-muted-foreground">{formatRewardType(reward.rewardType)}</p>
