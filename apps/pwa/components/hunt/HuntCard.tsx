@@ -15,7 +15,7 @@ export function HuntCard({ hunt }: { hunt: NearbyHunt }) {
   const dist = formatDist(hunt.distance);
   const cover = assetUrl(hunt.coverImage);
   return (
-    <div className="bg-card border border-border rounded-[25px] overflow-hidden flex items-stretch shadow-sm">
+    <div className="bg-card border border-border rounded-[25px] overflow-hidden h-[120px] flex items-stretch shadow-sm">
       {/* Image */}
       <div className="relative w-[177px] shrink-0 bg-muted">
         {cover && (
