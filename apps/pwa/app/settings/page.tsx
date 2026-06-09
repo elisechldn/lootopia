@@ -2,6 +2,7 @@
 
 import TopBar from '@/components/ui/TopBar';
 import TabNavigation from '@/components/ui/TabNavigation';
+import ThemeSelector from '@/components/settings/ThemeSelector';
 import { useSettingsStore, SETTINGS_DEFAULTS } from '@/store/settingsStore';
 
 type SettingKey = 'smoothingFactor' | 'orientationChangeThreshold' | 'gpsMinDistance' | 'gpsMinAccuracy' | 'searchRadius';
@@ -83,6 +84,16 @@ export default function SettingsPage() {
 
       <div className="flex-1 overflow-y-auto pt-topbar pb-safe-3">
         <div className="px-4 pt-4 pb-6 space-y-6">
+
+          <Section title="Apparence">
+            <div className="px-4 py-4 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <span className="text-sm font-medium">Thème</span>
+                <p className="text-xs text-muted-foreground">Clair, sombre ou selon le système.</p>
+              </div>
+              <ThemeSelector />
+            </div>
+          </Section>
 
           <Section title="Orientation du capteur">
             {ORIENTATION_SLIDERS.map((config) => (

@@ -18,7 +18,7 @@ export default function HintContentModal({ clue, onClose }: Props) {
       <div className="mb-4 flex items-center gap-2.5">
         <div className={[
           'flex h-10 w-10 shrink-0 items-center justify-center rounded-full border',
-          isSolution ? 'bg-red-50 border-red-200/25' : 'bg-green-100 border-green-200/25',
+          isSolution ? 'bg-red-500/10 border-red-200/25' : 'bg-green-500/15 border-green-200/25',
         ].join(' ')}>
           {isSolution
             ? <Star size={18} className="stroke-red-500" fill="none" />
@@ -26,18 +26,18 @@ export default function HintContentModal({ clue, onClose }: Props) {
           }
         </div>
         <div>
-          <p className="mb-0.5 text-xs font-semibold text-gray-500">
+          <p className="mb-0.5 text-xs font-semibold text-muted-foreground">
             {isSolution ? '🏁 Solution' : `💡 Indice ${clue.orderNumber}`}
           </p>
-          <p className="text-[15px] font-bold text-gray-900">
+          <p className="text-[15px] font-bold text-foreground">
             {isSolution ? 'Réponse révélée' : 'Un petit coup de pouce'}
           </p>
         </div>
       </div>
 
       {/* Clue text */}
-      <div className="mb-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5">
-        <p className="m-0 text-sm italic leading-5.5 text-gray-900">
+      <div className="mb-3 rounded-xl border border-border bg-muted px-4 py-3.5">
+        <p className="m-0 text-sm italic leading-5.5 text-foreground">
           {clue.message}
         </p>
       </div>

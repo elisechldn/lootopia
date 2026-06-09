@@ -18,12 +18,12 @@ export default function HintBubbleItem({ bubble, onClick }: Props) {
       onClick={onClick}
       className={[
         'relative flex h-11 w-11 shrink-0 self-end items-center justify-center rounded-full',
-        isUsed     && 'bg-green-100 border-2 border-green-500 cursor-pointer',
-        isEnabled  && 'bg-orange-50 border-[2.5px] border-orange-500 shadow-[0_0_0_4px_rgba(249,115,22,0.2)] cursor-pointer',
-        isDisabled && 'bg-gray-100 border-2 border-gray-300 opacity-50 cursor-default',
+        isUsed     && 'bg-green-500/15 border-2 border-green-500 cursor-pointer',
+        isEnabled  && 'bg-orange-500/10 border-[2.5px] border-orange-500 shadow-[0_0_0_4px_rgba(249,115,22,0.2)] cursor-pointer',
+        isDisabled && 'bg-muted border-2 border-border opacity-50 cursor-default',
       ].filter(Boolean).join(' ')}
     >
-      <div className="absolute -top-0.5 -left-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-gray-200 bg-white text-[9px] font-bold leading-none text-gray-900">
+      <div className="absolute -top-0.5 -left-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-border bg-card text-[9px] font-bold leading-none text-foreground">
         {bubble.orderNumber}
       </div>
 
@@ -32,7 +32,7 @@ export default function HintBubbleItem({ bubble, onClick }: Props) {
         ? <Star size={18} className="stroke-orange-500" fill="none" />
         : <Info size={18} className="stroke-orange-500" fill="none" />
       )}
-      {isDisabled && <Lock size={18} className="stroke-gray-300" fill="none" />}
+      {isDisabled && <Lock size={18} className="stroke-muted-foreground" fill="none" />}
     </div>
   );
 }

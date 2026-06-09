@@ -21,7 +21,7 @@ export default function TopBar({ greeting, onSearchClick }: TopBarProps) {
                   <button
                     onClick={onSearchClick}
                     aria-label="Rechercher"
-                    className="flex items-center justify-center w-9 h-9 rounded-full text-foreground bg-transparent border-0 cursor-pointer transition-[background] duration-150 hover:bg-gray-500/10 active:bg-gray-500/20"
+                    className="flex items-center justify-center w-9 h-9 rounded-full text-foreground bg-transparent border-0 cursor-pointer transition-[background] duration-150 hover:bg-foreground/10 active:bg-foreground/20"
                   >
                     <Search size={20} />
                   </button>
@@ -29,7 +29,7 @@ export default function TopBar({ greeting, onSearchClick }: TopBarProps) {
                 <Link
                   href="/profile"
                   aria-label="Profil"
-                  className="flex items-center justify-center w-9 h-9 rounded-full text-foreground bg-transparent border-0 cursor-pointer transition-[background] duration-150 hover:bg-gray-500/10 active:bg-gray-500/20"
+                  className="flex items-center justify-center w-9 h-9 rounded-full text-foreground bg-transparent border-0 cursor-pointer transition-[background] duration-150 hover:bg-foreground/10 active:bg-foreground/20"
                 >
                   <UserCircle size={22} />
                 </Link>

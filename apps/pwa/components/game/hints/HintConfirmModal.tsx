@@ -21,7 +21,7 @@ export default function HintConfirmModal({ bubble, totalPoints, participationPoi
       {/* Icon */}
       <div className={[
         'mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border-2',
-        isSolution ? 'bg-orange-50 border-red-200/25' : 'bg-orange-50 border-orange-200/25',
+        isSolution ? 'bg-red-500/10 border-red-200/25' : 'bg-orange-500/10 border-orange-200/25',
       ].join(' ')}>
         {isSolution
           ? <Star size={26} className="stroke-red-500" fill="none" />
@@ -30,12 +30,12 @@ export default function HintConfirmModal({ bubble, totalPoints, participationPoi
       </div>
 
       {/* Title */}
-      <p className="mb-2 text-center text-[17px] font-bold text-gray-900">
+      <p className="mb-2 text-center text-[17px] font-bold text-foreground">
         {isSolution ? 'Révéler la solution ?' : `Utiliser l'indice ${bubble.orderNumber} ?`}
       </p>
 
       {/* Description */}
-      <p className="mb-3.5 text-center text-[13px] leading-5 text-gray-500">
+      <p className="mb-3.5 text-center text-[13px] leading-5 text-muted-foreground">
         {isSolution ? (
           <>Cette action <span className="font-bold text-red-500">réinitialise vos points</span> sur cette étape et passe automatiquement à l&apos;étape suivante.</>
         ) : (
@@ -44,19 +44,19 @@ export default function HintConfirmModal({ bubble, totalPoints, participationPoi
       </p>
 
       {/* Cost banner */}
-      <div className={['mb-5 flex items-center gap-2 rounded-[10px] px-3.5 py-2.5', isSolution ? 'bg-red-50' : 'bg-orange-50'].join(' ')}>
+      <div className={['mb-5 flex items-center gap-2 rounded-[10px] px-3.5 py-2.5', isSolution ? 'bg-red-500/10' : 'bg-orange-500/10'].join(' ')}>
         <ShieldAlert size={16} className={isSolution ? 'stroke-red-500' : 'stroke-orange-500'} />
         <span className={['text-xs font-semibold', isSolution ? 'text-red-500' : 'text-orange-500'].join(' ')}>
           {isSolution ? '−∞ pts' : `−${bubble.penaltyCost} pts`}
         </span>
-        <span className="ml-auto text-[11px] text-gray-400">Score actuel : {participationPoints} pts</span>
+        <span className="ml-auto text-[11px] text-muted-foreground">Score actuel : {participationPoints} pts</span>
       </div>
 
       {/* Buttons */}
       <div className="flex gap-2.5">
         <button
           onClick={onCancel}
-          className="h-12 flex-1 rounded-3xl border border-gray-200 bg-white text-sm font-semibold text-gray-900 active:bg-gray-100"
+          className="h-12 flex-1 rounded-3xl border border-border bg-card text-sm font-semibold text-foreground active:bg-muted"
         >
           Annuler
         </button>

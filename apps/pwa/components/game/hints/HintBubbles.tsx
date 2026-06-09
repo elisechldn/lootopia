@@ -87,7 +87,7 @@ export default function HintBubbles({ progressId, totalPoints, participationPoin
   return (
     <>
       <div className="flex flex-row items-center gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <span className="shrink-0 rounded-full border border-gray-200 bg-white/90 px-2.5 py-0.5 text-sm font-black">
+        <span className="shrink-0 rounded-full border border-border bg-card/90 px-2.5 py-0.5 text-sm font-black">
           Indices
         </span>
         <div className="flex flex-row items-center gap-1.5 p-1">
