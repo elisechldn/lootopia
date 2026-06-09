@@ -11,8 +11,8 @@ type Rules = {
   keyPrefix: (userId: number) => string;
 };
 
-const TWO_MB = 2 * 1024 * 1024;
 const FIVE_MB = 5 * 1024 * 1024;
+const EIGHT_MB = 8 * 1024 * 1024;
 const TEN_MB = 10 * 1024 * 1024;
 
 const IMAGE_MIME_TO_EXT: Record<string, string> = {
@@ -42,7 +42,7 @@ const RULES: Record<FileKind, Rules> = {
   },
   avatar: {
     mimeTypes: Object.keys(IMAGE_MIME_TO_EXT),
-    maxBytes: TWO_MB,
+    maxBytes: EIGHT_MB,
     extension: (mime) => IMAGE_MIME_TO_EXT[mime] ?? 'bin',
     keyPrefix: (userId) => `avatars/${userId}`,
   },

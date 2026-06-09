@@ -17,6 +17,7 @@ type UserWithParticipations = {
   role: string;
   firstname: string;
   lastname: string;
+  profilePicture: string | null;
   participations?: {
     id: number;
     status: string;
@@ -310,6 +311,7 @@ export class AuthService {
         firstname: user.firstname,
         lastname: user.lastname,
         role: user.role,
+        profilePicture: user.profilePicture ?? null,
         participations: user.participations ?? [],
       },
     };

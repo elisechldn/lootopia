@@ -12,6 +12,7 @@ import { logoutAction } from '@/lib/actions/auth.actions';
 import { uploadAvatarAction } from '@/lib/actions/profile.actions';
 import { assetUrl } from '@/lib/assets';
 import { type Prisma } from '@repo/types';
+import Image from "next/image";
 
 type Participation = Prisma.ParticipationGetPayload<{
   select: {
@@ -96,23 +97,30 @@ export default function ProfilePage() {
       <div className="flex-1 overflow-y-auto pt-topbar">
         {/* En-tête profil */}
         <div className="px-4 pb-6 flex items-center gap-4 border-b border-border">
-          <div className="relative group flex-shrink-0">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary overflow-hidden">
-              {user.profilePicture ? (
-                // biome-ignore lint/performance/noImgElement: avatar URL from trusted MinIO bucket
-                <img src={user.profilePicture} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <span>{user.firstname[0]}{user.lastname[0]}</span>
-              )}
-            </div>
+          <div className="relative shrink-0">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={avatarUploading}
-              className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-active:opacity-100 transition-opacity disabled:cursor-wait"
+              className="relative block active:opacity-80 transition-opacity disabled:cursor-wait"
               aria-label="Changer l'avatar"
             >
-              <Camera size={16} className="text-white" />
+              <div className="relative w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary overflow-hidden">
+                {user.profilePicture ? (
+                  <Image
+                    src={assetUrl(user.profilePicture)!}
+                    alt="Avatar"
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
+                ) : (
+                  <span>{user.firstname[0]}{user.lastname[0]}</span>
+                )}
+              </div>
+              <span className="absolute bottom-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm border-2 border-background pointer-events-none">
+                <Camera size={10} />
+              </span>
             </button>
             <input
               ref={fileInputRef}
@@ -173,17 +181,19 @@ export default function ProfilePage() {
               {participations.map((p) => (
                 <div
                   key={p.id}
-                  className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card"
+                  className="flex items-center gap-3 p-3 rounded-[15px] border border-border bg-card shadow-sm"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                    {p.hunt.coverImage && (
-                      <img
+                  {p.hunt.coverImage && (
+                  <div className="relative w-10 h-10 rounded-lg bg-muted overflow-hidden shrink-0">
+                      <Image
                         src={assetUrl(p.hunt.coverImage)!}
                         alt={p.hunt.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="40px"
                       />
-                    )}
                   </div>
+                  )}
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm truncate">{p.hunt.title}</p>
                     <p className={`text-xs ${STATUS_COLORS[p.status] ?? 'text-muted-foreground'}`}>

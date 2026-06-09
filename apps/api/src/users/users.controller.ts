@@ -23,7 +23,7 @@ import { UsersService } from './users.service';
 import { FilesService } from '../storage/files/files.service';
 import { StorageService } from '../storage/storage.service';
 
-const TWO_MB = 2 * 1024 * 1024;
+const EIGHT_MB = 8 * 1024 * 1024;
 
 @Controller('users')
 export class UsersController {
@@ -44,7 +44,7 @@ export class UsersController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),
-      limits: { fileSize: TWO_MB },
+      limits: { fileSize: EIGHT_MB },
     }),
   )
   async uploadAvatar(
@@ -54,15 +54,15 @@ export class UsersController {
     const userId = req.user.sub;
     const current = await this.usersService.findOne(userId);
     if (current.profilePicture) {
-      const oldKey = this.storageService.keyFromPublicUrl(
-        current.profilePicture,
-      );
+      const oldKey = current.profilePicture.startsWith('http')
+        ? this.storageService.keyFromPublicUrl(current.profilePicture)
+        : current.profilePicture;
       if (oldKey)
         await this.storageService.deleteObject(oldKey).catch(() => null);
     }
-    const { url } = await this.filesService.upload(userId, 'avatar', file);
-    await this.usersService.update(userId, { profilePicture: url });
-    return { url };
+    const { key } = await this.filesService.upload(userId, 'avatar', file);
+    await this.usersService.update(userId, { profilePicture: key });
+    return { url: key };
   }
 
   @Post()
