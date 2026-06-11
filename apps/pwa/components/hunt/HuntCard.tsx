@@ -1,10 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { Trophy, ChevronRight } from 'lucide-react';
+import { Trophy, MapPin } from 'lucide-react';
 import type { NearbyHunt } from '@/services/hunt.service';
 import { formatRewardType } from '@/lib/reward';
 import { assetUrl } from '@/lib/assets';
+import { 
+  Card, 
+  CardHeader, 
+  CardTitle, 
+  CardDescription, 
+  CardContent 
+} from '@/components/ui/card';
 
 function formatDist(meters: number | null): string | null {
   if (meters == null) return null;
@@ -14,49 +21,50 @@ function formatDist(meters: number | null): string | null {
 export function HuntCard({ hunt }: { hunt: NearbyHunt }) {
   const dist = formatDist(hunt.distance);
   const cover = assetUrl(hunt.coverImage);
+
   return (
-    <div className="bg-card border border-border rounded-[25px] overflow-hidden h-[120px] flex items-stretch shadow-sm">
-      {/* Image + titre en overlay (même pattern que HuntHero) */}
-      <div className="relative w-1/2 shrink-0 bg-muted">
+    <Card className="overflow-hidden flex flex-col sm:flex-row items-stretch border border-border bg-card shadow-sm transition-colors hover:bg-accent/50">
+      {/* Zone Image / Header */}
+      <CardHeader className="relative p-0 w-full sm:w-1/2 h-32 sm:h-auto shrink-0 bg-muted">
         {cover && (
           <Image
             src={cover}
             alt={hunt.title}
             fill
             className="object-cover"
-            sizes="50vw"
+            sizes="(max-width: 640px) 100vw, 50vw"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-        <p className="absolute bottom-0 left-2 right-2 font-black text-sm leading-7 tracking-[-0.5px] text-white truncate">
-          {hunt.title}
-        </p>
-      </div>
-
-      {/* Contenu */}
-      <div className="flex-1 min-w-0 flex flex-col justify-start p-[10px] overflow-hidden">
-        {hunt.rewardType && (
-          <div className="flex items-center gap-[5px]">
-            <Trophy size={16} className="text-amber-500 shrink-0" />
-            <span className="font-semibold text-xs leading-7 tracking-[-0.5px] text-amber-500 truncate">
-              {formatRewardType(hunt.rewardType)}
-            </span>
-          </div>
-        )}
-
+        {/* Overlay pour le texte et le dégradé */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        
         {dist && (
-          <div>
-              <span className="bg-muted px-2 self-start border border-border rounded-full font-semibold text-xs leading-7 tracking-[-0.5px] text-muted-foreground">
-              À {dist}
+          <span className="absolute top-2 right-2 flex items-center gap-1 text-[11px] font-semibold bg-black/60 text-white px-2 py-0.5 rounded-full backdrop-blur-xs">
+            <MapPin size={10} /> {dist}
+          </span>
+        )}
+        
+        <CardTitle className="absolute bottom-2 left-3 right-3 font-black text-sm text-white truncate">
+          {hunt.title}
+        </CardTitle>
+      </CardHeader>
+
+      {/* Zone Contenu / Description */}
+      <CardContent className="flex-1 p-3 flex flex-col justify-between gap-2 min-w-0">
+        <CardDescription className="text-xs text-muted-foreground line-clamp-2">
+          {hunt.shortDescription || "Aucune description disponible."}
+        </CardDescription>
+
+        {/* Section récompense (Anciennement CardAction custom) */}
+        {hunt.rewardType && (
+          <div className="flex items-center gap-1.5 text-amber-500 mt-auto">
+            <Trophy size={14} className="shrink-0" />
+            <span className="font-semibold text-xs truncate">
+              {formatRewardType(hunt.rewardType)} {hunt.rewardType ? `(${hunt.rewardType})` : ''}
             </span>
           </div>
         )}
-      </div>
-
-      {/* Chevron */}
-      <div className="w-1/6 flex items-center justify-center shrink-0">
-        <ChevronRight size={24} className="text-muted-foreground" />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
