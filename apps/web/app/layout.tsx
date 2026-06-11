@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-import { Geist } from "next/font/google";
+import { Bitter, Special_Elite, Caveat } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
+// Texte courant (Slab)
+const bitter = Bitter({ 
+  subsets: ['latin'], 
+  variable: '--font-body',
+  weight: ['400', '500', '600', '700']
+});
 
-const geistSans = localFont({
-    src: "./fonts/GeistVF.woff",
-    variable: "--font-geist-sans",
+//"Machine à écrire" pour les titres et le logo
+const specialElite = Special_Elite({ 
+  weight: '400', 
+  subsets: ['latin'], 
+  variable: '--font-stamp' 
+});
+
+//Police manuscrite pour les post-it et détails de jeu
+const caveat = Caveat({ 
+  subsets: ['latin'], 
+  variable: '--font-hand',
+  weight: ['600', '700']
 });
 
 export const metadata: Metadata = {
@@ -18,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="fr" className={cn("font-sans", geist.variable)}>
+        <html lang="fr" className={cn("font-sans", bitter.variable)}>
         <head>
             <script
                 dangerouslySetInnerHTML={{
@@ -42,7 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 }}
             />
         </head>
-        <body className={`${geistSans.variable} font-sans antialiased`}>
+        <body className={`${bitter.variable} font-sans antialiased`}>
         {children}
         </body>
         </html>

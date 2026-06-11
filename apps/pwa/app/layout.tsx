@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Unbounded, Lato} from "next/font/google";
+import "./globals.css";
 
 const unbounded = Unbounded({
   subsets: ["latin"],

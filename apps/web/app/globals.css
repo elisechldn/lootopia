@@ -19,72 +19,48 @@ a {
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.58 0.22 27);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.809 0.105 251.813);
-    --chart-2: oklch(0.623 0.214 259.815);
-    --chart-3: oklch(0.546 0.245 262.881);
-    --chart-4: oklch(0.488 0.243 264.376);
-    --chart-5: oklch(0.424 0.199 265.638);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --background: #E4D9BF;
+    --foreground: #3A2A1C;
+    --card: #FBF5E6;                 /* $surface : Cartes crème */
+    --card-foreground: #3A2A1C;      /* $ink */
+    --popover: #FBF5E6;              /* $surface */
+    --popover-foreground: #3A2A1C;   
+    --primary: #C0392B;              /* $thread-red : Fil rouge CTA principal */
+    --primary-foreground: #FBF5E6;   /* Écrit en crème sur le rouge */
+    
+    --secondary: #4E8C82;            /* $folder-teal : Données secondaires */
+    --secondary-foreground: #FBF5E6;
+    
+    --muted: #E4D9BF;                
+    --muted-foreground: #7C6A4F;     /* $text-muted : Texte secondaire sur beige */
+    
+    --accent: #EAC34E;               /* $postit : Notes / Nav active */
+    --accent-foreground: #3A2A1C;
+    
+    --destructive: #7C1E15;          /* $thread-red-dk */
+    
+    --border: #3A2A1C;               /* Les bordures deviennent espresso (effet cartoon) */
+    --input: #3A2A1C;
+    --ring: #C0392B;
+
+    --sidebar: #3E3660;              /* $desk-night : Bureau nocturne */
+    --sidebar-foreground: #BCB3D8;     /* $nav-text : Libellés inactifs */
+    --sidebar-primary: #EAC34E;      /* $postit : Onglet actif background */
+    --sidebar-primary-foreground: #3A2A1C; /* Texte sur onglet actif */
+    --sidebar-accent: #4F4778;       /* $desk-border : Séparateurs / Hover */
+    --sidebar-accent-foreground: #FBF5E6;
+    --sidebar-border: #4F4778;       /* $desk-border */
+    --sidebar-ring: #C0392B;
+
+    --radius: 7px;                   /* $radius-card */
 }
 
 .dark {
-    --background: oklch(0.18 0 0);
-    --foreground: oklch(0.93 0 0);
-    --card: oklch(0.22 0 0);
-    --card-foreground: oklch(0.93 0 0);
-    --popover: oklch(0.22 0 0);
-    --popover-foreground: oklch(0.93 0 0);
-    --primary: oklch(0.85 0.00 0);
-    --primary-foreground: oklch(0.15 0 0);
-    --secondary: oklch(0.28 0 0);
-    --secondary-foreground: oklch(0.93 0 0);
-    --muted: oklch(0.28 0 0);
-    --muted-foreground: oklch(0.65 0 0);
-    --accent: oklch(0.32 0 0);
-    --accent-foreground: oklch(0.93 0 0);
-    --destructive: oklch(0.65 0.18 22);
-    --border: oklch(1 0 0 / 12%);
-    --input: oklch(1 0 0 / 18%);
-    --ring: oklch(0.55 0 0);
-    --chart-1: oklch(0.809 0.105 251.813);
-    --chart-2: oklch(0.623 0.214 259.815);
-    --chart-3: oklch(0.546 0.245 262.881);
-    --chart-4: oklch(0.488 0.243 264.376);
-    --chart-5: oklch(0.424 0.199 265.638);
-    --sidebar: oklch(0.20 0 0);
-    --sidebar-foreground: oklch(0.93 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.28 0 0);
-    --sidebar-accent-foreground: oklch(0.93 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.55 0 0);
+    --background: #E4D9BF;
+    --foreground: #3A2A1C;
+    --card: #FBF5E6;
+    --card-foreground: #3A2A1C;
+    --border: #3A2A1C;
 }
 
 @theme inline {
@@ -97,11 +73,6 @@ a {
     --color-sidebar-primary: var(--sidebar-primary);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -124,9 +95,14 @@ a {
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
+    
+    --color-cork: #C49A5E;
+    --color-wood-frame: #6E4426;
+    --font-sans: var(--font-body), serif;
+    --font-stamp: var(--font-stamp), serif;
+    --font-hand: var(--font-hand), cursive;
+    --shadow-retro: 4px 4px 0px 0px #3A2A1C;
+    --shadow-retro-sm: 2px 2px 0px 0px #3A2A1C;
 }
 
 @layer base {
@@ -139,6 +115,23 @@ a {
     }
 
     html {
-        @apply font-sans;
+        @apply font-body; /* On applique ta police Slab "Bitter" par défaut */
     }
+}
+
+/* --- VOS RECETTES UTILITAIRES SIGNATURES --- */
+@utility retro-card {
+    background-color: var(--color-card);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-retro);
+}
+
+@utility retro-badge {
+    border: 2px solid var(--color-border);
+    box-shadow: var(--shadow-retro-sm);
+}
+
+@utility tilt-pin {
+    transform: rotate(-1deg);
 }

@@ -14,6 +14,7 @@ type HuntWithSteps = HuntGetPayload<{
 export type NearbyHunt = {
   id: number;
   title: string;
+  coverImage: string | null;
   shortDescription: string | null;
   rewardType: string | null;
   rewardValue: string | null;

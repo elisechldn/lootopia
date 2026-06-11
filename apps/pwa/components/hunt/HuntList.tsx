@@ -1,46 +1,64 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { MapPin, Trophy, ChevronRight } from 'lucide-react';
-import type { NearbyHunt }              from '@/services/hunt.service';
+import Link from "next/link";
+import Image from "next/image";
+import { MapPin, Trophy } from "lucide-react";
+import type { NearbyHunt } from "@/services/hunt.service";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 function formatDist(meters: number | null): string | null {
   if (meters == null) return null;
-  return meters < 1000 ? `${Math.round(meters)} m` : `${(meters / 1000).toFixed(1)} km`;
+  return meters < 1000
+    ? `${Math.round(meters)} m`
+    : `${(meters / 1000).toFixed(1)} km`;
 }
 
 function HuntCard({ hunt }: { hunt: NearbyHunt }) {
   const dist = formatDist(hunt.distance);
 
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col shadow-sm">
-      <div className="h-24 bg-muted relative">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        {dist && (
-          <span className="absolute top-2 right-2 flex items-center gap-1 text-xs bg-black/50 text-white px-2 py-0.5 rounded-full">
-            <MapPin size={10} /> {dist}
-          </span>
-        )}
-        <p className="absolute bottom-2 left-3 right-3 text-white font-semibold text-sm leading-tight line-clamp-1">
-          {hunt.title}
-        </p>
-      </div>
-
-      <div className="p-3 flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
-          {hunt.shortDescription && (
-            <p className="text-xs text-muted-foreground line-clamp-2">{hunt.shortDescription}</p>
+    <Card key={hunt.id} className="flex align-center">
+      <CardHeader>
+        <div className="h-24 bg-muted relative">
+          {hunt.coverImage && (
+            <Image
+              src={hunt.coverImage}
+              alt={hunt.title}
+              fill
+              className="object-cover"
+            />
           )}
-          {hunt.rewardValue && (
-            <div className="flex items-center gap-1 mt-1.5 text-xs text-amber-600 dark:text-amber-400">
-              <Trophy size={11} />
-              <span className="truncate">{hunt.rewardValue}</span>
-            </div>
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+          {dist && (
+            <span className="absolute top-2 right-2 flex items-center gap-1 text-xs bg-black/50 text-white px-2 py-0.5 rounded-full">
+              <MapPin size={10} /> {dist}
+            </span>
           )}
+          <CardTitle>{hunt.title}</CardTitle>
         </div>
-        <ChevronRight size={16} className="text-muted-foreground flex-shrink-0 mt-0.5" />
-      </div>
-    </div>
+      </CardHeader>
+      <CardDescription>
+        <span className="flex items-center gap-2">{hunt.shortDescription}</span>
+        <CardAction>
+          <Trophy size={11} />
+          <span className="truncate">{hunt.rewardValue}</span>
+        </CardAction>
+      </CardDescription>
+      <CardFooter>
+        <Link href={`/hunts/${hunt.id}`}>
+          <Button className="w-full text-center">Participer</Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 }
 
