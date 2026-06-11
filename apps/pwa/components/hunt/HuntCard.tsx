@@ -28,7 +28,7 @@ export function HuntCard({ hunt }: { hunt: NearbyHunt }) {
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-        <p className="absolute bottom-2 left-2 right-2 font-black text-xl leading-7 tracking-[-0.5px] text-white truncate">
+        <p className="absolute bottom-0 left-2 right-2 font-black text-sm leading-7 tracking-[-0.5px] text-white truncate">
           {hunt.title}
         </p>
       </div>
@@ -46,9 +46,8 @@ export function HuntCard({ hunt }: { hunt: NearbyHunt }) {
 
         {dist && (
           <div>
-              <span className="font-semibold text-xs leading-7 tracking-[-0.5px] text-muted-foreground" >zone de départ:{' '}</span>
               <span className="bg-muted px-2 self-start border border-border rounded-full font-semibold text-xs leading-7 tracking-[-0.5px] text-muted-foreground">
-              {dist}
+              À {dist}
             </span>
           </div>
         )}
