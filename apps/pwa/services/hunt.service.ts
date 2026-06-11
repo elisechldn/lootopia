@@ -14,6 +14,7 @@ type HuntWithSteps = HuntGetPayload<{
 export type NearbyHunt = {
   id: number;
   title: string;
+  coverImage: string | null;
   shortDescription: string | null;
   rewardType: string | null;
   coverImage: string | null;
@@ -51,4 +52,11 @@ export async function getNearbyHunts(
   const result = await response.json();
   // Le TransformInterceptor NestJS enveloppe dans { data: [...] }
   return (result.data ?? result) as NearbyHunt[];
+}
+
+
+export async function getHuntByStatus(status: string) {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hunts?status=${status}`);
+    if (!response.ok) throw new Error('No Hunt found');
+    return response.json() as Promise<PaginatedResult<HuntModel>>;
 }
