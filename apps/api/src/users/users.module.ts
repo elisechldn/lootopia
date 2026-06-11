@@ -1,15 +1,12 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { AuthModule } from '../auth/auth.module';
+import { FilesModule } from '../storage/files/files.module';
 
 @Module({
-  imports: [
-    JwtModule.register({
-      secret: process.env.JWT_SECRET ?? 'dev-secret-change-in-prod',
-      signOptions: { expiresIn: '7d' },
-    }),
-  ],
+  imports: [PassportModule, AuthModule, FilesModule],
   controllers: [UsersController],
   providers: [UsersService],
 })

@@ -1,10 +1,14 @@
+import { cookies } from "next/headers";
 import AnalyticsDashboard from "@/components/partner/AnalyticsDashboard";
 
+const API_URL = process.env.API_URL ?? 'http://localhost:8000';
+
 async function getAnalytics() {
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/hunts/analytics`,
-        { cache: 'no-store' }
-    );
+    const token = (await cookies()).get('auth_token')?.value;
+    const res = await fetch(`${API_URL}/hunts/analytics`, {
+        cache: 'no-store',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
     if (!res.ok) return [];
     const json = await res.json();
     return json.data ?? [];

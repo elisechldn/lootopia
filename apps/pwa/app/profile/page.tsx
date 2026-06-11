@@ -1,14 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogOut, Trophy, CheckCircle, Clock } from 'lucide-react';
-import TopBar                                 from '@/components/ui/TobBar/TopBar';
-import TabNavigation                          from '@/components/ui/TabNavigation/TabNavigation';
+import Link from 'next/link';
+import { Camera, LogOut, Trophy, CheckCircle, Clock, Gift } from 'lucide-react';
+import TopBar           from '@/components/ui/TopBar';
+import TabNavigation    from '@/components/ui/TabNavigation';
 import { useUserStore } from '@/store/userStore';
-import { getMyParticipations } from '@/services/participation.service';
+import { getMyParticipationsAction } from '@/lib/actions/participation.actions';
 import { logoutAction } from '@/lib/actions/auth.actions';
+import { uploadAvatarAction } from '@/lib/actions/profile.actions';
+import { assetUrl } from '@/lib/assets';
 import { type Prisma } from '@repo/types';
+import Image from "next/image";
 
 type Participation = Prisma.ParticipationGetPayload<{
   select: {
@@ -17,12 +21,12 @@ type Participation = Prisma.ParticipationGetPayload<{
     totalPoints: true;
     startTime: true;
     endTime: true;
+    refHunt: true;
     hunt: {
       select: {
         title: true;
         coverImage: true;
         rewardType: true;
-        rewardValue: true;
       };
     };
   };
@@ -42,20 +46,41 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, logout } = useUserStore();
+  const { user, logout, setProfilePicture } = useUserStore();
   const [participations, setParticipations] = useState<Participation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!user) {
       router.replace('/login');
       return;
     }
-    getMyParticipations(user.id).then((data) => {
-      setParticipations(data as Participation[]);
+    getMyParticipationsAction().then((data) => {
+      setParticipations(data as unknown as Participation[]);
       setLoading(false);
     });
   }, []);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarError(null);
+    setAvatarUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const { url } = await uploadAvatarAction(formData);
+      setProfilePicture(url);
+    } catch (err) {
+      setAvatarError(err instanceof Error ? err.message : "Erreur lors de l'upload");
+    } finally {
+      setAvatarUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleLogout = async () => {
     await logoutAction();
@@ -66,23 +91,55 @@ export default function ProfilePage() {
   if (!user) return null;
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen pb-tabbar">
       <TopBar />
 
-      <div className="flex-1 overflow-y-auto pt-14 pb-16">
+      <div className="flex-1 overflow-y-auto pt-topbar">
         {/* En-tête profil */}
-        <div className="px-4 py-6 flex items-center gap-4 border-b border-border">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary">
-            {user.firstname[0]}{user.lastname[0]}
+        <div className="px-4 pb-6 flex items-center gap-4 border-b border-border">
+          <div className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={avatarUploading}
+              className="relative block active:opacity-80 transition-opacity disabled:cursor-wait"
+              aria-label="Changer l'avatar"
+            >
+              <div className="relative w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary overflow-hidden">
+                {user.profilePicture ? (
+                  <Image
+                    src={assetUrl(user.profilePicture)!}
+                    alt="Avatar"
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
+                ) : (
+                  <span>{user.firstname[0]}{user.lastname[0]}</span>
+                )}
+              </div>
+              <span className="absolute bottom-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm border-2 border-background pointer-events-none">
+                <Camera size={10} />
+              </span>
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={handleAvatarChange}
+            />
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-lg">{user.firstname} {user.lastname}</p>
             <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+            {avatarUploading && <p className="text-xs text-primary mt-0.5">Upload en cours…</p>}
+            {avatarError && <p className="text-xs text-destructive mt-0.5">{avatarError}</p>}
           </div>
           <button
             onClick={handleLogout}
             aria-label="Se déconnecter"
-            className="p-2 rounded-lg text-muted-foreground hover:text-destructive transition-colors"
+            className="p-2 rounded-lg text-muted-foreground hover:text-destructive transition-colors active:bg-destructive/10 active:text-destructive"
           >
             <LogOut size={20} />
           </button>
@@ -124,17 +181,19 @@ export default function ProfilePage() {
               {participations.map((p) => (
                 <div
                   key={p.id}
-                  className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card"
+                  className="flex items-center gap-3 p-3 rounded-[15px] border border-border bg-card shadow-sm"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                    {p.hunt.coverImage && (
-                      <img
-                        src={p.hunt.coverImage}
+                  {p.hunt.coverImage && (
+                  <div className="relative w-10 h-10 rounded-lg bg-muted overflow-hidden shrink-0">
+                      <Image
+                        src={assetUrl(p.hunt.coverImage)!}
                         alt={p.hunt.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="40px"
                       />
-                    )}
                   </div>
+                  )}
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm truncate">{p.hunt.title}</p>
                     <p className={`text-xs ${STATUS_COLORS[p.status] ?? 'text-muted-foreground'}`}>
@@ -143,10 +202,14 @@ export default function ProfilePage() {
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className="text-sm font-semibold">{p.totalPoints} pts</p>
-                    {p.hunt.rewardValue && p.status === 'COMPLETED' && (
-                      <p className="text-xs text-amber-600 dark:text-amber-400 truncate max-w-[80px]">
-                        {p.hunt.rewardValue}
-                      </p>
+                    {p.status === 'COMPLETED' && (
+                      <Link
+                        href={`/hunts/${p.refHunt}/reward`}
+                        className="inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 hover:underline active:opacity-70"
+                      >
+                        <Gift size={11} />
+                        Récompense
+                      </Link>
                     )}
                   </div>
                 </div>

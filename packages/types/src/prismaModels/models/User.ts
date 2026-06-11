@@ -45,6 +45,11 @@ export type UserMinAggregateOutputType = {
   profilePicture: string | null
   lastConnection: Date | null
   country: string | null
+  resetToken: string | null
+  resetTokenExpiry: Date | null
+  emailVerified: boolean | null
+  emailVerificationToken: string | null
+  emailVerificationExpiry: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +65,11 @@ export type UserMaxAggregateOutputType = {
   profilePicture: string | null
   lastConnection: Date | null
   country: string | null
+  resetToken: string | null
+  resetTokenExpiry: Date | null
+  emailVerified: boolean | null
+  emailVerificationToken: string | null
+  emailVerificationExpiry: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -75,6 +85,11 @@ export type UserCountAggregateOutputType = {
   profilePicture: number
   lastConnection: number
   country: number
+  resetToken: number
+  resetTokenExpiry: number
+  emailVerified: number
+  emailVerificationToken: number
+  emailVerificationExpiry: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -100,6 +115,11 @@ export type UserMinAggregateInputType = {
   profilePicture?: true
   lastConnection?: true
   country?: true
+  resetToken?: true
+  resetTokenExpiry?: true
+  emailVerified?: true
+  emailVerificationToken?: true
+  emailVerificationExpiry?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -115,6 +135,11 @@ export type UserMaxAggregateInputType = {
   profilePicture?: true
   lastConnection?: true
   country?: true
+  resetToken?: true
+  resetTokenExpiry?: true
+  emailVerified?: true
+  emailVerificationToken?: true
+  emailVerificationExpiry?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +155,11 @@ export type UserCountAggregateInputType = {
   profilePicture?: true
   lastConnection?: true
   country?: true
+  resetToken?: true
+  resetTokenExpiry?: true
+  emailVerified?: true
+  emailVerificationToken?: true
+  emailVerificationExpiry?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -232,6 +262,11 @@ export type UserGroupByOutputType = {
   profilePicture: string | null
   lastConnection: Date | null
   country: string
+  resetToken: string | null
+  resetTokenExpiry: Date | null
+  emailVerified: boolean
+  emailVerificationToken: string | null
+  emailVerificationExpiry: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -241,7 +276,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -270,10 +305,16 @@ export type UserWhereInput = {
   profilePicture?: Prisma.StringNullableFilter<"User"> | string | null
   lastConnection?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   country?: Prisma.StringFilter<"User"> | string
+  resetToken?: Prisma.StringNullableFilter<"User"> | string | null
+  resetTokenExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  emailVerified?: Prisma.BoolFilter<"User"> | boolean
+  emailVerificationToken?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVerificationExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   hunts?: Prisma.HuntListRelationFilter
   participations?: Prisma.ParticipationListRelationFilter
+  arItems?: Prisma.ArItemListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -287,16 +328,24 @@ export type UserOrderByWithRelationInput = {
   profilePicture?: Prisma.SortOrderInput | Prisma.SortOrder
   lastConnection?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  emailVerificationToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerificationExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   hunts?: Prisma.HuntOrderByRelationAggregateInput
   participations?: Prisma.ParticipationOrderByRelationAggregateInput
+  arItems?: Prisma.ArItemOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   username?: string
   email?: string
+  resetToken?: string
+  emailVerificationToken?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -307,11 +356,15 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   profilePicture?: Prisma.StringNullableFilter<"User"> | string | null
   lastConnection?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   country?: Prisma.StringFilter<"User"> | string
+  resetTokenExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  emailVerified?: Prisma.BoolFilter<"User"> | boolean
+  emailVerificationExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   hunts?: Prisma.HuntListRelationFilter
   participations?: Prisma.ParticipationListRelationFilter
-}, "id" | "username" | "email">
+  arItems?: Prisma.ArItemListRelationFilter
+}, "id" | "username" | "email" | "resetToken" | "emailVerificationToken">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -324,6 +377,11 @@ export type UserOrderByWithAggregationInput = {
   profilePicture?: Prisma.SortOrderInput | Prisma.SortOrder
   lastConnection?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  emailVerificationToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerificationExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -347,6 +405,11 @@ export type UserScalarWhereWithAggregatesInput = {
   profilePicture?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   lastConnection?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   country?: Prisma.StringWithAggregatesFilter<"User"> | string
+  resetToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  resetTokenExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  emailVerificationToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  emailVerificationExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -361,10 +424,16 @@ export type UserCreateInput = {
   profilePicture?: string | null
   lastConnection?: Date | string | null
   country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hunts?: Prisma.HuntCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -378,10 +447,16 @@ export type UserUncheckedCreateInput = {
   profilePicture?: string | null
   lastConnection?: Date | string | null
   country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hunts?: Prisma.HuntUncheckedCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUpdateInput = {
@@ -394,10 +469,16 @@ export type UserUpdateInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hunts?: Prisma.HuntUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -411,10 +492,16 @@ export type UserUncheckedUpdateInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hunts?: Prisma.HuntUncheckedUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -428,6 +515,11 @@ export type UserCreateManyInput = {
   profilePicture?: string | null
   lastConnection?: Date | string | null
   country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -442,6 +534,11 @@ export type UserUpdateManyMutationInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -457,8 +554,18 @@ export type UserUncheckedUpdateManyInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type UserScalarRelationFilter = {
@@ -477,6 +584,11 @@ export type UserCountOrderByAggregateInput = {
   profilePicture?: Prisma.SortOrder
   lastConnection?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  emailVerificationToken?: Prisma.SortOrder
+  emailVerificationExpiry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -496,6 +608,11 @@ export type UserMaxOrderByAggregateInput = {
   profilePicture?: Prisma.SortOrder
   lastConnection?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  emailVerificationToken?: Prisma.SortOrder
+  emailVerificationExpiry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -511,12 +628,33 @@ export type UserMinOrderByAggregateInput = {
   profilePicture?: Prisma.SortOrder
   lastConnection?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  emailVerificationToken?: Prisma.SortOrder
+  emailVerificationExpiry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+}
+
+export type UserCreateNestedOneWithoutArItemsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutArItemsInput, Prisma.UserUncheckedCreateWithoutArItemsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArItemsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutArItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutArItemsInput, Prisma.UserUncheckedCreateWithoutArItemsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArItemsInput
+  upsert?: Prisma.UserUpsertWithoutArItemsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutArItemsInput, Prisma.UserUpdateWithoutArItemsInput>, Prisma.UserUncheckedUpdateWithoutArItemsInput>
 }
 
 export type UserCreateNestedOneWithoutHuntsInput = {
@@ -551,6 +689,108 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
+export type UserCreateWithoutArItemsInput = {
+  username: string
+  firstname: string
+  lastname: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  profilePicture?: string | null
+  lastConnection?: Date | string | null
+  country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hunts?: Prisma.HuntCreateNestedManyWithoutUserInput
+  participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutArItemsInput = {
+  id?: number
+  username: string
+  firstname: string
+  lastname: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  profilePicture?: string | null
+  lastConnection?: Date | string | null
+  country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hunts?: Prisma.HuntUncheckedCreateNestedManyWithoutUserInput
+  participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutArItemsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutArItemsInput, Prisma.UserUncheckedCreateWithoutArItemsInput>
+}
+
+export type UserUpsertWithoutArItemsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutArItemsInput, Prisma.UserUncheckedUpdateWithoutArItemsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutArItemsInput, Prisma.UserUncheckedCreateWithoutArItemsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutArItemsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutArItemsInput, Prisma.UserUncheckedUpdateWithoutArItemsInput>
+}
+
+export type UserUpdateWithoutArItemsInput = {
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.StringFieldUpdateOperationsInput | string
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hunts?: Prisma.HuntUpdateManyWithoutUserNestedInput
+  participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutArItemsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.StringFieldUpdateOperationsInput | string
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hunts?: Prisma.HuntUncheckedUpdateManyWithoutUserNestedInput
+  participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutHuntsInput = {
   username: string
   firstname: string
@@ -561,9 +801,15 @@ export type UserCreateWithoutHuntsInput = {
   profilePicture?: string | null
   lastConnection?: Date | string | null
   country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutHuntsInput = {
@@ -577,9 +823,15 @@ export type UserUncheckedCreateWithoutHuntsInput = {
   profilePicture?: string | null
   lastConnection?: Date | string | null
   country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutHuntsInput = {
@@ -608,9 +860,15 @@ export type UserUpdateWithoutHuntsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHuntsInput = {
@@ -624,9 +882,15 @@ export type UserUncheckedUpdateWithoutHuntsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutParticipationsInput = {
@@ -639,9 +903,15 @@ export type UserCreateWithoutParticipationsInput = {
   profilePicture?: string | null
   lastConnection?: Date | string | null
   country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hunts?: Prisma.HuntCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutParticipationsInput = {
@@ -655,9 +925,15 @@ export type UserUncheckedCreateWithoutParticipationsInput = {
   profilePicture?: string | null
   lastConnection?: Date | string | null
   country: string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationToken?: string | null
+  emailVerificationExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hunts?: Prisma.HuntUncheckedCreateNestedManyWithoutUserInput
+  arItems?: Prisma.ArItemUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutParticipationsInput = {
@@ -686,9 +962,15 @@ export type UserUpdateWithoutParticipationsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hunts?: Prisma.HuntUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutParticipationsInput = {
@@ -702,9 +984,15 @@ export type UserUncheckedUpdateWithoutParticipationsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastConnection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hunts?: Prisma.HuntUncheckedUpdateManyWithoutUserNestedInput
+  arItems?: Prisma.ArItemUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 
@@ -715,11 +1003,13 @@ export type UserUncheckedUpdateWithoutParticipationsInput = {
 export type UserCountOutputType = {
   hunts: number
   participations: number
+  arItems: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hunts?: boolean | UserCountOutputTypeCountHuntsArgs
   participations?: boolean | UserCountOutputTypeCountParticipationsArgs
+  arItems?: boolean | UserCountOutputTypeCountArItemsArgs
 }
 
 /**
@@ -746,6 +1036,13 @@ export type UserCountOutputTypeCountParticipationsArgs<ExtArgs extends runtime.T
   where?: Prisma.ParticipationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountArItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ArItemWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -758,10 +1055,16 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   profilePicture?: boolean
   lastConnection?: boolean
   country?: boolean
+  resetToken?: boolean
+  resetTokenExpiry?: boolean
+  emailVerified?: boolean
+  emailVerificationToken?: boolean
+  emailVerificationExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hunts?: boolean | Prisma.User$huntsArgs<ExtArgs>
   participations?: boolean | Prisma.User$participationsArgs<ExtArgs>
+  arItems?: boolean | Prisma.User$arItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -776,6 +1079,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   profilePicture?: boolean
   lastConnection?: boolean
   country?: boolean
+  resetToken?: boolean
+  resetTokenExpiry?: boolean
+  emailVerified?: boolean
+  emailVerificationToken?: boolean
+  emailVerificationExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -791,6 +1099,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   profilePicture?: boolean
   lastConnection?: boolean
   country?: boolean
+  resetToken?: boolean
+  resetTokenExpiry?: boolean
+  emailVerified?: boolean
+  emailVerificationToken?: boolean
+  emailVerificationExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -806,14 +1119,20 @@ export type UserSelectScalar = {
   profilePicture?: boolean
   lastConnection?: boolean
   country?: boolean
+  resetToken?: boolean
+  resetTokenExpiry?: boolean
+  emailVerified?: boolean
+  emailVerificationToken?: boolean
+  emailVerificationExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "firstname" | "lastname" | "email" | "passwordHash" | "role" | "profilePicture" | "lastConnection" | "country" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "firstname" | "lastname" | "email" | "passwordHash" | "role" | "profilePicture" | "lastConnection" | "country" | "resetToken" | "resetTokenExpiry" | "emailVerified" | "emailVerificationToken" | "emailVerificationExpiry" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hunts?: boolean | Prisma.User$huntsArgs<ExtArgs>
   participations?: boolean | Prisma.User$participationsArgs<ExtArgs>
+  arItems?: boolean | Prisma.User$arItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -824,6 +1143,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     hunts: Prisma.$HuntPayload<ExtArgs>[]
     participations: Prisma.$ParticipationPayload<ExtArgs>[]
+    arItems: Prisma.$ArItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -836,6 +1156,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     profilePicture: string | null
     lastConnection: Date | null
     country: string
+    resetToken: string | null
+    resetTokenExpiry: Date | null
+    emailVerified: boolean
+    emailVerificationToken: string | null
+    emailVerificationExpiry: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1234,6 +1559,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   hunts<T extends Prisma.User$huntsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$huntsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HuntPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   participations<T extends Prisma.User$participationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$participationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  arItems<T extends Prisma.User$arItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$arItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1273,6 +1599,11 @@ export interface UserFieldRefs {
   readonly profilePicture: Prisma.FieldRef<"User", 'String'>
   readonly lastConnection: Prisma.FieldRef<"User", 'DateTime'>
   readonly country: Prisma.FieldRef<"User", 'String'>
+  readonly resetToken: Prisma.FieldRef<"User", 'String'>
+  readonly resetTokenExpiry: Prisma.FieldRef<"User", 'DateTime'>
+  readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
+  readonly emailVerificationToken: Prisma.FieldRef<"User", 'String'>
+  readonly emailVerificationExpiry: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -1471,6 +1802,11 @@ export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Users.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Users.
+   */
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
@@ -1708,6 +2044,30 @@ export type User$participationsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.ParticipationScalarFieldEnum | Prisma.ParticipationScalarFieldEnum[]
+}
+
+/**
+ * User.arItems
+ */
+export type User$arItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ArItem
+   */
+  select?: Prisma.ArItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ArItem
+   */
+  omit?: Prisma.ArItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ArItemInclude<ExtArgs> | null
+  where?: Prisma.ArItemWhereInput
+  orderBy?: Prisma.ArItemOrderByWithRelationInput | Prisma.ArItemOrderByWithRelationInput[]
+  cursor?: Prisma.ArItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ArItemScalarFieldEnum | Prisma.ArItemScalarFieldEnum[]
 }
 
 /**

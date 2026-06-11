@@ -6,6 +6,8 @@ import StepsTab from "./StepsTab";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { Hunt, Step } from "./types";
 import HuntMap from "@/components/partner/HuntMap";
+import { uploadFile } from "@/lib/upload";
+import { assetUrl } from "@/lib/assets";
 
 type Tab = "metadata" | "steps";
 type Status = "DRAFT" | "ACTIVE" | "FINISHED";
@@ -15,20 +17,24 @@ interface Props {
 }
 
 export default function HuntForm({ initialData }: Props) {
-    const [steps, setSteps] = useState<Step[]>(
-        initialData?.steps?.map((s) => ({
+    const [steps, setSteps] = useState<Step[]>( initialData?.steps?.map((s) => ({
             id: s.id,
             orderNumber: s.orderNumber,
             title: s.title,
-            clue: s.clue ?? "",
+            clues: s.clues ?? [],
             latitude: s.latitude ?? null,
             longitude: s.longitude ?? null,
             radius: s.radius,
-            actionType: s.actionType,
-            arMarker: s.arMarker ?? null,
-            arContent: s.arContent ?? null,
+            refArItem: s.refArItem ?? null,
+            arItem: s.arItem ?? null,
+            arItemFilename: s.arItem?.filename ?? null,
             qrCode: s.qrCode ?? null,
             points: s.points,
+            arMode: (s as { arMode?: "GPS" | "MARKER" }).arMode ?? "GPS",
+            _markerFile: null,
+            _markerPatternFile: null,
+            markerImageUrl: (s as { markerImageUrl?: string | null }).markerImageUrl ?? null,
+            markerPatternUrl: (s as { markerPatternUrl?: string | null }).markerPatternUrl ?? null,
         })) ?? []
     );
     const isEditing = !!initialData;
@@ -38,26 +44,28 @@ export default function HuntForm({ initialData }: Props) {
     const [status, setStatus] = useState<Status>((initialData?.status as Status) ?? "DRAFT");
     const [tags, setTags] = useState<string[]>(["futuriste", "Historique", "Piraterie"]);
     const [tagInput, setTagInput] = useState("");
-    const [coverImage, setCoverImage] = useState<string | null>(null);
+    const [coverImage, setCoverImage] = useState<string | null>(assetUrl(initialData?.coverImage));
+    const [coverImageKey, setCoverImageKey] = useState<string | null>(initialData?.coverImage ?? null);
+    const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [form, setForm] = useState({
         title: initialData?.title ?? "",
         shortDescription: initialData?.shortDescription ?? "",
         fullDescription: initialData?.description ?? "",
-        startDate: initialData?.startDate ? new Date(initialData.startDate).toISOString().split("T")[0] : "",
-        endDate: initialData?.endDate ? new Date(initialData.endDate).toISOString().split("T")[0] : "",
+        startDate: initialData?.startDate ? initialData.startDate.slice(0, 10) : "",
+        endDate: initialData?.endDate ? initialData.endDate.slice(0, 10) : "",
         locationCenter: initialData?.latitude && initialData?.longitude ? `${initialData?.latitude} ${initialData?.longitude}` : null,
         // country: initialData?.location?.split(", ")[1] ?? "France",
         // city: initialData?.location?.split(", ")[0] ?? "",
         // difficulty: initialData?.difficulty ?? "Intermédiaire",
         rewardType: initialData?.rewardType ?? "DISCOUNT_CODE",
         rewardValue: initialData?.rewardValue ?? "",
+        steps: initialData?.steps ?? []
     });
     const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
 
-    const set = (field: string, value: string) =>
-        setForm((prev) => ({ ...prev, [field]: value }));
+    const set = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
 
     const addTag = () => {
         const trimmed = tagInput.trim();
@@ -67,14 +75,28 @@ export default function HuntForm({ initialData }: Props) {
         setTagInput("");
     };
 
-    const removeTag = (tag: string) =>
-        setTags((prev) => prev.filter((t) => t !== tag));
+    const removeTag = (tag: string) => setTags((prev) => prev.filter((t) => t !== tag));
 
     const handleSave = async (nextStatus?: Status) => {
         setError(null);
         setSaving(true);
         if (!form.locationCenter) throw new Error('Hunt must have a defined location center');
         const coords = form.locationCenter.split(' ');
+
+        let nextCoverKey = coverImageKey;
+        try {
+            if (coverImageFile) {
+                const uploaded = await uploadFile(coverImageFile, "cover");
+                nextCoverKey = uploaded.key;
+                setCoverImageKey(uploaded.key);
+                setCoverImageFile(null);
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Échec de l'upload de l'image");
+            setSaving(false);
+            return;
+        }
+
         const payload = {
             title: form.title || "Sans titre",
             shortDescription: form.shortDescription || null,
@@ -88,13 +110,15 @@ export default function HuntForm({ initialData }: Props) {
             status: nextStatus ?? status,
             rewardType: form.rewardType,
             rewardValue: form.rewardValue || null,
+            coverImage: nextCoverKey,
             refUser: user?.sub,
         };
-
+        console.log("payload -> ", payload);
+        console.log("steps -> ", steps);
         try {
             const url = isEditing
-                ? `${process.env.NEXT_PUBLIC_API_URL}/hunts/${initialData!.id}`
-                : `${process.env.NEXT_PUBLIC_API_URL}/hunts`;
+                ? `/api/hunts/${initialData!.id}`
+                : `/api/hunts`;
             const method = isEditing ? "PUT" : "POST";
 
             const res = await fetch(url, {
@@ -113,11 +137,65 @@ export default function HuntForm({ initialData }: Props) {
             const huntId = huntJson.data?.id ?? initialData?.id;
 
             if (steps.length > 0 && huntId) {
-                await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hunts/${huntId}/steps`, {
+                let preparedSteps: Step[];
+                try {
+                    preparedSteps = await Promise.all(
+                        steps.map(async (s) => {
+                            if (s._arContentFile) {
+                                const formData = new FormData();
+                                formData.append("file", s._arContentFile);
+                                const res = await fetch("/api/ar-items", { method: "POST", body: formData });
+                                if (!res.ok) throw new Error("Échec de l'upload de l'item AR");
+                                const json = await res.json() as { data: { id: string; filename: string; filepath: string } };
+                                const arItem = json.data;
+                                return { ...s, refArItem: arItem.id, arItemFilename: arItem.filename, _arContentFile: null };
+                            }
+                            return s;
+                        }),
+                    );
+                } catch (err) {
+                    setError(err instanceof Error ? err.message : "Échec de l'upload d'un modèle 3D");
+                    return;
+                }
+                setSteps(preparedSteps);
+
+                const stepsPayload = preparedSteps.map(({ _arContentFile, _markerFile, _markerPatternFile, ...rest }) => {
+                    void _arContentFile;
+                    void _markerFile;
+                    void _markerPatternFile;
+                    return rest;
+                });
+
+                const stepsRes = await fetch(`/api/hunts/${huntId}/steps`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ steps }),
+                    body: JSON.stringify({ steps: stepsPayload }),
                 });
+
+                // Upload marker files for MARKER-mode steps
+                if (stepsRes.ok) {
+                    const stepsJson = await stepsRes.json() as { data: Array<{ id: number; orderNumber: number }> };
+                    const savedSteps = stepsJson.data ?? [];
+                    for (const preparedStep of preparedSteps) {
+                        if (preparedStep.arMode === "MARKER" && (preparedStep._markerFile || preparedStep._markerPatternFile)) {
+                            const savedStep = savedSteps.find((s) => s.orderNumber === preparedStep.orderNumber);
+                            if (savedStep) {
+                                const fd = new FormData();
+                                if (preparedStep._markerFile) fd.append("image", preparedStep._markerFile);
+                                if (preparedStep._markerPatternFile) fd.append("pattern", preparedStep._markerPatternFile);
+                                const markerRes = await fetch(`/api/steps/${savedStep.id}/marker`, { method: "POST", body: fd });
+                                if (markerRes.ok) {
+                                    const markerJson = await markerRes.json() as { data: { markerImageUrl: string; markerPatternUrl: string } };
+                                    setSteps((prev) => prev.map((s) =>
+                                        s.orderNumber === preparedStep.orderNumber
+                                            ? { ...s, markerImageUrl: markerJson.data.markerImageUrl, markerPatternUrl: markerJson.data.markerPatternUrl, _markerFile: null, _markerPatternFile: null }
+                                            : s
+                                    ));
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             router.push("/dashboard");
@@ -148,9 +226,9 @@ export default function HuntForm({ initialData }: Props) {
                             className="px-4 py-2 text-sm font-medium text-foreground/80 bg-card border border-gray-300 rounded-lg hover:bg-muted/50 transition-colors disabled:opacity-50">
                         {saving ? "Enregistrement..." : "Enregistrer"}
                     </button>
-                    <button className="px-4 py-2 text-sm font-medium text-foreground/80 bg-card border border-gray-300 rounded-lg hover:bg-muted/50 transition-colors">
-                        Dupliquer
-                    </button>
+                    {/*<button className="px-4 py-2 text-sm font-medium text-foreground/80 bg-card border border-gray-300 rounded-lg hover:bg-muted/50 transition-colors">*/}
+                    {/*    Dupliquer*/}
+                    {/*</button>*/}
                     <button onClick={() => handleSave("ACTIVE")} disabled={saving}
                             className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50">
                         Publier la chasse
@@ -197,7 +275,8 @@ export default function HuntForm({ initialData }: Props) {
                                 </label>
                                 <input value={form.title} onChange={(e) => set("title", e.target.value)}
                                        placeholder="Titre de la chasse"
-                                       className="w-full px-4 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />
+                                       className="w-full px-4 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+                                />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-foreground/80 mb-1">
@@ -228,13 +307,13 @@ export default function HuntForm({ initialData }: Props) {
                             <input
                                 ref={fileInputRef}
                                 type="file"
-                                accept="image/*"
+                                accept="image/jpeg,image/png,image/webp"
                                 className="hidden"
                                 onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (file) {
-                                        const url = URL.createObjectURL(file);
-                                        setCoverImage(url);
+                                        setCoverImageFile(file);
+                                        setCoverImage(URL.createObjectURL(file));
                                     }
                                 }}
                             />
@@ -259,7 +338,11 @@ export default function HuntForm({ initialData }: Props) {
                             </div>
                             {coverImage && (
                                 <button
-                                    onClick={() => setCoverImage(null)}
+                                    onClick={() => {
+                                        setCoverImage(null);
+                                        setCoverImageFile(null);
+                                        setCoverImageKey(null);
+                                    }}
                                     className="mt-2 text-xs text-muted-foreground/70 hover:text-red-500 transition-colors">
                                     Supprimer l&apos;image
                                 </button>

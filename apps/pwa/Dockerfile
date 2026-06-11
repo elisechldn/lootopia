@@ -28,6 +28,15 @@ ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ARG API_URL
 ENV API_URL=$API_URL
+# Vars utilisées par next.config.js (rewrite /assets/*) et par le helper assetUrl().
+# Doivent être présentes au BUILD car Next.js gèle les rewrites dans .next/required-server-files.json
+# au moment de `next build` ; les changer en runtime ne sert à rien en mode standalone.
+ARG NEXT_PUBLIC_ASSETS_BASE_URL
+ENV NEXT_PUBLIC_ASSETS_BASE_URL=$NEXT_PUBLIC_ASSETS_BASE_URL
+ARG MINIO_INTERNAL_URL
+ENV MINIO_INTERNAL_URL=$MINIO_INTERNAL_URL
+ARG S3_BUCKET
+ENV S3_BUCKET=$S3_BUCKET
 COPY --from=installer /app/ .
 COPY --from=pruner /app/out/full .
 RUN npm run build

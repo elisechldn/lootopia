@@ -3,6 +3,7 @@
 import { useCallback } from 'react'
 import * as LocAR from 'locar'
 import type { ARRefs } from './arRefs'
+import { useSettingsStore } from '@/store/settingsStore'
 
 type UseDeviceOrientationControlsOptions = {
   refs: React.MutableRefObject<ARRefs>
@@ -27,10 +28,11 @@ export function useDeviceOrientationControls({
     const { camera } = refs.current
     if (!camera || signal.aborted) return
 
+    const { smoothingFactor, orientationChangeThreshold } = useSettingsStore.getState()
     const controls = new LocAR.DeviceOrientationControls(camera, {
       enablePermissionDialog: false,
-      smoothingFactor: 0.85,
-      orientationChangeThreshold: 0.02,
+      smoothingFactor,
+      orientationChangeThreshold,
     })
 
     refs.current.controls = controls

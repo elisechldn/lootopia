@@ -218,7 +218,7 @@ export type ClueGroupByOutputType = {
   _max: ClueMaxAggregateOutputType | null
 }
 
-type GetClueGroupByPayload<T extends ClueGroupByArgs> = Prisma.PrismaPromise<
+export type GetClueGroupByPayload<T extends ClueGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ClueGroupByOutputType, T['by']> &
       {
@@ -450,10 +450,6 @@ export type ClueUpdateOneRequiredWithoutClueUsagesNestedInput = {
   upsert?: Prisma.ClueUpsertWithoutClueUsagesInput
   connect?: Prisma.ClueWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClueUpdateToOneWithWhereWithoutClueUsagesInput, Prisma.ClueUpdateWithoutClueUsagesInput>, Prisma.ClueUncheckedUpdateWithoutClueUsagesInput>
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
 }
 
 export type ClueCreateNestedManyWithoutStepInput = {
@@ -1378,6 +1374,11 @@ export type ClueFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Clues.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Clues.
+   */
   distinct?: Prisma.ClueScalarFieldEnum | Prisma.ClueScalarFieldEnum[]
 }
 

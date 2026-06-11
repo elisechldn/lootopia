@@ -22,19 +22,20 @@ const HUNT_COORDS: Record<number, [number, number]> = {
   9: [2.1301, 48.8014], // Versailles
   10: [-1.5536, 47.2184], // Nantes
   11: [1.950804, 48.819725], // Valibout
+  12: [2.238728, 48.893536], // Sup De Vinci — Paris
 };
 
 async function setHuntLocationCenter(huntId: number, lon: number, lat: number) {
   await prisma.$executeRaw`
-    UPDATE "Hunt"
-    SET "locationCenter" = ST_MakePoint(${lon}, ${lat})::geography
+    UPDATE "hunts"
+    SET "location_center" = ST_MakePoint(${lon}, ${lat})::geography
     WHERE id = ${huntId}
   `;
 }
 
 async function setStepLocation(stepId: number, lon: number, lat: number) {
   await prisma.$executeRaw`
-    UPDATE "Step"
+    UPDATE "steps"
     SET "location" = ST_MakePoint(${lon}, ${lat})::geography
     WHERE id = ${stepId}
   `;
@@ -46,7 +47,7 @@ async function main() {
 
   const admin = await prisma.user.upsert({
     where: { email: 'john@admin.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'admin_john',
       firstname: 'John',
@@ -55,13 +56,14 @@ async function main() {
       passwordHash: hash,
       role: 'ADMIN',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=john',
     },
   });
 
   const alice = await prisma.user.upsert({
     where: { email: 'alice@partner.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'partner_alice',
       firstname: 'Alice',
@@ -70,13 +72,14 @@ async function main() {
       passwordHash: hash,
       role: 'PARTNER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice',
     },
   });
 
   const bob = await prisma.user.upsert({
     where: { email: 'bob@partner.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'partner_bob',
       firstname: 'Bob',
@@ -85,13 +88,14 @@ async function main() {
       passwordHash: hash,
       role: 'PARTNER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob',
     },
   });
 
   const charlie = await prisma.user.upsert({
     where: { email: 'charlie@player.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'player_charlie',
       firstname: 'Charlie',
@@ -100,13 +104,14 @@ async function main() {
       passwordHash: hash,
       role: 'PLAYER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=charlie',
     },
   });
 
   const diana = await prisma.user.upsert({
     where: { email: 'diana@player.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'player_diana',
       firstname: 'Diana',
@@ -115,13 +120,14 @@ async function main() {
       passwordHash: hash,
       role: 'PLAYER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=diana',
     },
   });
 
   const john = await prisma.user.upsert({
     where: { email: 'john.doe@gmail.com' },
-    update: {},
+    update: { emailVerified: true },
     create: {
       username: 'Johnny',
       firstname: 'John',
@@ -130,6 +136,7 @@ async function main() {
       passwordHash: hash,
       role: 'PLAYER',
       country: 'FR',
+      emailVerified: true,
       profilePicture: 'https://thispersondoesnotexist.com/',
     },
   });
@@ -151,7 +158,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'PARIS2025-PROMO10',
-      coverImage: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800',
       refUser: alice.id,
     },
   });
@@ -172,7 +180,8 @@ async function main() {
       status: 'DRAFT',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'LYON2025-PROMO15',
-      coverImage: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
       refUser: bob.id,
     },
   });
@@ -194,7 +203,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'FREE_ITEM',
       rewardValue: 'Dégustation offerte au Château Margaux',
-      coverImage: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800',
       refUser: alice.id,
     },
   });
@@ -216,7 +226,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'BADGE',
       rewardValue: 'Badge Explorateur Alsacien',
-      coverImage: 'https://images.unsplash.com/photo-1543512214-318c7553f230?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1543512214-318c7553f230?w=800',
       refUser: bob.id,
     },
   });
@@ -237,7 +248,8 @@ async function main() {
       status: 'FINISHED',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'MER2025-PROMO20',
-      coverImage: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=800',
       refUser: alice.id,
     },
   });
@@ -258,7 +270,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'FREE_ITEM',
       rewardValue: 'Visite guidée nocturne exclusive',
-      coverImage: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1548013146-72479768bada?w=800',
       refUser: bob.id,
     },
   });
@@ -279,7 +292,8 @@ async function main() {
       status: 'DRAFT',
       rewardType: 'BADGE',
       rewardValue: 'Badge Astronaute Toulousain',
-      coverImage: 'https://images.unsplash.com/photo-1574068468668-a05a11f871da?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1574068468668-a05a11f871da?w=800',
       refUser: alice.id,
     },
   });
@@ -300,7 +314,8 @@ async function main() {
       status: 'ACTIVE',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'COTE2025-PROMO10',
-      coverImage: 'https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=800',
       refUser: bob.id,
     },
   });
@@ -321,7 +336,8 @@ async function main() {
       status: 'FINISHED',
       rewardType: 'FREE_ITEM',
       rewardValue: 'Accès privatif aux appartements du roi',
-      coverImage: 'https://images.unsplash.com/photo-1591289009723-aef0a1a8a211?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1591289009723-aef0a1a8a211?w=800',
       refUser: alice.id,
     },
   });
@@ -342,7 +358,8 @@ async function main() {
       status: 'DRAFT',
       rewardType: 'BADGE',
       rewardValue: 'Badge Mécanicien des Machines',
-      coverImage: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=800',
       refUser: bob.id,
     },
   });
@@ -356,18 +373,42 @@ async function main() {
       title: 'Le Plaisir du Valibout',
       shortDescription: 'Une expérience AR en trois actes gastronomiques.',
       description:
-        'Partez à la découverte du Valibout en trois étapes : l\'entrée, le plat et le dessert. Une chasse en réalité augmentée pour les fins gourmets explorateurs.',
+        "Partez à la découverte du Valibout en trois étapes : l'entrée, le plat et le dessert. Une chasse en réalité augmentée pour les fins gourmets explorateurs.",
       startDate: new Date('2026-04-01'),
       endDate: new Date('2026-12-31'),
       radius: 500,
       status: 'ACTIVE',
       rewardType: 'BADGE',
       rewardValue: 'Badge Gourmet du Valibout',
-      coverImage: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800',
+      coverImage:
+        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800',
       refUser: alice.id,
     },
   });
   await setHuntLocationCenter(huntValibout.id, ...HUNT_COORDS[11]!);
+
+  // 12 — Sup De Vinci (Alice, ACTIVE)
+  const huntSupDeVinci = await prisma.hunt.upsert({
+    where: { id: 12 },
+    update: {},
+    create: {
+      title: 'Portes ouvertes de Sup De Vinci',
+      shortDescription:
+        "Découvrez les formations et labs de l'école en explorant le campus.",
+      description:
+        "Partez à la découverte du campus parisien de Sup De Vinci, école d'informatique et du numérique. Résolvez des énigmes liées au développement, à l'IA et au cybersécurité pour décrocher votre badge Futur Étudiant.",
+      startDate: new Date('2026-05-15'),
+      endDate: new Date('2026-05-15'),
+      radius: 300,
+      status: 'ACTIVE',
+      rewardType: 'BADGE',
+      rewardValue: 'Badge Futur Étudiant Sup De Vinci',
+      coverImage:
+        'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntSupDeVinci.id, ...HUNT_COORDS[12]!);
 
   // ── Steps ──────────────────────────────────────────────────────────────────
 
@@ -375,10 +416,6 @@ async function main() {
     orderNumber: number;
     title: string;
     radius: number;
-    actionType: 'GPS' | 'QR_CODE' | 'AR' | 'RIDDLE';
-    arMarkerUrl?: string;
-    arContent?: string;
-    qrCodeValue?: string;
     points: number;
     refHunt: number;
     lat: number;
@@ -393,7 +430,6 @@ async function main() {
       lat: 48.8584,
       lon: 2.2945,
       radius: 200,
-      actionType: 'GPS',
       points: 100,
       refHunt: huntParis.id,
     },
@@ -403,10 +439,8 @@ async function main() {
       lat: 48.8606,
       lon: 2.3376,
       radius: 100,
-      actionType: 'QR_CODE',
       points: 150,
       refHunt: huntParis.id,
-      qrCodeValue: 'louvre-qr-2025',
     },
     {
       orderNumber: 3,
@@ -414,10 +448,8 @@ async function main() {
       lat: 48.853,
       lon: 2.3499,
       radius: 50,
-      actionType: 'AR',
       points: 200,
       refHunt: huntParis.id,
-      arMarkerUrl: 'https://assets.example.com/markers/notre-dame.png',
     },
     {
       orderNumber: 4,
@@ -425,7 +457,6 @@ async function main() {
       lat: 48.8867,
       lon: 2.3431,
       radius: 30,
-      actionType: 'RIDDLE',
       points: 175,
       refHunt: huntParis.id,
     },
@@ -437,10 +468,8 @@ async function main() {
       lat: 45.76,
       lon: 4.827,
       radius: 30,
-      actionType: 'QR_CODE',
       points: 120,
       refHunt: huntLyon.id,
-      qrCodeValue: 'vieux-lyon-qr-2025',
     },
     {
       orderNumber: 2,
@@ -448,10 +477,8 @@ async function main() {
       lat: 45.7623,
       lon: 4.822,
       radius: 50,
-      actionType: 'AR',
       points: 180,
       refHunt: huntLyon.id,
-      arMarkerUrl: 'https://assets.example.com/markers/fourviere.png',
     },
     {
       orderNumber: 3,
@@ -459,10 +486,8 @@ async function main() {
       lat: 45.7578,
       lon: 4.832,
       radius: 80,
-      actionType: 'QR_CODE',
       points: 140,
       refHunt: huntLyon.id,
-      qrCodeValue: 'bellecour-qr-2025',
     },
 
     // Bordeaux
@@ -472,7 +497,6 @@ async function main() {
       lat: 44.8412,
       lon: -0.5697,
       radius: 100,
-      actionType: 'GPS',
       points: 80,
       refHunt: huntBordeaux.id,
     },
@@ -482,10 +506,8 @@ async function main() {
       lat: 44.8378,
       lon: -0.578,
       radius: 50,
-      actionType: 'QR_CODE',
       points: 120,
       refHunt: huntBordeaux.id,
-      qrCodeValue: 'saint-andre-qr-2025',
     },
 
     // Strasbourg
@@ -495,10 +517,8 @@ async function main() {
       lat: 48.5818,
       lon: 7.7507,
       radius: 60,
-      actionType: 'AR',
       points: 150,
       refHunt: huntStrasbourg.id,
-      arMarkerUrl: 'https://assets.example.com/markers/strasbourg.png',
     },
     {
       orderNumber: 2,
@@ -506,10 +526,8 @@ async function main() {
       lat: 48.579,
       lon: 7.7385,
       radius: 40,
-      actionType: 'QR_CODE',
       points: 100,
       refHunt: huntStrasbourg.id,
-      qrCodeValue: 'petite-france-qr-2025',
     },
 
     // Marseille
@@ -519,7 +537,6 @@ async function main() {
       lat: 43.2951,
       lon: 5.3745,
       radius: 150,
-      actionType: 'GPS',
       points: 90,
       refHunt: huntMarseille.id,
     },
@@ -529,7 +546,6 @@ async function main() {
       lat: 43.2141,
       lon: 5.4264,
       radius: 80,
-      actionType: 'RIDDLE',
       points: 200,
       refHunt: huntMarseille.id,
     },
@@ -539,10 +555,8 @@ async function main() {
       lat: 43.2845,
       lon: 5.3708,
       radius: 60,
-      actionType: 'AR',
       points: 180,
       refHunt: huntMarseille.id,
-      arMarkerUrl: 'https://assets.example.com/markers/bonne-mere.png',
     },
 
     // Mont-Saint-Michel
@@ -552,10 +566,8 @@ async function main() {
       lat: 48.636,
       lon: -1.5115,
       radius: 30,
-      actionType: 'QR_CODE',
       points: 120,
       refHunt: huntMSM.id,
-      qrCodeValue: 'msm-porte-qr-2025',
     },
     {
       orderNumber: 2,
@@ -563,10 +575,8 @@ async function main() {
       lat: 48.6361,
       lon: -1.5107,
       radius: 25,
-      actionType: 'AR',
       points: 250,
       refHunt: huntMSM.id,
-      arMarkerUrl: 'https://assets.example.com/markers/abbaye.png',
     },
     {
       orderNumber: 3,
@@ -574,7 +584,6 @@ async function main() {
       lat: 48.6359,
       lon: -1.512,
       radius: 40,
-      actionType: 'RIDDLE',
       points: 300,
       refHunt: huntMSM.id,
     },
@@ -586,7 +595,6 @@ async function main() {
       lat: 43.6047,
       lon: 1.4442,
       radius: 60,
-      actionType: 'GPS',
       points: 100,
       refHunt: huntToulouse.id,
     },
@@ -596,10 +604,8 @@ async function main() {
       lat: 43.5852,
       lon: 1.4894,
       radius: 80,
-      actionType: 'QR_CODE',
       points: 150,
       refHunt: huntToulouse.id,
-      qrCodeValue: 'cite-espace-qr-2025',
     },
 
     // Nice
@@ -609,7 +615,6 @@ async function main() {
       lat: 43.695,
       lon: 7.265,
       radius: 100,
-      actionType: 'GPS',
       points: 80,
       refHunt: huntNice.id,
     },
@@ -619,10 +624,8 @@ async function main() {
       lat: 43.6963,
       lon: 7.2769,
       radius: 50,
-      actionType: 'QR_CODE',
       points: 110,
       refHunt: huntNice.id,
-      qrCodeValue: 'vieux-nice-qr-2025',
     },
     {
       orderNumber: 3,
@@ -630,7 +633,6 @@ async function main() {
       lat: 43.6969,
       lon: 7.2821,
       radius: 70,
-      actionType: 'RIDDLE',
       points: 160,
       refHunt: huntNice.id,
     },
@@ -642,10 +644,8 @@ async function main() {
       lat: 48.8048,
       lon: 2.1203,
       radius: 30,
-      actionType: 'AR',
       points: 200,
       refHunt: huntVersailles.id,
-      arMarkerUrl: 'https://assets.example.com/markers/versailles.png',
     },
     {
       orderNumber: 2,
@@ -653,10 +653,8 @@ async function main() {
       lat: 48.804,
       lon: 2.114,
       radius: 60,
-      actionType: 'QR_CODE',
       points: 150,
       refHunt: huntVersailles.id,
-      qrCodeValue: 'jardins-versailles-qr-2025',
     },
     {
       orderNumber: 3,
@@ -664,7 +662,6 @@ async function main() {
       lat: 48.809,
       lon: 2.104,
       radius: 50,
-      actionType: 'RIDDLE',
       points: 250,
       refHunt: huntVersailles.id,
     },
@@ -676,29 +673,59 @@ async function main() {
       lat: 48.819807,
       lon: 1.950907,
       radius: 30,
-      actionType: 'AR',
       points: 100,
       refHunt: huntValibout.id,
     },
     {
       orderNumber: 2,
       title: 'Le plat',
-      lat: 48.820215,
-      lon: 1.951237,
+      // lat: 48.820215,
+      // lon: 1.951237,
+      lat: 48.819807, // IDEM QUE L'ENTREE
+      lon: 1.950907, // IDEM QUE L'ENTREE
       radius: 30,
-      actionType: 'AR',
       points: 150,
       refHunt: huntValibout.id,
     },
     {
       orderNumber: 3,
       title: 'Le dessert',
-      lat: 48.819153,
-      lon: 1.950267,
+      // lat: 48.819153,
+      // lon: 1.950267,
+      lat: 48.819807, // IDEM QUE L'ENTREE
+      lon: 1.950907, // IDEM QUE L'ENTREE
       radius: 30,
-      actionType: 'AR',
       points: 200,
       refHunt: huntValibout.id,
+    },
+
+    // Sup De Vinci
+    {
+      orderNumber: 1,
+      title: 'Accueil & Inscription',
+      lat: 48.893536,
+      lon: 2.238728,
+      radius: 30,
+      points: 100,
+      refHunt: huntSupDeVinci.id,
+    },
+    {
+      orderNumber: 2,
+      title: 'Atelier Développement Web',
+      lat: 48.893494,
+      lon: 2.238763,
+      radius: 25,
+      points: 150,
+      refHunt: huntSupDeVinci.id,
+    },
+    {
+      orderNumber: 3,
+      title: 'Lab Intelligence Artificielle',
+      lat: 48.893363,
+      lon: 2.238465,
+      radius: 25,
+      points: 200,
+      refHunt: huntSupDeVinci.id,
     },
 
     // Nantes
@@ -708,7 +735,6 @@ async function main() {
       lat: 47.2082,
       lon: -1.5649,
       radius: 80,
-      actionType: 'GPS',
       points: 100,
       refHunt: huntNantes.id,
     },
@@ -718,10 +744,8 @@ async function main() {
       lat: 47.2078,
       lon: -1.5641,
       radius: 50,
-      actionType: 'QR_CODE',
       points: 130,
       refHunt: huntNantes.id,
-      qrCodeValue: 'carrousel-nantes-qr-2025',
     },
     {
       orderNumber: 3,
@@ -729,7 +753,6 @@ async function main() {
       lat: 47.216,
       lon: -1.5497,
       radius: 60,
-      actionType: 'RIDDLE',
       points: 175,
       refHunt: huntNantes.id,
     },
@@ -742,10 +765,6 @@ async function main() {
       orderNumber: s.orderNumber,
       title: s.title,
       radius: s.radius,
-      actionType: s.actionType,
-      arMarkerUrl: s.arMarkerUrl ?? null,
-      arContent: s.arContent ?? null,
-      qrCodeValue: s.qrCodeValue ?? null,
       points: s.points,
       refHunt: s.refHunt,
     })),
@@ -763,96 +782,616 @@ async function main() {
 
   // ── Clues ──────────────────────────────────────────────────────────────────
 
-  // Récupère quelques étapes pour y attacher des indices
-  const [stepParis1, stepParis4, stepLyon2, stepMSM3, stepVersailles3] =
-    await Promise.all([
-      prisma.step.findFirst({
-        where: { refHunt: huntParis.id, orderNumber: 1 },
-      }),
-      prisma.step.findFirst({
-        where: { refHunt: huntParis.id, orderNumber: 4 },
-      }),
-      prisma.step.findFirst({
-        where: { refHunt: huntLyon.id, orderNumber: 2 },
-      }),
-      prisma.step.findFirst({ where: { refHunt: huntMSM.id, orderNumber: 3 } }),
-      prisma.step.findFirst({
-        where: { refHunt: huntVersailles.id, orderNumber: 3 },
-      }),
-    ]);
+  type ClueSeed = { orderNumber: number; message: string; penaltyCost: number };
+  type StepClueSeed = { refHunt: number; stepOrder: number; clues: ClueSeed[] };
 
-  const clueData = [
-    ...(stepParis1
-      ? [
-          {
-            refStep: stepParis1.id,
-            orderNumber: 1,
-            message: 'Regarde vers le sud depuis le Champ-de-Mars.',
-            penaltyCost: 10,
-          },
-          {
-            refStep: stepParis1.id,
-            orderNumber: 2,
-            message: 'La dame de fer a les pieds dans le gazon.',
-            penaltyCost: 20,
-          },
-        ]
-      : []),
-    ...(stepParis4
-      ? [
-          {
-            refStep: stepParis4.id,
-            orderNumber: 1,
-            message: "Compte les marches blanches jusqu'au sommet.",
-            penaltyCost: 15,
-          },
-        ]
-      : []),
-    ...(stepLyon2
-      ? [
-          {
-            refStep: stepLyon2.id,
-            orderNumber: 1,
-            message: 'La basilique brille en or sur la colline.',
-            penaltyCost: 10,
-          },
-          {
-            refStep: stepLyon2.id,
-            orderNumber: 2,
-            message: 'Cherche la mosaïque côté est du parvis.',
-            penaltyCost: 25,
-          },
-        ]
-      : []),
-    ...(stepMSM3
-      ? [
-          {
-            refStep: stepMSM3.id,
-            orderNumber: 1,
-            message: 'Les marées montent deux fois par jour ici.',
-            penaltyCost: 20,
-          },
-          {
-            refStep: stepMSM3.id,
-            orderNumber: 2,
-            message: 'La réponse est gravée sur le rempart nord.',
-            penaltyCost: 40,
-          },
-        ]
-      : []),
-    ...(stepVersailles3
-      ? [
-          {
-            refStep: stepVersailles3.id,
-            orderNumber: 1,
-            message: 'Louis XIV aimait le rose dans ses appartements privés.',
-            penaltyCost: 15,
-          },
-        ]
-      : []),
+  const stepClueSeeds: StepClueSeed[] = [
+    // Paris
+    {
+      refHunt: huntParis.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Regarde vers le sud depuis le Champ-de-Mars.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'La dame de fer a les pieds dans le gazon.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntParis.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Le plus grand musée du monde borde ce jardin royal.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "La pyramide de verre marque l'entrée principale.",
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntParis.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "Elle se dresse sur l'île de la Cité, au cœur de la Seine.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Ses deux tours gothiques veillent sur Paris depuis 850 ans.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntParis.id,
+      stepOrder: 4,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "Compte les marches blanches jusqu'au sommet.",
+          penaltyCost: 15,
+        },
+        {
+          orderNumber: 2,
+          message: 'Son dôme blanc domine la butte depuis Montmartre.',
+          penaltyCost: 25,
+        },
+      ],
+    },
+
+    // Lyon
+    {
+      refHunt: huntLyon.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Les traboules percent les immeubles Renaissance de part en part.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Ce quartier médiéval borde la rive droite de la Saône.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntLyon.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'La basilique brille en or sur la colline.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Cherche la mosaïque côté est du parvis.',
+          penaltyCost: 25,
+        },
+      ],
+    },
+    {
+      refHunt: huntLyon.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "La plus grande place piétonne de France accueille la statue d'un roi.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Louis XIV trône au centre, regarde vers le nord.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+
+    // Bordeaux
+    {
+      refHunt: huntBordeaux.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Son reflet se lit dans le miroir d'eau, le plus grand du monde.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Trois pavillons symétriques face à la Garonne.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntBordeaux.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "Son clocher isolé s'appelle la tour Pey-Berland.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Napoléon y a épousé Marie-Louise par procuration.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+
+    // Strasbourg
+    {
+      refHunt: huntStrasbourg.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Sa flèche unique culmine à 142 mètres, dominant toute l'Alsace.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "L'horloge astronomique sonne à 12h30 précises.",
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntStrasbourg.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Les canaux encerclent ce quartier de maisons à colombages colorées.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Les tanneurs séchaient leurs peaux aux fenêtres de ces maisons.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+
+    // Marseille
+    {
+      refHunt: huntMarseille.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Le ferry-boat traverse ce port depuis 1880.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Les pointus sont ces barques traditionnelles peintes aux couleurs vives.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntMarseille.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "L'eau turquoise est accessible uniquement à pied ou en bateau.",
+          penaltyCost: 15,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Les falaises calcaires plongent directement dans la Méditerranée.',
+          penaltyCost: 25,
+        },
+      ],
+    },
+    {
+      refHunt: huntMarseille.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'La Bonne Mère veille sur tous les marins depuis son promontoire.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Son intérieur est entièrement revêtu de marbres colorés.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+
+    // Mont-Saint-Michel
+    {
+      refHunt: huntMSM.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "La digue-route permet d'accéder au rocher à marée basse.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "La Grande Rue mène directement jusqu'à l'abbaye.",
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntMSM.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Saint Michel terrasse le dragon au sommet de la flèche.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Le cloître suspend ses colonnes entre ciel et mer.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntMSM.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Les marées montent deux fois par jour ici.',
+          penaltyCost: 20,
+        },
+        {
+          orderNumber: 2,
+          message: 'La réponse est gravée sur le rempart nord.',
+          penaltyCost: 40,
+        },
+      ],
+    },
+
+    // Toulouse
+    {
+      refHunt: huntToulouse.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Sa façade rose en brique chauffe au soleil du Midi.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Les capitouls gouvernaient la ville depuis ce bâtiment.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntToulouse.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Une réplique de la station spatiale internationale y est exposée.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "Ariane 5 se dresse fièrement à l'entrée du parc.",
+          penaltyCost: 15,
+        },
+      ],
+    },
+
+    // Nice
+    {
+      refHunt: huntNice.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Les galets remplacent le sable sur cette célèbre plage.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Les palmiers longent 7 kilomètres de bord de mer.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntNice.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Les façades baroques ocre et rose colorent les ruelles étroites.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Le marché du Cours Saleya embaume de fleurs et de socca.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntNice.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'La cascade artificielle dévale les falaises au-dessus de la mer.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "Du sommet, le port Lympia s'étend à l'est.",
+          penaltyCost: 20,
+        },
+      ],
+    },
+
+    // Versailles
+    {
+      refHunt: huntVersailles.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Dix-sept miroirs reflètent la lumière venant des jardins.',
+          penaltyCost: 15,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Le traité de 1919 y fut signé, mettant fin à la Grande Guerre.',
+          penaltyCost: 25,
+        },
+      ],
+    },
+    {
+      refHunt: huntVersailles.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Le Nôtre a dessiné ces perspectives à la règle et au compas.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: "Le Grand Canal s'étend sur 1 500 mètres vers l'ouest.",
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntVersailles.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Louis XIV aimait le rose dans ses appartements privés.',
+          penaltyCost: 15,
+        },
+        {
+          orderNumber: 2,
+          message: 'Ce petit palais fut offert à Marie de Maintenon.',
+          penaltyCost: 25,
+        },
+      ],
+    },
+
+    // Valibout
+    {
+      refHunt: huntValibout.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message: "L'amuse-bouche se cache près du portail en bois.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Cherche la table dressée sous le grand chêne.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntValibout.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Le plat de résistance attend à l'ombre du bâtiment principal.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Regarde sous la cloche argentée posée sur la pierre.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntValibout.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Le dessert se déguste au bord du petit étang.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'Le marqueur AR est collé sous le banc en fer forgé.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+
+    // Sup De Vinci
+    {
+      refHunt: huntSupDeVinci.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Le premier contact avec l'école se fait derrière la grande porte vitrée à l'entrée du bâtiment.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Cherche le panneau "Bienvenue" portant le logo de l\'école — il indique le bureau des inscriptions.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntSupDeVinci.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Dans cette salle, les étudiants apprennent à bâtir des sites web. Cherche la machine affichant un éditeur de code.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Le tableau blanc mentionne HTML, CSS et JavaScript — tu es au bon endroit.',
+          penaltyCost: 20,
+        },
+      ],
+    },
+    {
+      refHunt: huntSupDeVinci.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'Dans ce laboratoire, les machines entraînent des modèles de machine learning. Repère les GPUs sous les bureaux.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            "Le poster sur le mur montre un réseau de neurones artificiels — l'indice final est collé derrière lui.",
+          penaltyCost: 25,
+        },
+      ],
+    },
+
+    // Nantes
+    {
+      refHunt: huntNantes.id,
+      stepOrder: 1,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            'La grande créature mécanique souffle de la vapeur toutes les heures.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            "Son billet se prend à la billetterie des Machines de l'île.",
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntNantes.id,
+      stepOrder: 2,
+      clues: [
+        {
+          orderNumber: 1,
+          message: 'Trois niveaux de créatures marines tournent sur eux-mêmes.',
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message: 'La pieuvre géante occupe le niveau supérieur.',
+          penaltyCost: 15,
+        },
+      ],
+    },
+    {
+      refHunt: huntNantes.id,
+      stepOrder: 3,
+      clues: [
+        {
+          orderNumber: 1,
+          message:
+            "Les ducs de Bretagne y résidaient avant l'union à la France.",
+          penaltyCost: 10,
+        },
+        {
+          orderNumber: 2,
+          message:
+            'Le puits de la cathédrale gothique se trouve dans la cour intérieure.',
+          penaltyCost: 20,
+        },
+      ],
+    },
   ];
 
-  await prisma.clue.createMany({ skipDuplicates: true, data: clueData });
+  for (const { refHunt, stepOrder, clues } of stepClueSeeds) {
+    const step = await prisma.step.findFirst({
+      where: { refHunt, orderNumber: stepOrder },
+    });
+    if (!step) continue;
+    await prisma.clue.createMany({
+      skipDuplicates: true,
+      data: clues.map((c) => ({ ...c, refStep: step.id })),
+    });
+  }
 
   // ── Participations ─────────────────────────────────────────────────────────
 

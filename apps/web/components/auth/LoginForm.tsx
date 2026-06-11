@@ -42,6 +42,12 @@ export default function LoginForm() {
                         className="w-full bg-gray-900 text-white text-sm font-semibold py-3 rounded-xl hover:bg-gray-800 transition-colors disabled:opacity-60 mt-2">
                     {isPending ? 'Connexion...' : 'Se connecter'}
                 </button>
+                <div className={" text-sm flex justify-between items-center"}>
+                    <p>Vous n'avez pas de compte ?</p>
+                    <Link href="/register" className="text-sm text-foreground underline hover:text-muted-foreground">
+                        inscrivez-vous
+                    </Link>
+                </div>
             </form>
         </div>
     );

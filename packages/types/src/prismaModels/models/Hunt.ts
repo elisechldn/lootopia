@@ -263,7 +263,7 @@ export type HuntGroupByOutputType = {
   _max: HuntMaxAggregateOutputType | null
 }
 
-type GetHuntGroupByPayload<T extends HuntGroupByArgs> = Prisma.PrismaPromise<
+export type GetHuntGroupByPayload<T extends HuntGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<HuntGroupByOutputType, T['by']> &
       {
@@ -1775,6 +1775,11 @@ export type HuntFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Hunts.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Hunts.
+   */
   distinct?: Prisma.HuntScalarFieldEnum | Prisma.HuntScalarFieldEnum[]
 }
 
