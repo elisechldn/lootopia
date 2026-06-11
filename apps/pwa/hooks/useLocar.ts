@@ -5,6 +5,7 @@ import * as LocAR from 'locar'
 import type { ARRefs } from './arRefs'
 import { CustomLocationBased } from '@/components/three/CustomLocationBased'
 import { useARStore } from '@/store/arStore'
+import { useSettingsStore } from '@/store/settingsStore'
 
 type UseLocarOptions = {
   refs: React.MutableRefObject<ARRefs>
@@ -23,7 +24,8 @@ export function useLocar({ refs, onError }: UseLocarOptions): UseLocarReturn {
     const { scene, camera, renderer } = refs.current
     if (!scene || !camera || !renderer || signal.aborted) return
 
-    const locar = new CustomLocationBased(scene, camera)
+    const { gpsMinDistance, gpsMinAccuracy } = useSettingsStore.getState()
+    const locar = new CustomLocationBased(scene, camera, { gpsMinDistance, gpsMinAccuracy })
     const clickHandler = new LocAR.ClickHandler(renderer)
 
     refs.current.locar = locar

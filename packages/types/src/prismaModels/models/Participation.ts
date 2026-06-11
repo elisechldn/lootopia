@@ -232,7 +232,7 @@ export type ParticipationGroupByOutputType = {
   _max: ParticipationMaxAggregateOutputType | null
 }
 
-type GetParticipationGroupByPayload<T extends ParticipationGroupByArgs> = Prisma.PrismaPromise<
+export type GetParticipationGroupByPayload<T extends ParticipationGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ParticipationGroupByOutputType, T['by']> &
       {
@@ -1602,6 +1602,11 @@ export type ParticipationFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` Participations.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Participations.
+   */
   distinct?: Prisma.ParticipationScalarFieldEnum | Prisma.ParticipationScalarFieldEnum[]
 }
 

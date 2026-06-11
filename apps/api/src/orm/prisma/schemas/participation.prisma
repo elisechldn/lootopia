@@ -1,21 +1,22 @@
 model Participation {
   id          Int                 @id @default(autoincrement())
-  startTime   DateTime            @default(now())
-  endTime     DateTime?
-  totalPoints Int                 @default(0)
+  startTime   DateTime            @default(now()) @map("start_time")
+  endTime     DateTime?           @map("end_time")
+  totalPoints Int                 @default(0) @map("total_points")
   status      ParticipationStatus @default(IN_PROGRESS)
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
 
-  refUser Int
+  refUser Int  @map("ref_user")
   user    User @relation(fields: [refUser], references: [id], onDelete: Cascade)
 
-  refHunt Int
+  refHunt Int  @map("ref_hunt")
   hunt    Hunt @relation(fields: [refHunt], references: [id], onDelete: Cascade)
 
   progresses Progress[]
 
   @@unique([refUser, refHunt])
+  @@map("participations")
 }
 
 enum ParticipationStatus {

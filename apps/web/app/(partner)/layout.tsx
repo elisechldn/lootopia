@@ -1,20 +1,37 @@
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/auth';
 import PartnerSidebar from "@/components/partner/PartnerSidebar";
 import AuthProvider from "@/components/partner/AuthProvider";
 import ThemeWrapper from "@/components/partner/ThemeWrapper";
 
-async function getSession() {
+const API_URL = process.env.API_URL ?? 'http://localhost:8000';
+
+async function getSessionWithProfile() {
+    const session = await getSession();
+    if (!session) return null;
+    if (session.role !== 'PARTNER' && session.role !== 'ADMIN') return null;
+
     const token = (await cookies()).get('auth_token')?.value;
-    if (!token) return null;
     try {
-        const parts = token.split('.');
-        if (parts.length < 2 || !parts[1]) return null;
-        return JSON.parse(atob(parts[1]));
-    } catch { return null; }
+        const res = await fetch(`${API_URL}/users/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: 'no-store',
+        });
+        if (res.ok) {
+            const json = await res.json();
+            const profile = json.data ?? null;
+            return { ...session, profilePicture: profile?.profilePicture ?? null };
+        }
+    } catch {
+
+    }
+    return session;
 }
 
 export default async function PartnerLayout({ children }: { children: React.ReactNode }) {
-    const session = await getSession();
+    const session = await getSessionWithProfile();
+    if (!session) redirect('/login');
     return (
         <AuthProvider user={session}>
             <ThemeWrapper>

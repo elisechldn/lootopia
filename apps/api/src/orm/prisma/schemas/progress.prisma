@@ -1,21 +1,22 @@
 model Progress {
   id           Int            @id @default(autoincrement())
   statut       ProgressStatus @default(IN_PROGRESS)
-  totalPoints  Int            @default(0)
-  startedAt    DateTime       @default(now())
-  completedAt  DateTime?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  totalPoints  Int            @default(0) @map("total_points")
+  startedAt    DateTime       @default(now()) @map("started_at")
+  completedAt  DateTime?      @map("completed_at")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
 
-  refParticipation Int
+  refParticipation Int           @map("ref_participation")
   participation    Participation @relation(fields: [refParticipation], references: [id], onDelete: Cascade)
 
-  refStep Int
+  refStep Int  @map("ref_step")
   step    Step @relation(fields: [refStep], references: [id], onDelete: Cascade)
 
   clueUsages ClueUsage[]
 
   @@unique([refParticipation, refStep])
+  @@map("progresses")
 }
 
 enum ProgressStatus {

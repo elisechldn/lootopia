@@ -10,6 +10,7 @@ interface User {
     firstname?: string;
     lastname?: string;
     role: string;
+    profilePicture?: string | null;
 }
 
 interface Props {
@@ -60,6 +61,20 @@ const navItems = [
     },
 ];
 
+// Réservé aux ADMIN : télémétrie globale de la plateforme.
+const adminNavItems = [
+    {
+        label: "Stats Générales",
+        href: "/admin/stats",
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+        ),
+    },
+];
+
 export default function PartnerSidebar({ user: initialUser }: Props) {
     const pathname = usePathname();
     const storeUser = useAuthStore((s) => s.user);
@@ -86,7 +101,7 @@ export default function PartnerSidebar({ user: initialUser }: Props) {
 
             {/* Nav */}
             <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
-                {navItems.map((item) => {
+                {[...navItems, ...(user?.role === "ADMIN" ? adminNavItems : [])].map((item) => {
                     const isActive = pathname === item.href;
                     return (
                         <Link
@@ -109,11 +124,16 @@ export default function PartnerSidebar({ user: initialUser }: Props) {
             <div className="px-4 py-4 border-t border-border">
                 <Link href="/dashboard/profile" className="flex items-center gap-3 hover:bg-muted/50 rounded-lg p-1 transition-colors">
                     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shrink-0">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-muted-foreground">
-                            <path fillRule="evenodd"
-                                  d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
-                                  clipRule="evenodd"/>
-                        </svg>
+                        {user?.profilePicture ? (
+                            // biome-ignore lint/performance/noImgElement: avatar URL from trusted MinIO bucket
+                            <img src={user.profilePicture} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-muted-foreground">
+                                <path fillRule="evenodd"
+                                      d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
+                                      clipRule="evenodd"/>
+                            </svg>
+                        )}
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground truncate">

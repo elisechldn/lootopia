@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useAuthStore } from "@/lib/stores/auth.store";
 
 interface Props {
-    user: { sub: number; email: string; role: string; firstname?: string; lastname?: string } | null;
+    user: { sub: number; email: string; role: string; firstname?: string; lastname?: string; profilePicture?: string | null } | null;
     children: React.ReactNode;
 }
 

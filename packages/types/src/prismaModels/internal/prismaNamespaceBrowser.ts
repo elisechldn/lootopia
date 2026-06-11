@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  ArItem: 'ArItem',
   ClueUsage: 'ClueUsage',
   Clue: 'Clue',
   Hunt: 'Hunt',
@@ -74,6 +75,19 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const ArItemScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  filepath: 'filepath',
+  hasAnimations: 'hasAnimations',
+  refUser: 'refUser',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ArItemScalarFieldEnum = (typeof ArItemScalarFieldEnum)[keyof typeof ArItemScalarFieldEnum]
 
 
 export const ClueUsageScalarFieldEnum = {
@@ -154,14 +168,14 @@ export const StepScalarFieldEnum = {
   orderNumber: 'orderNumber',
   title: 'title',
   radius: 'radius',
-  actionType: 'actionType',
-  arMarkerUrl: 'arMarkerUrl',
-  arContent: 'arContent',
-  qrCodeValue: 'qrCodeValue',
   points: 'points',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  refHunt: 'refHunt'
+  refHunt: 'refHunt',
+  refArItem: 'refArItem',
+  arMode: 'arMode',
+  markerImageUrl: 'markerImageUrl',
+  markerPatternUrl: 'markerPatternUrl'
 } as const
 
 export type StepScalarFieldEnum = (typeof StepScalarFieldEnum)[keyof typeof StepScalarFieldEnum]
@@ -178,6 +192,11 @@ export const UserScalarFieldEnum = {
   profilePicture: 'profilePicture',
   lastConnection: 'lastConnection',
   country: 'country',
+  resetToken: 'resetToken',
+  resetTokenExpiry: 'resetTokenExpiry',
+  emailVerified: 'emailVerified',
+  emailVerificationToken: 'emailVerificationToken',
+  emailVerificationExpiry: 'emailVerificationExpiry',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

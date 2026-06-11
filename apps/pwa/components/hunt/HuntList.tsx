@@ -22,9 +22,7 @@ function formatDist(meters: number | null): string | null {
     : `${(meters / 1000).toFixed(1)} km`;
 }
 
-function HuntCard({ hunt }: { hunt: NearbyHunt }) {
-  const dist = formatDist(hunt.distance);
-
+export function HuntList({ hunts, ref }: HuntListProps) {
   return (
     <Card key={hunt.id} className="flex align-center">
       <CardHeader>

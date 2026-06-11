@@ -72,7 +72,7 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
         if (!huntToDelete) return;
         setDeleting(true);
         try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hunts/${huntToDelete.id}`, {
+            await fetch(`/api/hunts/${huntToDelete.id}`, {
                 method: "DELETE",
             });
             router.refresh();

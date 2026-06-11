@@ -43,4 +43,7 @@ yarn-error.log*
 *.iws
 *.ipr
 
-certificates
+bmad
+_bmad/
+.claude/
+CLAUDE.md

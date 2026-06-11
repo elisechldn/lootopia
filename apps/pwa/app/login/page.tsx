@@ -62,6 +62,12 @@ export default function LoginPage() {
             />
           </div>
 
+          <div className="flex justify-end">
+            <Link href="/forgot-password" className="text-sm text-primary underline underline-offset-2 active:opacity-70">
+              Mot de passe oublié ?
+            </Link>
+          </div>
+
           {error && (
             <p className="text-sm text-destructive">{error}</p>
           )}
@@ -69,7 +75,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm disabled:opacity-50 transition-opacity"
+            className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm disabled:opacity-50 transition-opacity active:opacity-90"
           >
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
@@ -77,7 +83,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm mt-6">
           Pas encore de compte ?{' '}
-          <Link href="/register" className="text-primary font-medium underline underline-offset-2">
+          <Link href="/register" className="text-primary font-medium underline underline-offset-2 active:opacity-70">
             S&apos;inscrire
           </Link>
         </p>

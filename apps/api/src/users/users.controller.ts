@@ -2,46 +2,79 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
-  Headers,
   Param,
   Patch,
   Post,
   Query,
-  UnauthorizedException,
+  Request,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 import { CreateUserDto, UpdateUserDto } from '@repo/types';
 import { UsersService } from './users.service';
+import { FilesService } from '../storage/files/files.service';
+import { StorageService } from '../storage/storage.service';
+
+const EIGHT_MB = 8 * 1024 * 1024;
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    private readonly filesService: FilesService,
+    private readonly storageService: StorageService,
   ) {}
 
   @Get('me')
-  getMe(@Headers('authorization') authorization: string) {
-    if (!authorization?.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Token manquant ou invalide');
+  @UseGuards(AuthGuard('jwt'))
+  getMe(@Request() req: { user: { sub: number } }) {
+    return this.usersService.findMe(req.user.sub);
+  }
+
+  @Post('me/avatar')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: EIGHT_MB },
+    }),
+  )
+  async uploadAvatar(
+    @Request() req: { user: { sub: number } },
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const userId = req.user.sub;
+    const current = await this.usersService.findOne(userId);
+    if (current.profilePicture) {
+      const oldKey = current.profilePicture.startsWith('http')
+        ? this.storageService.keyFromPublicUrl(current.profilePicture)
+        : current.profilePicture;
+      if (oldKey)
+        await this.storageService.deleteObject(oldKey).catch(() => null);
     }
-    const token = authorization.slice(7);
-    let payload: { sub: number };
-    try {
-      payload = this.jwtService.verify(token);
-    } catch {
-      throw new UnauthorizedException('Token invalide ou expiré');
-    }
-    return this.usersService.findMe(payload.sub);
+    const { key } = await this.filesService.upload(userId, 'avatar', file);
+    await this.usersService.update(userId, { profilePicture: key });
+    return { url: key };
   }
 
   @Post()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
   findAll(@Query('page') page?: string, @Query('pageSize') pageSize?: string) {
     return this.usersService.findAll(
       page ? parseInt(page, 10) : undefined,
@@ -50,17 +83,35 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @UseGuards(AuthGuard('jwt'))
+  update(
+    @Request() req: { user: { sub: number } },
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    if (req.user.sub !== +id) {
+      throw new ForbiddenException(
+        'Vous ne pouvez modifier que votre propre profil',
+      );
+    }
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @UseGuards(AuthGuard('jwt'))
+  remove(@Request() req: { user: { sub: number } }, @Param('id') id: string) {
+    if (req.user.sub !== +id) {
+      throw new ForbiddenException(
+        'Vous ne pouvez supprimer que votre propre compte',
+      );
+    }
     return this.usersService.remove(+id);
   }
 }

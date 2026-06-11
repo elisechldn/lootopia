@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Unbounded, Lato} from "next/font/google";
 import "./globals.css";
+import AuthProvider from "@/components/providers/AuthProvider";
+import ThemeProvider from "@/components/providers/ThemeProvider";
 
 const unbounded = Unbounded({
   subsets: ["latin"],
@@ -16,6 +18,17 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: "Lootopia",
   description: "Application to hunt treasures and win prizes",
+  appleWebApp: {
+    capable: true,
+    title: "Lootopia",
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    apple: [
+      { url: "/logo_192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/logo_512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
@@ -29,6 +42,12 @@ export const viewport: Viewport = {
   // Essentiel pour les smartphones modernes avec des encoches (notches) ou des bords arrondis (comme l'iPhone).
   // Cela permet au contenu de s'étendre sur toute la surface de l'écran, y compris derrière les zones "non-rectangulaires".
   viewportFit: "cover",
+  // Couleur de la barre de statut au premier paint (suit l'OS) — alignée sur --background.
+  // Après hydratation, ThemeColorSync impose la couleur du thème résolu (override manuel inclus).
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({
@@ -37,9 +56,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${lato.variable} ${unbounded.variable} antialiased`}>
-        {children}
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="antialiased">
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

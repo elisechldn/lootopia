@@ -6,7 +6,7 @@
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
-      "env": ["API_URL"]
+      "env": ["API_URL", "MINIO_INTERNAL_URL", "S3_BUCKET"]
     },
     "lint": {
       "dependsOn": ["^lint"]
