@@ -63,7 +63,7 @@ export default function ParticipantsDashboard({ data }: Props) {
         <div className="space-y-4">
 
             {/* Filtres */}
-            <div className="bg-card border border-border rounded-xl px-5 py-4">
+            <div className="retro-card px-5 py-4">
                 <div className="flex items-center gap-3">
                     <div className="relative flex-1 max-w-xs">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
@@ -92,7 +92,7 @@ export default function ParticipantsDashboard({ data }: Props) {
             </div>
 
             {/* Tableau */}
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="retro-card overflow-hidden">
                 <div className="px-5 py-4 border-b border-border flex items-center justify-between">
                     <h2 className="text-sm font-semibold text-foreground">Liste des participants</h2>
                     <span className="text-xs text-muted-foreground/70">{filtered.length} résultat{filtered.length > 1 ? "s" : ""}</span>

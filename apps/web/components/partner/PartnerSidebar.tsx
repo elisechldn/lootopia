@@ -82,7 +82,7 @@ export default function PartnerSidebar({ user: initialUser }: Props) {
     const user = storeUser ?? initialUser;
 
     return (
-        <aside className="w-56 min-h-screen bg-card border-r border-border flex flex-col">
+        <aside className="w-56 min-h-screen border-r border-border flex flex-col bg-sidebar">
             {/* Brand */}
             <div className="px-5 py-5 border-b border-border">
                 <div className="flex items-center gap-2">
@@ -93,8 +93,8 @@ export default function PartnerSidebar({ user: initialUser }: Props) {
                         </svg>
                     </div>
                     <div>
-                        <p className="text-sm font-bold text-foreground leading-none">Chasse au Trésor</p>
-                        <p className="text-xs text-muted-foreground/70 mt-0.5">Portail des partenaires</p>
+                        <p className="text-sm font-bold text-muted leading-none">Chasse au Trésor</p>
+                        <p className="text-xs text-sidebar-foreground mt-0.5">Portail des partenaires</p>
                     </div>
                 </div>
             </div>
@@ -109,8 +109,8 @@ export default function PartnerSidebar({ user: initialUser }: Props) {
                             href={item.href}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                                 isActive
-                                    ? "bg-muted text-foreground"
-                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                    ? "bg-sidebar-primary text-sidebar-primary-foreground border-border"
+                                    : "text-sidebar-foreground hover:text-foreground hover:bg-muted/50"
                             }`}
                         >
                             {item.icon}
@@ -136,10 +136,10 @@ export default function PartnerSidebar({ user: initialUser }: Props) {
                         )}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">
+                        <p className="text-sm font-medium text-muted truncate">
                             {user ? `${user.firstname ?? ''} ${user.lastname ?? ''}`.trim() || user.email : 'Partenaire'}
                         </p>
-                        <p className="text-xs text-muted-foreground/70 truncate">
+                        <p className="text-xs text-sidebar-foreground truncate">
                             {user?.email ?? ''}
                         </p>
                     </div>

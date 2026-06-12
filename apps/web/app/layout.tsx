@@ -5,28 +5,29 @@ import { cn } from "@/lib/utils";
 
 // Texte courant (Slab)
 const bitter = Bitter({
-  subsets: ['latin'],
-  variable: '--font-body',
-  weight: ['400', '500', '600', '700']
+  subsets: ["latin"],
+  variable: "--font-body",
+  weight: ["400", "500", "600", "700"],
 });
 
 //"Machine à écrire" pour les titres et le logo
 const specialElite = Special_Elite({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-stamp'
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-stamp",
 });
 
 //Police manuscrite pour les post-it et détails de jeu
 const caveat = Caveat({
-  subsets: ['latin'],
-  variable: '--font-hand',
-  weight: ['600', '700']
+  subsets: ["latin"],
+  variable: "--font-hand",
+  weight: ["600", "700"],
 });
 
 export const metadata: Metadata = {
-    title: "Lootopia",
-    description: "La solution de gestion parcours interactifs en réalité augmentée",
+  title: "Lootopia",
+  description:
+    "La solution de gestion parcours interactifs en réalité augmentée",
 };
 
 export default function RootLayout({
@@ -55,13 +56,20 @@ export default function RootLayout({
                                 } catch(e) {}
                             })();
                         `,
-                }}
-            />
-        </head>
-        <body className={`${bitter.variable} font-sans antialiased`}>
+          }}
+        />
+      </head>
+      <body
+        className={cn(
+          bitter.variable,
+          specialElite.variable,
+          caveat.variable,
+          "font-sans antialiased",
+        )}
+      >
         {children}
         {modal}
-        </body>
-        </html>
-    );
+      </body>
+    </html>
+  );
 }

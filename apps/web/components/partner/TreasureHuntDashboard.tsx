@@ -39,7 +39,7 @@ function StatusBadge({ status }: { status: Hunt["status"] }) {
 
 function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
     return (
-        <div className="bg-card border border-border rounded-xl px-5 py-4 flex items-center justify-between">
+        <div className="tilt-pin retro-badge bg-card rounded-xl px-5 py-4 flex items-center justify-between">
             <div>
                 <p className="text-xs text-muted-foreground mb-1">{label}</p>
                 <p className="text-2xl font-bold text-foreground">{value.toLocaleString()}</p>
@@ -152,7 +152,7 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
             </div>
 
             {/* Filters */}
-            <div className="bg-card border border-border rounded-xl px-5 py-4 mb-4">
+            <div className="retro-card px-5 py-4 mb-4">
                 <div className="flex items-center gap-3">
                     <div className="relative flex-1 max-w-xs">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
@@ -181,7 +181,7 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
             </div>
 
             {/* Table */}
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="retro-card border-wood-frame overflow-hidden">
                 <div className="px-5 py-4 border-b border-border">
                     <h2 className="text-sm font-semibold text-foreground">Liste des parcours</h2>
                 </div>
