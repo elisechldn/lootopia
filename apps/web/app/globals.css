@@ -1,7 +1,10 @@
 @import "tailwindcss";
+@source "./**/*.{ts,tsx}";
+@source "../components/**/*.{ts,tsx}";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* ... tout le reste inchangé */
 @custom-variant dark (&:is(.dark *));
 
 html,
@@ -115,7 +118,7 @@ a {
     }
 
     html {
-        @apply font-body; /* On applique ta police Slab "Bitter" par défaut */
+        @apply font-sans; /* On applique ta police Slab "Bitter" par défaut */
     }
 }
 

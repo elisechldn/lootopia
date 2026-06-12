@@ -21,7 +21,7 @@ interface Props {
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
     return (
-        <div className="bg-card border border-border rounded-xl px-5 py-4">
+        <div className="tilt-pin retro-card px-5 py-4">
             <p className="text-xs text-muted-foreground mb-1">{label}</p>
             <p className="text-2xl font-bold text-foreground">{value}</p>
             {sub && <p className="text-xs text-muted-foreground/70 mt-0.5">{sub}</p>}
@@ -83,7 +83,7 @@ export default function AnalyticsDashboard({ data }: Props) {
             </div>
 
             {/* Recherche */}
-            <div className="bg-card border border-border rounded-xl px-5 py-4">
+            <div className="retro-card px-5 py-4">
                 <div className="relative max-w-xs">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
                          className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/70">
@@ -100,7 +100,7 @@ export default function AnalyticsDashboard({ data }: Props) {
             </div>
 
             {/* Tableau */}
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="retro-card border-wood-frame overflow-hidden">
                 <div className="px-5 py-4 border-b border-border">
                     <h2 className="text-sm font-semibold text-foreground">Détail par chasse</h2>
                 </div>

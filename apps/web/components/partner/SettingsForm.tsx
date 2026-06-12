@@ -70,7 +70,7 @@ export default function SettingsForm() {
 
     return (
         <div className="space-y-6">
-            <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+            <div className="retro-card rounded-xl p-6 space-y-4">
                 <h2 className="text-sm font-semibold text-foreground">Apparence</h2>
                 <p className="text-xs text-muted-foreground/70">
                     Choisissez le thème de l&apos;interface.
@@ -80,7 +80,7 @@ export default function SettingsForm() {
                         <button
                             key={t.value}
                             onClick={() => handleThemeChange(t.value)}
-                            className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-colors ${
+                            className={`flex flex-col items-center gap-2 p-4 retro-card transition-colors ${
                                 theme === t.value
                                     ? "border-primary bg-muted/50"
                                     : "border-border hover:border-muted-foreground/30 hover:bg-muted/50"

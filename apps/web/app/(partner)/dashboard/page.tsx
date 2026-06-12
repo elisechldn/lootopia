@@ -1,8 +1,10 @@
 import { cookies } from "next/headers";
 import TreasureHuntDashboard from "@/components/partner/TreasureHuntDashboard";
 import { Hunt, HuntStats } from "@/components/partner/types";
+import React from "react";
 
 const API_URL = process.env.API_URL ?? 'http://localhost:8000';
+console.log("API_URL =", process.env.API_URL);
 
 async function authHeaders(): Promise<Record<string, string>> {
     const token = (await cookies()).get('auth_token')?.value;
