@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState }                         from "react";
-import * as THREE                                              from "three";
-import { GLTFLoader }                                          from "three/addons/loaders/GLTFLoader.js";
-import { assetUrl }                                            from "@/lib/assets";
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   ArToolkitSource,
   ArToolkitContext,
   ArMarkerControls,
-// @ts-ignore
+  // @ts-expect-error AR.js ships no TypeScript types
 } from "@ar-js-org/ar.js/three.js/build/ar-threex.mjs";
 import {
   AmbientLight,
@@ -17,15 +16,13 @@ import {
   Mesh,
   MeshStandardMaterial,
 } from "three";
+import { assetUrl } from "@/lib/assets";
 
-export interface ARCameraProps {
+export interface MarkerArTesterProps {
+  /** Chemin relatif du fichier .patt (ex: "partners/12/ar-markers/34/xxx.patt") */
   patternUrl: string;
+  /** Chemin relatif du fichier .glb de l'item AR (ex: "partners/12/ar-items/xxx.glb") */
   glbFilepath?: string | null;
-  participationId?: number;
-  stepId?: number;
-  userId?: number;
-  onItemHit?: (lat: number, lon: number) => void;
-  isValidating?: boolean;
 }
 
 // Taille du modèle .glb relative à la taille du marqueur (1 = même largeur que le marqueur)
@@ -41,40 +38,36 @@ function buildPlaceholderMesh() {
 // AR.js classes have no TypeScript types — typed as unknown at call sites
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export default function ARCamera({ patternUrl, glbFilepath, participationId, stepId, userId, onItemHit, isValidating }: ARCameraProps) {
-
+export default function MarkerArTester({ patternUrl, glbFilepath }: MarkerArTesterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [cameraError, setCameraError] = useState<string | null>(null);
-  const onItemHitRef = useRef(onItemHit);
-  const isValidatingRef = useRef(isValidating);
-  const pendingRef = useRef(false);
+  const [markerVisible, setMarkerVisible] = useState(false);
 
-  useEffect(() => { onItemHitRef.current = onItemHit; }, [onItemHit]);
+  // desactiver le scroll
+  const prevOverflow = document.body.style.overflow;
+  const prevOverscroll = document.documentElement.style.overscrollBehavior;
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overscrollBehavior = "none";
+
   useEffect(() => {
-    isValidatingRef.current = isValidating;
-    if (!isValidating) pendingRef.current = false;
-  }, [isValidating]);
-  useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     let animId = 0;
     let renderer: THREE.WebGLRenderer | null = null;
-
-    // onResize needs to be accessible in the cleanup closure
     let onResize: (() => void) | null = null;
 
-    async function init() {
-
+    const init = async () => {
       // RENDERER
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.domElement.style.position = 'absolute';
-      renderer.domElement.style.top = '0px';
-      renderer.domElement.style.left = '0px';
-      renderer.domElement.style.zIndex = '16';
-      containerRef.current?.appendChild(renderer.domElement);
+      renderer.domElement.style.position = "absolute";
+      renderer.domElement.style.top = "0px";
+      renderer.domElement.style.left = "0px";
+      renderer.domElement.style.zIndex = "16";
+      container.appendChild(renderer.domElement);
 
       // SCENE
       const scene = new THREE.Scene();
@@ -86,21 +79,14 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
       scene.add(dirLight);
 
       // Lire dimensions réelles du capteur caméra
-      const stream = await navigator.mediaDevices.getUserMedia({ video: {
-          aspectRatio: window.innerWidth / window.innerHeight,
-        }});
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { aspectRatio: window.innerWidth / window.innerHeight },
+      });
       const track = stream.getVideoTracks()[0];
-      console.log("stream.getVideoTracks()", stream.getVideoTracks())
-      const { width: camW, height: camH } = track?.getSettings()!;
-      console.log("track?.getSettings()", track?.getSettings())
-      stream.getTracks().forEach(t => t.stop()); // libère caméra, ArToolkit la reprend après
-
-      // Capteur retourne toujours landscape (ex: 640×480) même sur mobile portrait.
-      // On swap si l'écran est portrait pour que le ratio source corresponde à l'affichage.
-      const isPortrait = window.innerHeight > window.innerWidth;
-      const sourceWidth  = isPortrait ? Math.min(camW!, camH!) : Math.max(camW!, camH!);
-      const sourceHeight = isPortrait ? Math.max(camW!, camH!) : Math.min(camW!, camH!);
-      // console.log(`sourceWidth: ${sourceWidth}, sourceHeight: ${sourceHeight}`);
+      const settings = track?.getSettings() ?? {};
+      const camW = settings.width;
+      const camH = settings.height;
+      stream.getTracks().forEach((t) => t.stop()); // libère caméra, ArToolkit la reprend après
 
       // AR.js source (webcam)
       const arToolkitSource: any = new ArToolkitSource({
@@ -123,12 +109,11 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
         camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
       });
 
-      arToolkitSource.init(() => {
+      arToolkitSource.init(
+        () => {
           const video: HTMLVideoElement = arToolkitSource.domElement;
-          video.addEventListener('canplay', onResize);
-          video.setAttribute('data-app', 'video');
-          // containerRef.current?.insertBefore(video, renderer!.domElement);
-          // onResize();
+          video.addEventListener("canplay", () => onResize?.());
+          video.setAttribute("data-app", "video");
           setLoading(false);
         },
         () => {
@@ -137,27 +122,21 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
         },
       );
 
-
       // Marker root — position/rotation tracked by ArMarkerControls
       const markerRoot = new THREE.Group();
       scene.add(markerRoot);
-      const resolvedPatternUrl = '/assets/' + patternUrl;
-      console.log("patternUrl", patternUrl)
-      console.log("patternUrl resolved", resolvedPatternUrl)
+      const resolvedPatternUrl = "/assets/" + patternUrl;
 
       new ArMarkerControls(arToolkitContext, markerRoot, {
         type: "pattern",
         patternUrl: resolvedPatternUrl,
       });
 
-      // Load .glb from step's arItem, fallback to placeholder
+      // Charge le .glb de l'item AR, fallback sur le cube placeholder
       const clock = new THREE.Clock();
       let mixer: THREE.AnimationMixer | null = null;
       const glbUrl = glbFilepath ? assetUrl(glbFilepath) : null;
-      console.log("glbFilepath", glbFilepath)
-      console.log("assetUrl(glbFilepath)", assetUrl(glbFilepath))
       if (glbUrl) {
-        console.log("COUCOU", glbUrl)
         try {
           const gltf = await new GLTFLoader().loadAsync(glbUrl);
           mixer = new THREE.AnimationMixer(gltf.scene);
@@ -179,72 +158,27 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
         markerRoot.add(buildPlaceholderMesh());
       }
 
-
-      // Raycaster for tap/click → GPS check → validateStep
-      const raycaster = new THREE.Raycaster();
-      function handleTap(e: MouseEvent | TouchEvent) {
-
-        const rect = renderer!.domElement.getBoundingClientRect();
-        const clientX = "touches" in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
-        const clientY = "touches" in e ? e.touches[0]?.clientY ?? 0 : e.clientY;
-        const x = ((clientX - rect.left) / rect.width) * 2 - 1;
-        const y = -((clientY - rect.top) / rect.height) * 2 + 1;
-        raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
-        const hits = raycaster.intersectObjects(scene.children, true);
-        console.log("HITS", hits)
-        if (hits.length === 0 || !markerRoot.visible) return;
-
-        if (!navigator.geolocation) {
-          setCameraError("La géolocalisation est requise pour valider cette étape");
-          return;
-        }
-
-        if (isValidatingRef.current || pendingRef.current) return;
-        pendingRef.current = true;
-
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            onItemHitRef.current?.(pos.coords.latitude, pos.coords.longitude);
-          },
-          () => {
-            setCameraError("Impossible d'obtenir votre position GPS");
-          },
-          { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 },
-        );
-      }
-
-      renderer.domElement.addEventListener("click", handleTap);
-      renderer.domElement.addEventListener("touchend", handleTap);
-
-
-      function onResize() {
+      onResize = function () {
         arToolkitSource.onResizeElement();
         arToolkitSource.copyElementSizeTo(renderer?.domElement);
-
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        console.log('RESIZE WINDOW --> width:', w, 'height:', h);
 
         if (arToolkitContext.arController !== null) {
           const canvas = arToolkitContext.arController.canvas;
           arToolkitSource.copyElementSizeTo(canvas);
-          canvas.setAttribute('data-app', 'canvas context');
+          canvas.setAttribute("data-app", "canvas context");
           const video = arToolkitSource.domElement;
-          video.style.margin = '0px';
+          video.style.margin = "0px";
           video.style.width = window.innerWidth;
           video.style.height = window.innerHeight;
-          video.style.objectFit = 'cover';
+          video.style.objectFit = "cover";
           video.style.zIndex = 15;
           canvas.style.opacity = 0.4;
           canvas.style.width = video.style.width;
           canvas.style.height = video.style.height;
-          canvas.style.margin = '0px';
+          canvas.style.margin = "0px";
           canvas.style.zIndex = 15;
-
-
-          console.log("RESIZE VIDEO --> width:", video.style.width, "height:", video.style.height);
         }
-      }
+      };
 
       window.addEventListener("resize", onResize);
 
@@ -253,17 +187,13 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
         animId = requestAnimationFrame(animate);
         if (arToolkitSource.ready && arToolkitContext.arController !== null) {
           arToolkitContext.update(arToolkitSource.domElement);
-          if (markerRoot.visible) {
-            console.log("Marqueur détecté", markerRoot.position);
-          }
+          setMarkerVisible(markerRoot.visible);
         }
         if (mixer) mixer.update(clock.getDelta());
-        // scene.visible mirrors marker detection state
-        scene.visible = camera.visible;
         renderer!.render(scene, camera);
       }
       animate();
-    }
+    };
 
     init().catch(() => {
       setCameraError("Erreur d'initialisation AR");
@@ -272,16 +202,18 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
 
     return () => {
       cancelAnimationFrame(animId);
+      const rendererEl = renderer?.domElement;
       renderer?.dispose();
       renderer?.forceContextLoss();
-      if (containerRef.current?.contains(renderer!.domElement)) {
-        containerRef.current.removeChild(renderer!.domElement);
+      if (rendererEl && container.contains(rendererEl)) {
+        container.removeChild(rendererEl);
       }
       if (onResize) window.removeEventListener("resize", onResize);
-      document.querySelectorAll('video').forEach(v => v.remove());
+      document.querySelectorAll("video").forEach((v) => v.remove());
+      document.body.style.overflow = prevOverflow;
+      document.documentElement.style.overscrollBehavior = prevOverscroll;
     };
-
-  }, []);
+  }, [patternUrl, glbFilepath]);
 
   return (
     <div
@@ -303,7 +235,7 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 10,
+            zIndex: 1000,
             color: "#fff",
             gap: 12,
           }}
@@ -331,7 +263,7 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 10,
+            zIndex: 1000,
             background: "rgba(0,0,0,0.8)",
             color: "#fff",
             padding: "0 24px",
@@ -343,6 +275,36 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
         </div>
       )}
 
+      {!loading && !cameraError && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(env(safe-area-inset-top, 0px) + 12px)",
+            left: 0,
+            right: 0,
+            zIndex: 20,
+            display: "flex",
+            justifyContent: "center",
+            pointerEvents: "none",
+          }}
+        >
+          <span
+            style={{
+              padding: "6px 14px",
+              borderRadius: 999,
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#fff",
+              background: markerVisible
+                ? "rgba(34, 197, 94, 0.85)"
+                : "rgba(0, 0, 0, 0.55)",
+              transition: "background-color 0.2s ease",
+            }}
+          >
+            {markerVisible ? "Marqueur détecté ✅" : "Recherche du marqueur…"}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

@@ -23,6 +23,18 @@ const HUNT_COORDS: Record<number, [number, number]> = {
   10: [-1.5536, 47.2184], // Nantes
   11: [1.950804, 48.819725], // Valibout
   12: [2.238728, 48.893536], // Sup De Vinci — Paris
+  13: [2.7022, 48.4042], // Fontainebleau
+  14: [2.0944, 48.8993], // Saint-Germain-en-Laye
+  15: [2.4347, 48.8434], // Vincennes
+  16: [2.7808, 48.8722], // Disneyland Paris
+  17: [1.5339, 49.0758], // Giverny
+  18: [2.4869, 49.1936], // Chantilly
+  19: [3.2998, 48.5598], // Provins
+  20: [2.1717, 49.0728], // Auvers-sur-Oise
+  21: [2.2347, 48.8133], // Meudon
+  22: [2.3601, 48.9357], // Saint-Denis
+  23: [1.8307, 48.6444], // Rambouillet
+  24: [2.2913, 48.7784], // Sceaux
 };
 
 async function setHuntLocationCenter(huntId: number, lon: number, lat: number) {
@@ -42,6 +54,12 @@ async function setStepLocation(stepId: number, lon: number, lat: number) {
 }
 
 async function main() {
+  // Dates dynamiques pour hunts
+  const startDateHunt = new Date();
+  const endDateHunt = new Date(
+    startDateHunt.getTime() + 7 * 24 * 60 * 60 * 1000,
+  );
+
   // ── Users ──────────────────────────────────────────────────────────────────
   const hash = '$2b$10$kfG7lYzqx1jFZpfnR4rBX.3bZDX10SsNoVRNFrkmJU3vDRx//me7i'; // mot de passe : lol
 
@@ -152,8 +170,8 @@ async function main() {
       shortDescription: 'Explorez les monuments emblématiques de la capitale.',
       description:
         'Partez à la découverte des lieux les plus iconiques de Paris, de la Tour Eiffel au Sacré-Cœur en passant par le Louvre.',
-      startDate: new Date('2025-03-01'),
-      endDate: new Date('2025-03-31'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 5000,
       status: 'ACTIVE',
       rewardType: 'DISCOUNT_CODE',
@@ -174,8 +192,8 @@ async function main() {
       shortDescription: 'Partez à la découverte des traboules lyonnaises.',
       description:
         'Explorez les passages secrets de la vieille ville de Lyon et résolvez des énigmes historiques.',
-      startDate: new Date('2025-04-01'),
-      endDate: new Date('2025-04-30'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 3500,
       status: 'DRAFT',
       rewardType: 'DISCOUNT_CODE',
@@ -197,8 +215,8 @@ async function main() {
         'Une aventure entre vignobles et architecture bordelaise.',
       description:
         'Découvrez le patrimoine viticole et architectural de Bordeaux à travers une chasse alliant histoire et dégustation.',
-      startDate: new Date('2025-05-01'),
-      endDate: new Date('2025-05-31'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 4000,
       status: 'ACTIVE',
       rewardType: 'FREE_ITEM',
@@ -220,8 +238,8 @@ async function main() {
         'Plongez dans la magie du marché de Noël strasbourgeois.',
       description:
         'Une chasse festive au cœur de Strasbourg, entre la cathédrale gothique et les marchés de Noël enchanteurs.',
-      startDate: new Date('2025-12-01'),
-      endDate: new Date('2025-12-24'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 2500,
       status: 'ACTIVE',
       rewardType: 'BADGE',
@@ -242,8 +260,8 @@ async function main() {
       shortDescription: 'Une aventure nature sur les côtes méditerranéennes.',
       description:
         'Explorez les calanques sauvages de Marseille et résolvez des énigmes liées à la géologie et à la faune méditerranéenne.',
-      startDate: new Date('2025-06-01'),
-      endDate: new Date('2025-06-30'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 8000,
       status: 'FINISHED',
       rewardType: 'DISCOUNT_CODE',
@@ -264,8 +282,8 @@ async function main() {
       shortDescription: 'Percez les secrets du rocher normand.',
       description:
         'Entre les marées et les ruelles médiévales du Mont-Saint-Michel, une chasse au trésor unique vous attend.',
-      startDate: new Date('2025-07-15'),
-      endDate: new Date('2025-08-15'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 1500,
       status: 'ACTIVE',
       rewardType: 'FREE_ITEM',
@@ -286,8 +304,8 @@ async function main() {
       shortDescription: 'Découvrez Toulouse entre art et sciences.',
       description:
         "Une chasse mêlant l'histoire de la ville rose, ses capitouls et ses grandes institutions scientifiques comme la Cité de l'Espace.",
-      startDate: new Date('2025-09-01'),
-      endDate: new Date('2025-09-30'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 3000,
       status: 'DRAFT',
       rewardType: 'BADGE',
@@ -308,8 +326,8 @@ async function main() {
       shortDescription: "Une chasse ensoleillée sur la Côte d'Azur.",
       description:
         "Promenez-vous sur la Promenade des Anglais et dans le Vieux-Nice à la recherche d'indices colorés cachés dans les ruelles baroques.",
-      startDate: new Date('2025-08-01'),
-      endDate: new Date('2025-08-31'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 3500,
       status: 'ACTIVE',
       rewardType: 'DISCOUNT_CODE',
@@ -330,8 +348,8 @@ async function main() {
       shortDescription: 'Explorez les jardins et galeries royales.',
       description:
         'Une chasse au cœur du domaine royal de Versailles, entre la Galerie des Glaces et les bosquets secrets des jardins à la française.',
-      startDate: new Date('2025-04-15'),
-      endDate: new Date('2025-05-15'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 6000,
       status: 'FINISHED',
       rewardType: 'FREE_ITEM',
@@ -352,8 +370,8 @@ async function main() {
       shortDescription: "Suivez les machines de l'île dans Nantes.",
       description:
         "Une aventure steampunk à travers l'île de Nantes, guidée par les créatures mécaniques des Machines de l'île.",
-      startDate: new Date('2025-10-01'),
-      endDate: new Date('2025-10-31'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 4000,
       status: 'DRAFT',
       rewardType: 'BADGE',
@@ -374,8 +392,8 @@ async function main() {
       shortDescription: 'Une expérience AR en trois actes gastronomiques.',
       description:
         "Partez à la découverte du Valibout en trois étapes : l'entrée, le plat et le dessert. Une chasse en réalité augmentée pour les fins gourmets explorateurs.",
-      startDate: new Date('2026-04-01'),
-      endDate: new Date('2026-12-31'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 500,
       status: 'ACTIVE',
       rewardType: 'BADGE',
@@ -397,8 +415,8 @@ async function main() {
         "Découvrez les formations et labs de l'école en explorant le campus.",
       description:
         "Partez à la découverte du campus parisien de Sup De Vinci, école d'informatique et du numérique. Résolvez des énigmes liées au développement, à l'IA et au cybersécurité pour décrocher votre badge Futur Étudiant.",
-      startDate: new Date('2026-05-15'),
-      endDate: new Date('2026-05-15'),
+      startDate: startDateHunt,
+      endDate: endDateHunt,
       radius: 300,
       status: 'ACTIVE',
       rewardType: 'BADGE',
@@ -409,6 +427,272 @@ async function main() {
     },
   });
   await setHuntLocationCenter(huntSupDeVinci.id, ...HUNT_COORDS[12]!);
+
+  // 13 — Fontainebleau (Alice, ACTIVE)
+  const huntFontainebleau = await prisma.hunt.upsert({
+    where: { id: 13 },
+    update: {},
+    create: {
+      title: 'Le Trésor de Fontainebleau',
+      shortDescription: 'Une chasse royale au cœur de la forêt et du château.',
+      description:
+        'Explorez le château de Fontainebleau et sa forêt mythique, repaire des rois de France et terrain de jeu des grimpeurs.',
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 4000,
+      status: 'ACTIVE',
+      rewardType: 'BADGE',
+      rewardValue: 'Badge Courtisan de Fontainebleau',
+      coverImage:
+        'https://images.unsplash.com/photo-1551867633-194f125bddfa?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntFontainebleau.id, ...HUNT_COORDS[13]!);
+
+  // 14 — Saint-Germain-en-Laye (Alice, ACTIVE)
+  const huntSaintGermain = await prisma.hunt.upsert({
+    where: { id: 14 },
+    update: {},
+    create: {
+      title: 'Énigmes de Saint-Germain-en-Laye',
+      shortDescription: 'Sur les pas de Louis XIV, entre château et forêt.',
+      description:
+        'Une chasse au trésor dans la ville natale du Roi-Soleil, entre la grande terrasse et le château royal.',
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 2500,
+      status: 'ACTIVE',
+      rewardType: 'DISCOUNT_CODE',
+      rewardValue: 'GERMAIN2026-PROMO10',
+      coverImage:
+        'https://images.unsplash.com/photo-1499678329028-101435549a4e?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntSaintGermain.id, ...HUNT_COORDS[14]!);
+
+  // 15 — Vincennes (Alice, ACTIVE)
+  const huntVincennes = await prisma.hunt.upsert({
+    where: { id: 15 },
+    update: {},
+    create: {
+      title: 'Le Donjon de Vincennes',
+      shortDescription:
+        "Percez les secrets de la plus haute forteresse médiévale d'Europe.",
+      description:
+        'Explorez le château de Vincennes et son bois, aux portes de Paris, à la recherche de trésors médiévaux.',
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 2000,
+      status: 'ACTIVE',
+      rewardType: 'FREE_ITEM',
+      rewardValue: 'Visite guidée du donjon offerte',
+      coverImage:
+        'https://images.unsplash.com/photo-1520637836862-4d197d17c93a?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntVincennes.id, ...HUNT_COORDS[15]!);
+
+  // 16 — Disneyland Paris (Alice, ACTIVE)
+  const huntDisneyland = await prisma.hunt.upsert({
+    where: { id: 16 },
+    update: {},
+    create: {
+      title: 'La Quête Magique de Marne-la-Vallée',
+      shortDescription: 'Une aventure féerique aux portes du parc enchanté.',
+      description:
+        "Pars à la recherche d'objets magiques disséminés autour du parc le plus visité d'Europe.",
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 3000,
+      status: 'ACTIVE',
+      rewardType: 'BADGE',
+      rewardValue: 'Badge Explorateur Enchanté',
+      coverImage:
+        'https://images.unsplash.com/photo-1597466599360-3b9775841aec?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntDisneyland.id, ...HUNT_COORDS[16]!);
+
+  // 17 — Giverny (Alice, ACTIVE)
+  const huntGiverny = await prisma.hunt.upsert({
+    where: { id: 17 },
+    update: {},
+    create: {
+      title: 'Les Couleurs de Giverny',
+      shortDescription:
+        'Sur les traces de Monet, dans ses jardins impressionnistes.',
+      description:
+        'Une chasse artistique dans le village de Giverny, entre les nymphéas et le pont japonais de Claude Monet.',
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 1500,
+      status: 'ACTIVE',
+      rewardType: 'FREE_ITEM',
+      rewardValue: 'Carte postale signée — édition limitée',
+      coverImage:
+        'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntGiverny.id, ...HUNT_COORDS[17]!);
+
+  // 18 — Chantilly (Alice, ACTIVE)
+  const huntChantilly = await prisma.hunt.upsert({
+    where: { id: 18 },
+    update: {},
+    create: {
+      title: 'Le Mystère du Château de Chantilly',
+      shortDescription: 'Entre chevaux, dentelle et crème fouettée.',
+      description:
+        'Découvre le domaine de Chantilly, son château, ses grandes écuries et son célèbre potager-jardin.',
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 3000,
+      status: 'ACTIVE',
+      rewardType: 'BADGE',
+      rewardValue: 'Badge Gourmet de Chantilly',
+      coverImage:
+        'https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntChantilly.id, ...HUNT_COORDS[18]!);
+
+  // 19 — Provins (Alice, ACTIVE)
+  const huntProvins = await prisma.hunt.upsert({
+    where: { id: 19 },
+    update: {},
+    create: {
+      title: 'Les Remparts de Provins',
+      shortDescription: 'Voyage au temps des foires de Champagne.',
+      description:
+        "Une chasse médiévale dans la cité fortifiée de Provins, classée au patrimoine mondial de l'UNESCO.",
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 2000,
+      status: 'ACTIVE',
+      rewardType: 'BADGE',
+      rewardValue: 'Badge Chevalier de Provins',
+      coverImage:
+        'https://images.unsplash.com/photo-1520637736862-4d197d17c93a?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntProvins.id, ...HUNT_COORDS[19]!);
+
+  // 20 — Auvers-sur-Oise (Alice, ACTIVE)
+  const huntAuvers = await prisma.hunt.upsert({
+    where: { id: 20 },
+    update: {},
+    create: {
+      title: 'Sur les Pas de Van Gogh',
+      shortDescription: 'Un parcours artistique dans le village du peintre.',
+      description:
+        "Suis les traces de Vincent Van Gogh à Auvers-sur-Oise, entre l'église, les champs de blé et son dernier atelier.",
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 1500,
+      status: 'ACTIVE',
+      rewardType: 'FREE_ITEM',
+      rewardValue: 'Reproduction encadrée offerte',
+      coverImage:
+        'https://images.unsplash.com/photo-1577083552431-6e5fd75a9160?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntAuvers.id, ...HUNT_COORDS[20]!);
+
+  // 21 — Meudon (Alice, ACTIVE)
+  const huntMeudon = await prisma.hunt.upsert({
+    where: { id: 21 },
+    update: {},
+    create: {
+      title: 'La Forêt de Meudon',
+      shortDescription: 'Aventure nature aux portes de Paris.',
+      description:
+        'Explore la forêt domaniale de Meudon et son observatoire, entre balades et énigmes scientifiques.',
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 2500,
+      status: 'ACTIVE',
+      rewardType: 'BADGE',
+      rewardValue: 'Badge Astronome de Meudon',
+      coverImage:
+        'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntMeudon.id, ...HUNT_COORDS[21]!);
+
+  // 22 — Saint-Denis (Alice, ACTIVE)
+  const huntSaintDenis = await prisma.hunt.upsert({
+    where: { id: 22 },
+    update: {},
+    create: {
+      title: 'La Nécropole Royale de Saint-Denis',
+      shortDescription: 'Une chasse historique au cœur de la basilique.',
+      description:
+        'Découvre la basilique de Saint-Denis, dernière demeure des rois de France, et son riche passé.',
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 1500,
+      status: 'ACTIVE',
+      rewardType: 'DISCOUNT_CODE',
+      rewardValue: 'DENIS2026-PROMO10',
+      coverImage:
+        'https://images.unsplash.com/photo-1548625149-fc4a29cf7092?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntSaintDenis.id, ...HUNT_COORDS[22]!);
+
+  // 23 — Rambouillet (Alice, ACTIVE)
+  const huntRambouillet = await prisma.hunt.upsert({
+    where: { id: 23 },
+    update: {},
+    create: {
+      title: 'La Bergerie Nationale de Rambouillet',
+      shortDescription: 'Une chasse champêtre au château présidentiel.',
+      description:
+        'Une aventure dans le parc et le château de Rambouillet, résidence de chasse des présidents français.',
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 3000,
+      status: 'ACTIVE',
+      rewardType: 'BADGE',
+      rewardValue: 'Badge Berger de Rambouillet',
+      coverImage:
+        'https://images.unsplash.com/photo-1560493676-04071c5f467b?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntRambouillet.id, ...HUNT_COORDS[23]!);
+
+  // 24 — Sceaux (Alice, ACTIVE)
+  const huntSceaux = await prisma.hunt.upsert({
+    where: { id: 24 },
+    update: {},
+    create: {
+      title: 'Les Jardins de Sceaux',
+      shortDescription: 'Une chasse élégante dans le parc à la française.',
+      description:
+        'Explore le parc de Sceaux, son château et ses grandes cascades dessinées par Le Nôtre.',
+      startDate: startDateHunt,
+      endDate: endDateHunt,
+      radius: 1500,
+      status: 'ACTIVE',
+      rewardType: 'FREE_ITEM',
+      rewardValue: 'Pique-nique offert dans le parc',
+      coverImage:
+        'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800',
+      refUser: alice.id,
+    },
+  });
+  await setHuntLocationCenter(huntSceaux.id, ...HUNT_COORDS[24]!);
 
   // ── Steps ──────────────────────────────────────────────────────────────────
 

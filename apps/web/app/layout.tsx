@@ -31,14 +31,15 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="fr" className={cn("font-sans", bitter.variable)}>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
+    children,
+    modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
+    return (
+        <html lang="fr" className={cn("font-sans", bitter.variable)}>
+        <head>
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `
                             (function() {
                                 try {
                                     const theme = localStorage.getItem('lootopia_theme');
@@ -67,6 +68,7 @@ export default function RootLayout({
         )}
       >
         {children}
+        {modal}
       </body>
     </html>
   );

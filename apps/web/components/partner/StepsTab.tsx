@@ -18,6 +18,7 @@ const HuntRouteMap = dynamic(() => import("./HuntRouteMap"), {
 interface Props {
     steps: Step[];
     onChange: (steps: Step[]) => void;
+    huntId?: number;
 }
 
 function emptyStep(orderNumber: number): Step {
@@ -38,7 +39,7 @@ function emptyStep(orderNumber: number): Step {
     };
 }
 
-export default function StepsTab({ steps, onChange }: Props) {
+export default function StepsTab({ steps, onChange, huntId }: Props) {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     const addStep = useCallback(() => {
@@ -102,6 +103,7 @@ export default function StepsTab({ steps, onChange }: Props) {
                     onCluesChange={setClues}
                     allSteps={steps}
                     onStepsChange={onChange}
+                    huntId={huntId}
                 />
             ))}
 

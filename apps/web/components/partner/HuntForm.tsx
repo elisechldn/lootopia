@@ -520,7 +520,7 @@ export default function HuntForm({ initialData }: Props) {
             )}
 
             {activeTab === "steps" && (
-                <StepsTab steps={steps} onChange={setSteps} />
+                <StepsTab steps={steps} onChange={setSteps} huntId={initialData?.id} />
             )}
         </div>
     );

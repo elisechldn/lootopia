@@ -1,159 +1,123 @@
-# Turborepo starter
+# Lootopia
 
-This Turborepo starter is maintained by the Turborepo core team.
+Plateforme SaaS B2B2C de chasses au trésor géolocalisées en réalité augmentée. Les partenaires créent des parcours, les joueurs les rejoignent via QR code, des indices déclenchés par GPS les guident, et la capture AR débloque des récompenses.
 
-## Using this example
+Le projet est un monorepo [Turborepo](https://turborepo.dev/).
 
-Run the following command:
+## Contenu du monorepo
 
-```sh
-npx create-turbo@latest
-```
+### Apps
 
-## What's inside?
+| App | Framework | Port | Rôle |
+|-----|-----------|------|------|
+| `apps/api` | NestJS 11 | 8000 | Backend REST |
+| `apps/web` | Next.js 16 | 3000 | Portail web (partenaires / admin) |
+| `apps/pwa` | Next.js 16 | 3001 | PWA mobile pour les joueurs |
+| `apps/db` | PostgreSQL 18 + PostGIS | 5432 | Base de données géospatiale |
 
-This Turborepo includes the following packages/apps:
+### Packages
 
-### Apps and Packages
+- `@repo/types` : types TypeScript / DTO partagés
+- `@repo/ui` : bibliothèque de composants React partagée
+- `@repo/eslint-config` : configurations ESLint
+- `@repo/typescript-config` : presets `tsconfig.json`
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## Démarrage
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+Le projet peut être lancé de deux manières : **tout en Docker** via `docker compose`, ou **en local** via `npm run dev` (avec les services d'infrastructure en Docker).
 
-### Utilities
+### Option 1 — Tout en Docker (`docker compose`)
 
-This Turborepo has some additional tools already setup for you:
+L'ensemble de la stack (API, web, PWA, base de données, MinIO, Mailpit, pgAdmin) est orchestré par `compose.yml` à la racine.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+1. Copier le fichier d'exemple et **définir les variables d'environnement** (elles sont toutes à `changeMe` par défaut — voir les exemples de valeurs en commentaire de chaque variable) :
 
-### Build
+   ```sh
+   cp .env.example .env
+   ```
 
-To build all apps and packages, run the following command:
+2. Lancer la stack :
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+   ```sh
+   docker compose up --build
+   ```
 
-```sh
-cd my-turborepo
-turbo build
-```
+Dans ce mode, les `.env` des apps ne sont pas utilisés : `compose.yml` injecte directement la configuration de chaque service (via `environment` et `build.args`).
 
-Without global `turbo`, use your package manager:
+### Option 2 — En local (`npm run dev`)
 
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+Les apps tournent directement sous Node.js ; seule l'infrastructure (Postgres, MinIO, Mailpit) tourne en Docker.
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+1. **Définir les variables d'environnement dédiées dans chaque app**, à partir de leur `.env.example` respectif :
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+   ```sh
+   cp apps/api/.env.example apps/api/.env
+   cp apps/web/.env.example apps/web/.env
+   cp apps/pwa/.env.example apps/pwa/.env
+   ```
 
-```sh
-turbo build --filter=docs
-```
+   Chaque variable est à `changeMe` par défaut ; un commentaire en face de chacune explique son rôle et donne un exemple de valeur concrète (souvent différente entre local et Docker — ex. `http://localhost:8000` vs `http://api:8000`).
 
-Without global `turbo`:
+2. Lancer les services d'infrastructure :
 
-```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+   ```sh
+   docker compose up db minio mailpit
+   ```
 
-### Develop
+3. Installer les dépendances et lancer toutes les apps en parallèle :
 
-To develop all apps and packages, run the following command:
+   ```sh
+   npm install
+   npm run dev
+   ```
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
+**Cibler une app spécifique :**
 
 ```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+npx turbo run dev --filter=api
+npx turbo run dev --filter=web
+npx turbo run dev --filter=pwa
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+### Autres commandes
 
 ```sh
-turbo dev --filter=web
+npm run build        # Build de toutes les apps
+npm run test         # Tous les tests
+npm run lint         # Lint de tous les packages
+npm run check-types  # Vérification TypeScript
+npm run format       # Formatage Prettier
 ```
 
-Without global `turbo`:
+## Pourquoi des réécritures d'URL (rewrites) dans `next.config.js` ?
 
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+Les fichiers `apps/pwa/next.config.js` et `apps/web/next.config.js` définissent des rewrites Next.js (`/api/*` → API, `/assets/*` → MinIO). Raison : **les hôtes à requêter diffèrent selon l'environnement d'exécution**.
 
-### Remote Caching
+- **En local (Node.js direct)** : le navigateur et le serveur Next tournent sur la même machine ; l'API est joignable sur `http://localhost:8000` et MinIO sur `http://localhost:9000`.
+- **En conteneur (Docker Compose)** : le serveur Next doit joindre les autres services via le DNS interne du réseau Docker (`http://api:8000`, `http://minio:9000`) — des hôtes que le navigateur de l'utilisateur ne peut pas résoudre.
+- **Sur smartphone (cas de la PWA notamment)** : le téléphone accède à l'app via l'IP LAN de la machine de dev ou un tunnel HTTPS (ex. ngrok) ; `localhost` désignerait alors le téléphone lui-même, et un appel direct en HTTP vers l'API depuis une page servie en HTTPS serait bloqué (*mixed content*).
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+Plutôt que de faire varier les URLs côté client selon chaque cas, le client requête des chemins relatifs **même origine** (`/api/*`, `/assets/*`). Le serveur Next, qui connaît son environnement, proxyfie ces requêtes vers la bonne cible via les variables `API_URL` et `MINIO_INTERNAL_URL` (côté serveur uniquement, donc ajustables sans rebuild). Bénéfices :
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+- une seule URL côté client, valable quel que soit l'hôte d'accès (localhost, IP LAN, ngrok, prod) ;
+- pas de problème CORS (même origine) ;
+- pas de *mixed content* quand le front est servi en HTTPS alors que l'API/MinIO sont en HTTP ;
+- les hôtes internes Docker (`api`, `minio`) restent confinés côté serveur.
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+## Variables d'environnement
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+Trois niveaux de fichiers `.env` :
 
-```sh
-cd my-turborepo
-turbo login
-```
+1. **Racine `.env`** — consommé par `compose.yml` (credentials Postgres, pgAdmin, MinIO, `JWT_SECRET`).
+2. **`apps/api/.env`** — config NestJS (port, `DATABASE_URL`, JWT, S3, SMTP).
+3. **`apps/web/.env` et `apps/pwa/.env`** — config Next.js. ⚠️ Les variables `NEXT_PUBLIC_*` sont inlinées dans le bundle **au build** : en Docker, elles doivent être passées via `build.args`, pas seulement via `environment`.
 
-Without global `turbo`, use your package manager:
+Voir les `.env.example` correspondants : chaque variable y est documentée avec un commentaire et un exemple de valeur.
 
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+## Services annexes (Docker)
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+| Service | URL | Rôle |
+|---------|-----|------|
+| pgAdmin | http://localhost:5050 | Administration Postgres |
+| MinIO (console) | http://localhost:9001 | Stockage objet S3-compatible (assets) |
+| Mailpit | http://localhost:8025 | Boîte mail de dev (SMTP local) |
