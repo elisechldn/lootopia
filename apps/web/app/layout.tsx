@@ -4,22 +4,22 @@ import { Bitter, Special_Elite, Caveat } from "next/font/google";
 import { cn } from "@/lib/utils";
 
 // Texte courant (Slab)
-const bitter = Bitter({ 
-  subsets: ['latin'], 
+const bitter = Bitter({
+  subsets: ['latin'],
   variable: '--font-body',
   weight: ['400', '500', '600', '700']
 });
 
 //"Machine à écrire" pour les titres et le logo
-const specialElite = Special_Elite({ 
-  weight: '400', 
-  subsets: ['latin'], 
-  variable: '--font-stamp' 
+const specialElite = Special_Elite({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-stamp'
 });
 
 //Police manuscrite pour les post-it et détails de jeu
-const caveat = Caveat({ 
-  subsets: ['latin'], 
+const caveat = Caveat({
+  subsets: ['latin'],
   variable: '--font-hand',
   weight: ['600', '700']
 });
@@ -29,7 +29,10 @@ export const metadata: Metadata = {
     description: "La solution de gestion parcours interactifs en réalité augmentée",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+    children,
+    modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
     return (
         <html lang="fr" className={cn("font-sans", bitter.variable)}>
         <head>
@@ -57,6 +60,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </head>
         <body className={`${bitter.variable} font-sans antialiased`}>
         {children}
+        {modal}
         </body>
         </html>
     );

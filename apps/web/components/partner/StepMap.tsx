@@ -86,7 +86,7 @@ export default function StepMap({ latitude, longitude, radius, orderNumber, onCh
     return (
         <div
             ref={containerRef}
-            className="h-100 rounded-xl overflow-hidden border border-border"
+            className="h-100 rounded-xl overflow-hidden border border-border z-0"
             style={{ cursor: "crosshair" }}
         />
     );

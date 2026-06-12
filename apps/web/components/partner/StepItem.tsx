@@ -1,12 +1,14 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { Step } from "./types";
 import { Clue } from "@repo/types";
 import ArItemPicker from "./ArItemPicker/ArItemPicker";
 import CluesTab from "./CluesTab";
 import MarkerFileUpload from "./MarkerFileUpload";
+import { assetUrl } from "@/lib/assets";
 
 const StepMap = dynamic(() => import("./StepMap"), {
     ssr: false,
@@ -27,6 +29,7 @@ interface Props {
     onCluesChange: (stepIndex: number, clues: Partial<Clue>[]) => void;
     allSteps: Step[];
     onStepsChange: (steps: Step[]) => void;
+    huntId?: number;
 }
 
 const StepItem = memo(function StepItem({
@@ -39,8 +42,35 @@ const StepItem = memo(function StepItem({
     onCluesChange,
     allSteps,
     onStepsChange,
+    huntId,
 }: Props) {
     console.log("step", step)
+
+    // Aperçu local de l'image du marqueur (fichier sélectionné mais pas encore uploadé)
+    const [localMarkerPreview, setLocalMarkerPreview] = useState<string | null>(null);
+    const [isMarkerLightboxOpen, setIsMarkerLightboxOpen] = useState(false);
+    useEffect(() => {
+        if (!step._markerFile) {
+            setLocalMarkerPreview(null);
+            return;
+        }
+        const url = URL.createObjectURL(step._markerFile);
+        setLocalMarkerPreview(url);
+        return () => URL.revokeObjectURL(url);
+    }, [step._markerFile]);
+
+    // Fermeture de la lightbox avec Échap
+    useEffect(() => {
+        if (!isMarkerLightboxOpen) return;
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setIsMarkerLightboxOpen(false);
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [isMarkerLightboxOpen]);
+
+    const markerImagePreview = localMarkerPreview ?? assetUrl(step.markerImageUrl);
+    const canTestOnDevice = huntId != null && step.id != null && !!step.markerPatternUrl;
     return (
         <div className="border border-border rounded-xl overflow-hidden">
             {/* Header */}
@@ -157,76 +187,110 @@ const StepItem = memo(function StepItem({
                                             <p className="mt-1">2. Téléchargez les deux fichiers générés puis uploadez-les ci-dessous.</p>
                                         </div>
 
-                                        {/* Image du marqueur */}
-                                        <MarkerFileUpload
-                                            accept="image/jpeg,image/png,image/webp"
-                                            maxSize={10 * 1024 * 1024}
-                                            label="Image du marqueur"
-                                            hint="JPG, PNG ou WebP · max 10 Mo"
-                                            value={step._markerFile ?? null}
-                                            existingUrl={step.markerImageUrl}
-                                            showImagePreview
-                                            onFileValidate={(f) =>
-                                                ['image/jpeg', 'image/png', 'image/webp'].includes(f.type)
-                                                    ? null
-                                                    : 'Seuls JPG, PNG et WebP sont acceptés'
-                                            }
-                                            onChange={(file) => {
-                                                const updated = allSteps.map((s, i) =>
-                                                    i === index ? { ...s, _markerFile: file } : s
-                                                );
-                                                onStepsChange(updated);
-                                            }}
-                                            onExistingFileDelete={() => {
-                                                const updated = allSteps.map((s, i) =>
-                                                    i === index ? { ...s, markerImageUrl: null } : s
-                                                );
-                                                onStepsChange(updated);
-                                            }}
-                                        />
+                                        <div className={'flex gap-5'}>
+                                            <div className={'w-1/2'}>
+                                                {/* Image du marqueur */}
+                                                <MarkerFileUpload
+                                                    accept="image/jpeg,image/png,image/webp"
+                                                    maxSize={10 * 1024 * 1024}
+                                                    label="Image du marqueur"
+                                                    hint="JPG, PNG ou WebP · max 10 Mo"
+                                                    value={step._markerFile ?? null}
+                                                    existingUrl={step.markerImageUrl}
+                                                    showImagePreview
+                                                    onFileValidate={(f) =>
+                                                        ['image/jpeg', 'image/png', 'image/webp'].includes(f.type)
+                                                            ? null
+                                                            : 'Seuls JPG, PNG et WebP sont acceptés'
+                                                    }
+                                                    onChange={(file) => {
+                                                        const updated = allSteps.map((s, i) =>
+                                                            i === index ? { ...s, _markerFile: file } : s
+                                                        );
+                                                        onStepsChange(updated);
+                                                    }}
+                                                    onExistingFileDelete={() => {
+                                                        const updated = allSteps.map((s, i) =>
+                                                            i === index ? { ...s, markerImageUrl: null } : s
+                                                        );
+                                                        onStepsChange(updated);
+                                                    }}
+                                                />
 
-                                        {/* Fichier .patt */}
-                                        <MarkerFileUpload
-                                            accept=".patt"
-                                            maxSize={1024 * 1024}
-                                            label="Fichier pattern"
-                                            hint=".patt · max 1 Mo"
-                                            value={step._markerPatternFile ?? null}
-                                            existingUrl={step.markerPatternUrl}
-                                            onFileValidate={(f) =>
-                                                f.name.endsWith('.patt')
-                                                    ? null
-                                                    : 'Extension .patt requise'
-                                            }
-                                            onChange={(file) => {
-                                                const updated = allSteps.map((s, i) =>
-                                                    i === index ? { ...s, _markerPatternFile: file } : s
-                                                );
-                                                onStepsChange(updated);
-                                            }}
-                                            onExistingFileDelete={() => {
-                                                const updated = allSteps.map((s, i) =>
-                                                    i === index ? { ...s, markerPatternUrl: null } : s
-                                                );
-                                                onStepsChange(updated);
-                                            }}
-                                        />
+                                                {/* Fichier .patt */}
+                                                <MarkerFileUpload
+                                                    accept=".patt"
+                                                    maxSize={1024 * 1024}
+                                                    label="Fichier pattern"
+                                                    hint=".patt · max 1 Mo"
+                                                    value={step._markerPatternFile ?? null}
+                                                    existingUrl={step.markerPatternUrl}
+                                                    onFileValidate={(f) =>
+                                                        f.name.endsWith('.patt')
+                                                            ? null
+                                                            : 'Extension .patt requise'
+                                                    }
+                                                    onChange={(file) => {
+                                                        const updated = allSteps.map((s, i) =>
+                                                            i === index ? { ...s, _markerPatternFile: file } : s
+                                                        );
+                                                        onStepsChange(updated);
+                                                    }}
+                                                    onExistingFileDelete={() => {
+                                                        const updated = allSteps.map((s, i) =>
+                                                            i === index ? { ...s, markerPatternUrl: null } : s
+                                                        );
+                                                        onStepsChange(updated);
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className={'w-1/2 space-y-2'}>
+                                            <p className="text-xs font-medium text-muted-foreground">
+                                                Tester le marqueur
+                                            </p>
+
+                                            {markerImagePreview ? (
+                                                <div
+                                                    className="space-y-1"
+                                                    title="Cliquer pour agrandir"
+                                                >
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img
+                                                        onClick={() => setIsMarkerLightboxOpen(true)}
+                                                        src={markerImagePreview}
+                                                        alt="Aperçu du marqueur"
+                                                        className="w-1/2 cursor-pointer"
+                                                    />
+                                                    <p className="text-[11px] text-muted-foreground/70">
+                                                        {localMarkerPreview
+                                                            ? "Aperçu local (non enregistré)"
+                                                            : "Image enregistrée"}
+                                                    </p>
+                                                </div>
+                                            ) : (
+                                                <p className="text-xs text-muted-foreground/70">
+                                                    Aucune image sélectionnée.
+                                                </p>
+                                            )}
+
+                                            {canTestOnDevice ? (
+                                                <Link
+                                                    href={`/camera?pattern=${encodeURIComponent(step.markerPatternUrl!)}${step.arItem?.filepath ? `&glb=${encodeURIComponent(step.arItem.filepath)}` : ""}`}
+                                                    className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-md bg-foreground text-background hover:opacity-90 transition-opacity"
+                                                >
+                                                    Tester sur mobile
+                                                </Link>
+                                            ) : (
+                                                <p className="rounded-lg border border-amber-200 bg-amber-50 p-2 text-[11px] text-amber-800">
+                                                    Enregistrez la chasse (avec le fichier .patt
+                                                    uploadé) pour activer le test sur mobile.
+                                                </p>
+                                            )}
+                                        </div>
+                                        </div>
                                     </div>
                                 )}
                         </div>
-
-                        {/*/!* QR Code *!/*/}
-                        {/*<div>*/}
-                        {/*    <label className="block text-xs font-medium text-muted-foreground mb-1">*/}
-                        {/*        Contenu du QR Code*/}
-                        {/*    </label>*/}
-                        {/*    <input*/}
-                        {/*        value={step.qrCode ?? ""}*/}
-                        {/*        onChange={(e) => onUpdate(index, "qrCode", e.target.value)}*/}
-                        {/*        placeholder="URL ou texte encodé dans le QR Code..."*/}
-                        {/*        className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"*/}
-                        {/*    />*/}
-                        {/*</div>*/}
 
                         {/* Carte */}
                         <div>
@@ -304,6 +368,35 @@ const StepItem = memo(function StepItem({
                     </div>
                 </div>
             </div>
+
+            {/* Lightbox aperçu marqueur */}
+            {isMarkerLightboxOpen && markerImagePreview && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6"
+                    onClick={() => setIsMarkerLightboxOpen(false)}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Aperçu du marqueur en grand"
+                >
+                    <button
+                        type="button"
+                        onClick={() => setIsMarkerLightboxOpen(false)}
+                        className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+                        aria-label="Fermer"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={markerImagePreview}
+                        alt="Aperçu du marqueur"
+                        className="max-h-full max-w-full object-contain"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
         </div>
     );
 });
