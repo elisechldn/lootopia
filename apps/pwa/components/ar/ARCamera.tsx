@@ -28,6 +28,9 @@ export interface ARCameraProps {
   isValidating?: boolean;
 }
 
+// Taille du modèle .glb relative à la taille du marqueur (1 = même largeur que le marqueur)
+const MODEL_SCALE = 0.5;
+
 function buildPlaceholderMesh() {
   return new Mesh(
     new BoxGeometry(0.5, 0.5, 0.5),
@@ -164,7 +167,7 @@ export default function ARCamera({ patternUrl, glbFilepath, participationId, ste
           const box = new THREE.Box3().setFromObject(gltf.scene);
           const size = box.getSize(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
-          gltf.scene.scale.multiplyScalar(maxDim > 0 ? 1 / maxDim : 1);
+          gltf.scene.scale.multiplyScalar(maxDim > 0 ? MODEL_SCALE / maxDim : MODEL_SCALE);
           const alignedBox = new THREE.Box3().setFromObject(gltf.scene);
           gltf.scene.position.y = -alignedBox.min.y;
           markerRoot.add(gltf.scene);
