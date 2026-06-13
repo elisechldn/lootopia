@@ -1,19 +1,30 @@
 import type { Metadata, Viewport } from "next";
-import { Unbounded, Lato} from "next/font/google";
+import { Bitter, Special_Elite, Caveat } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/providers/AuthProvider";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 
-const unbounded = Unbounded({
+// Texte courant (Slab)
+const bitter = Bitter({
   subsets: ["latin"],
-  variable: "--font-unbounded",
+  variable: "--font-body",
+  weight: ["400", "500", "600", "700"],
 });
 
-const lato = Lato({
+//"Machine à écrire" pour les titres et le logo
+const specialElite = Special_Elite({
+  weight: "400",
   subsets: ["latin"],
-  weight: ["400", "700", "900"],
-  variable: "--font-lato"
+  variable: "--font-stamp",
 });
+
+//Police manuscrite pour les post-it et détails de jeu
+const caveat = Caveat({
+  subsets: ["latin"],
+  variable: "--font-hand",
+  weight: ["600", "700"],
+});
+
 
 export const metadata: Metadata = {
   title: "Lootopia",
@@ -58,7 +69,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${bitter.variable} ${bitter.variable}`}
       suppressHydrationWarning
     >
       <body className="antialiased">

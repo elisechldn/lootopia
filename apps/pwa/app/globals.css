@@ -100,7 +100,7 @@ a {
 }
 
 @theme inline {
-    --font-sans: var(--font-geist-sans);
+    --font-sans: var(--font-body);
     --height-screen: 100dvh;
     --min-height-screen: 100dvh;
     --color-sidebar-ring: var(--sidebar-ring);
