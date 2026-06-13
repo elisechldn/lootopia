@@ -5,7 +5,7 @@ import { getHuntByStatus } from "pwa/services/hunt.service";
 import { Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import {
   Card,
   CardAction,
