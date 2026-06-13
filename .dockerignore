@@ -1,5 +1,12 @@
-node_modules/
-dist/
-out/
-.turbo/
-.next/
+**/node_modules/
+**/dist/
+**/out/
+**/.turbo/
+**/.next/
+.git/
+**/.env
+**/.env.*
+!**/.env.example
+**/*.log
+.DS_Store
+**/coverage/
