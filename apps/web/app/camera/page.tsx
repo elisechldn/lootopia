@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams }               from "next/navigation";
 import dynamic from "next/dynamic";
 import QRCode       from "qrcode";
 import { toLanUrl } from "@/lib/lan-url";
@@ -19,7 +19,7 @@ function isMobileUserAgent(ua: string): boolean {
     return /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
 }
 
-export default function CameraPage() {
+function CameraPage() {
     const searchParams = useSearchParams();
     const pattern = searchParams.get("pattern");
     const glb = searchParams.get("glb");
@@ -78,4 +78,10 @@ export default function CameraPage() {
     }
 
     return <MarkerArTester patternUrl={pattern} glbFilepath={glb} />;
+}
+
+export default function SuspenseCameraPage() {
+    <Suspense fallback={<p className="text-center text-sm text-muted-foreground">Chargement...</p>}>
+        <CameraPage/>
+    </Suspense>
 }

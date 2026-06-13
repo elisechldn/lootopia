@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams }    from "next/navigation";
 import QRCode       from "qrcode";
 import { toLanUrl } from "@/lib/lan-url";
 import {
@@ -12,7 +12,7 @@ import {
     DialogDescription,
 }                   from "@/components/ui/dialog";
 
-export default function CameraInterceptedModal() {
+function CameraInterceptedModal() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pattern = searchParams.get("pattern");
@@ -62,4 +62,10 @@ export default function CameraInterceptedModal() {
             </DialogContent>
         </Dialog>
     );
+}
+
+export default function SuspenseCameraInterceptedModal() {
+    return <Suspense fallback={<p className="text-center text-sm text-muted-foreground">Chargement...</p>}>
+        <CameraInterceptedModal/>
+    </Suspense>
 }
