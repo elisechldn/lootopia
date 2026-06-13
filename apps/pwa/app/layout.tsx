@@ -1,34 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Bitter, Special_Elite, Caveat } from "next/font/google";
+import { Bitter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/providers/AuthProvider";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 
-// Texte courant (Slab)
 const bitter = Bitter({
   subsets: ["latin"],
   variable: "--font-body",
   weight: ["400", "500", "600", "700"],
 });
 
-//"Machine à écrire" pour les titres et le logo
-const specialElite = Special_Elite({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-stamp",
-});
-
-//Police manuscrite pour les post-it et détails de jeu
-const caveat = Caveat({
-  subsets: ["latin"],
-  variable: "--font-hand",
-  weight: ["600", "700"],
-});
-
-
 export const metadata: Metadata = {
   title: "Lootopia",
-  description: "Application to hunt treasures and win prizes",
+  description:
+    "La solution de gestion parcours interactifs en réalité augmentée",
   appleWebApp: {
     capable: true,
     title: "Lootopia",
