@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Trophy, Medal, Star, ChevronRight } from 'lucide-react';
 import TopBar from '@/components/ui/TopBar';
 import TabNavigation from '@/components/ui/TabNavigation';
@@ -11,13 +10,11 @@ import {
   getMyParticipationsAction,
   getLeaderboardAction,
 } from '@/lib/actions/participation.actions';
-import { assetUrl } from '@/lib/assets';
 
 // Forme runtime renvoyée par /participations/me (plus large que le type du store).
 type MyParticipation = {
   refHunt: number;
   totalPoints: number;
-  timeBonus: number;
   hunt: { title: string; coverImage: string | null };
 };
 
@@ -65,8 +62,8 @@ export default function LeaderBoardPage() {
             refHunt: p.refHunt,
             title: p.hunt.title,
             coverImage: p.hunt.coverImage,
-            // Score final = points de base + bonus de temps.
-            points: Math.round((p.totalPoints + p.timeBonus) * 100) / 100,
+            // totalPoints est déjà le score final (base + bonus de temps).
+            points: Math.round(p.totalPoints * 100) / 100,
             rank: index >= 0 ? index + 1 : null,
             total: entries.length,
           };

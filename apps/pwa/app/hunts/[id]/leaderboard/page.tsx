@@ -1,18 +1,13 @@
-import { Trophy, Medal, Clock, Star } from 'lucide-react';
+import Link from 'next/link';
+import { Trophy, Medal, Clock, Star, ListChecks } from 'lucide-react';
 import BackButton from '@/components/ui/BackButton';
-import { getLeaderboardAction } from '@/lib/actions/participation.actions';
+import {
+  getLeaderboardAction,
+  getMyParticipationsAction,
+} from '@/lib/actions/participation.actions';
+import { formatDuration } from '@/lib/time';
 
 type Props = { params: Promise<{ id: string }> };
-
-function formatDuration(start: string, end: string): string {
-  const ms = new Date(end).getTime() - new Date(start).getTime();
-  const totalSec = Math.floor(ms / 1000);
-  const h = Math.floor(totalSec / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = totalSec % 60;
-  if (h > 0) return `${h}h ${m.toString().padStart(2, '0')}m`;
-  return `${m}m ${s.toString().padStart(2, '0')}s`;
-}
 
 const RANK_STYLES: Record<number, { bg: string; text: string; icon: React.ReactNode }> = {
   1: { bg: 'bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800', text: 'text-amber-600 dark:text-amber-400', icon: <Trophy size={18} className="text-amber-500" /> },
@@ -26,7 +21,14 @@ function getRankStyle(rank: number) {
 
 export default async function LeaderboardPage({ params }: Props) {
   const { id } = await params;
-  const entries = await getLeaderboardAction(Number(id));
+  const [entries, participations] = await Promise.all([
+    getLeaderboardAction(Number(id)),
+    getMyParticipationsAction(),
+  ]);
+  // Lien vers le détail du parcours réservé au joueur ayant terminé cette chasse.
+  const hasCompleted = participations.some(
+    (p) => p.refHunt === Number(id) && p.status === 'COMPLETED',
+  );
 
   return (
     <main className="flex min-h-screen flex-col bg-background pt-safe">
@@ -36,6 +38,16 @@ export default async function LeaderboardPage({ params }: Props) {
       </header>
 
       <div className="flex flex-col gap-3 px-4 py-4">
+        {hasCompleted && (
+          <Link
+            href={`/hunts/${id}/leaderboard/stats`}
+            className="flex items-center justify-center gap-2 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary transition-colors active:bg-primary/20"
+          >
+            <ListChecks size={18} />
+            Voir le détail de mon parcours
+          </Link>
+        )}
+
         {entries.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <Star size={40} className="text-muted-foreground/40" />
@@ -46,6 +58,8 @@ export default async function LeaderboardPage({ params }: Props) {
           entries.map((entry, index) => {
             const rank = index + 1;
             const style = getRankStyle(rank);
+            // totalPoints est déjà le score final (base + bonus), cohérent avec le tri backend.
+            const finalScore = Math.round(entry.totalPoints * 100) / 100;
             return (
               <div
                 key={entry.id}
@@ -61,12 +75,17 @@ export default async function LeaderboardPage({ params }: Props) {
                   </p>
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Clock size={11} />
-                    <span>{formatDuration(entry.startTime, entry.endTime)}</span>
+                    <span>
+                      {formatDuration(
+                        new Date(entry.endTime).getTime() -
+                          new Date(entry.startTime).getTime(),
+                      )}
+                    </span>
                   </div>
                 </div>
 
                 <div className={`text-right shrink-0 font-bold tabular-nums ${style.text}`}>
-                  <p className="text-base">{entry.totalPoints}</p>
+                  <p className="text-base">{finalScore}</p>
                   <p className="text-xs font-normal text-muted-foreground">pts</p>
                 </div>
               </div>

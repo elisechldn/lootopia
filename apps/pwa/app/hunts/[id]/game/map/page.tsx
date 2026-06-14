@@ -166,10 +166,12 @@ export default function GameMapPage({ params }: Props) {
   }
 
   if (isCompleted) {
+    // Détail dérivé des étapes complétées ; le score final est figé sur la participation.
+    const completed = participation?.progresses.filter((p) => p.statut === 'COMPLETED') ?? [];
+    const basePoints = completed.reduce((s, p) => s + p.totalPoints, 0);
+    const timeBonus = Math.round(completed.reduce((s, p) => s + p.timeBonus, 0) * 100) / 100;
+    const finalScore = participation?.totalPoints ?? 0;
     // Règle : terminer avec 0 point de base ne débloque aucune récompense.
-    const basePoints = participation?.totalPoints ?? 0;
-    const timeBonus = participation?.timeBonus ?? 0;
-    const finalScore = Math.round((basePoints + timeBonus) * 100) / 100;
     const hasReward = basePoints > 0;
     return (
       <div className="flex h-screen flex-col items-center justify-center gap-4 px-6 text-center">

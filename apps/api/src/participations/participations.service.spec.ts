@@ -100,7 +100,7 @@ describe('ParticipationsService.validateStep (complétion + bonus temps)', () =>
     status: 'IN_PROGRESS',
     refUser: 42,
     hunt: { id: 10, steps: [{ id: 1, orderNumber: 1 }] },
-    progresses: [{ id: 5, statut: 'IN_PROGRESS', refStep: 1 }],
+    progresses: [{ id: 5, statut: 'IN_PROGRESS', refStep: 1, startedAt: at(0) }],
   };
 
   const updateSpy = jest.fn().mockResolvedValue({});
@@ -109,13 +109,8 @@ describe('ParticipationsService.validateStep (complétion + bonus temps)', () =>
       update: jest.fn().mockResolvedValue({}),
       create: jest.fn().mockResolvedValue({}),
       findMany: jest.fn().mockResolvedValue([
-        // 100 points, durée estimée 120 min, temps réel 60 min → bonus 200
-        {
-          totalPoints: 100,
-          startedAt: at(0),
-          completedAt: at(60),
-          step: { estimatedDuration: 120 },
-        },
+        // 100 points de base + bonus 200 (déjà figé sur le progress) → score final 300
+        { totalPoints: 100, timeBonus: 200 },
       ]),
     },
     participation: {
@@ -147,6 +142,7 @@ describe('ParticipationsService.validateStep (complétion + bonus temps)', () =>
       orderNumber: 1,
       points: 100,
       radius: 50,
+      estimatedDuration: 120,
     });
     mockPrismaCompletion.$queryRaw.mockResolvedValue([{ hasLocation: false }]);
     mockPrismaCompletion.clueUsage.count.mockResolvedValue(0);
@@ -161,15 +157,14 @@ describe('ParticipationsService.validateStep (complétion + bonus temps)', () =>
     service = module.get<ParticipationsService>(ParticipationsService);
   });
 
-  it('persiste totalPoints + timeBonus à la complétion de la dernière étape', async () => {
+  it('persiste le score final (base + bonus) à la complétion de la dernière étape', async () => {
     await service.validateStep(1, 1, 42, { latitude: 0, longitude: 0 });
 
     expect(updateSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
           status: 'COMPLETED',
-          totalPoints: 100,
-          timeBonus: 200,
+          totalPoints: 300, // 100 base + 200 bonus
           endTime: expect.any(Date),
         }),
       }),
