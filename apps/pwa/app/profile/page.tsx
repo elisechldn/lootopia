@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Camera, LogOut, Trophy, CheckCircle, Clock, Gift } from 'lucide-react';
+import { Camera, LogOut, Trophy, CheckCircle, Clock, Gift, ChevronRight } from 'lucide-react';
 import TopBar           from '@/components/ui/TopBar';
 import TabNavigation    from '@/components/ui/TabNavigation';
 import { useUserStore } from '@/store/userStore';
@@ -11,6 +11,7 @@ import { getMyParticipationsAction } from '@/lib/actions/participation.actions';
 import { logoutAction } from '@/lib/actions/auth.actions';
 import { uploadAvatarAction } from '@/lib/actions/profile.actions';
 import { assetUrl } from '@/lib/assets';
+import { formatRewardType } from '@/lib/reward';
 import { type Prisma } from '@repo/types';
 import Image from "next/image";
 
@@ -31,18 +32,6 @@ type Participation = Prisma.ParticipationGetPayload<{
     };
   };
 }>;
-
-const STATUS_LABELS: Record<string, string> = {
-  IN_PROGRESS: 'En cours',
-  COMPLETED: 'Terminée',
-  ABANDONED: 'Abandonnée',
-};
-
-const STATUS_COLORS: Record<string, string> = {
-  IN_PROGRESS: 'text-blue-500',
-  COMPLETED: 'text-green-500',
-  ABANDONED: 'text-muted-foreground',
-};
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -90,10 +79,13 @@ export default function ProfilePage() {
 
   if (!user) return null;
 
+  // Une chasse terminée avec au moins 1 point = une récompense débloquée
+  // (terminer à 0 point ne donne pas accès à la récompense).
+  const rewards = participations.filter((p) => p.status === 'COMPLETED' && p.totalPoints > 0);
+
   return (
     <div className="flex flex-col h-screen pb-tabbar">
       <TopBar />
-
       <div className="flex-1 overflow-y-auto pt-topbar">
         {/* En-tête profil */}
         <div className="px-4 pb-6 flex items-center gap-4 border-b border-border">
@@ -166,59 +158,40 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {/* Historique des chasses */}
+        {/* Mes récompenses */}
         <div className="px-4 pt-4">
-          <h2 className="font-semibold mb-3">Mes chasses</h2>
+          <h2 className="font-semibold mb-3">Mes récompenses</h2>
 
           {loading ? (
             <p className="text-sm text-muted-foreground">Chargement…</p>
-          ) : participations.length === 0 ? (
+          ) : rewards.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Vous n&apos;avez pas encore participé à une chasse.
+              Terminez une chasse pour débloquer des récompenses.
             </p>
           ) : (
             <div className="space-y-3">
-              {participations.map((p) => (
-                <div
+              {rewards.map((p) => (
+                <Link
                   key={p.id}
-                  className="flex items-center gap-3 p-3 rounded-[15px] border border-border bg-card shadow-sm"
+                  href={`/hunts/${p.refHunt}/reward`}
+                  className="flex items-center gap-3 p-3 rounded-[15px] border border-border bg-card shadow-sm transition-colors active:bg-foreground/5"
                 >
-                  {p.hunt.coverImage && (
-                  <div className="relative w-10 h-10 rounded-lg bg-muted overflow-hidden shrink-0">
-                      <Image
-                        src={assetUrl(p.hunt.coverImage)!}
-                        alt={p.hunt.title}
-                        fill
-                        className="object-cover"
-                        sizes="40px"
-                      />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-950">
+                    <Gift size={18} className="text-amber-500" />
                   </div>
-                  )}
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm truncate">{p.hunt.title}</p>
-                    <p className={`text-xs ${STATUS_COLORS[p.status] ?? 'text-muted-foreground'}`}>
-                      {STATUS_LABELS[p.status] ?? p.status}
+                    <p className="text-xs text-muted-foreground">
+                      {formatRewardType(p.hunt.rewardType)}
                     </p>
                   </div>
-                  <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-semibold">{p.totalPoints} pts</p>
-                    {p.status === 'COMPLETED' && (
-                      <Link
-                        href={`/hunts/${p.refHunt}/reward`}
-                        className="inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 hover:underline active:opacity-70"
-                      >
-                        <Gift size={11} />
-                        Récompense
-                      </Link>
-                    )}
-                  </div>
-                </div>
+                  <ChevronRight size={18} className="shrink-0 text-muted-foreground" />
+                </Link>
               ))}
             </div>
           )}
         </div>
       </div>
-
       <TabNavigation />
     </div>
   );

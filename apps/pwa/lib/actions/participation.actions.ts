@@ -107,6 +107,9 @@ export async function getHuntRewardAction(huntId: number): Promise<{
     (p) => p.refHunt === huntId && p.status === 'COMPLETED',
   );
   if (!match) return null;
+  // L'API masque la récompense (rewardValue null) quand la chasse est terminée
+  // à 0 point : pas de récompense à révéler.
+  if (!match.hunt.rewardValue) return null;
 
   return { rewardType: match.hunt.rewardType, rewardValue: match.hunt.rewardValue };
 }

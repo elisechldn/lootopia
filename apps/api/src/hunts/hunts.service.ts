@@ -54,6 +54,7 @@ export class HuntsService {
                   'title', s.title,
                   'radius', s.radius,
                   'points', s.points,
+                  'estimatedDuration', s."estimated_duration",
                   'createdAt', s."created_at",
                   'updatedAt', s."updated_at",
                   'refHunt', s."ref_hunt",
@@ -428,6 +429,14 @@ export class HuntsService {
     const savedSteps: Array<{ id: number; orderNumber: number }> = [];
 
     for (const [i, s] of steps.entries()) {
+      // Durée estimée requise et strictement positive (minutes entières).
+      const estimatedDuration = Number(s.estimatedDuration);
+      if (!Number.isInteger(estimatedDuration) || estimatedDuration < 1) {
+        throw new BadRequestException(
+          `La durée estimée de l'étape ${i + 1} doit être un entier strictement positif`,
+        );
+      }
+
       const stepData = {
         refHunt: huntId,
         orderNumber: Number(s.orderNumber ?? i + 1),
@@ -436,6 +445,7 @@ export class HuntsService {
         arMode: (s.arMode === 'MARKER' ? 'MARKER' : 'GPS') as never,
         refArItem: s.refArItem ? String(s.refArItem) : null,
         points: Number(s.points ?? 0),
+        estimatedDuration,
         markerImageUrl: s.markerImageUrl ? String(s.markerImageUrl) : null,
         markerPatternUrl: s.markerPatternUrl
           ? String(s.markerPatternUrl)

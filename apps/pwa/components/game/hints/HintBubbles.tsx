@@ -11,21 +11,26 @@ interface Props {
   progressId: number;
   totalPoints: number;
   participationPoints: number;
+  /** L'étape courante est la dernière de la chasse (adapte le CTA de la solution). */
+  isLastStep: boolean;
   onProgressChanged: () => void;
 }
 
-export default function HintBubbles({ progressId, totalPoints, participationPoints, onProgressChanged }: Props) {
+export default function HintBubbles({ progressId, totalPoints, participationPoints, isLastStep, onProgressChanged }: Props) {
   const [data, setData] = useState<CluePlayerData | null>(null);
   const [isPending, startTransition] = useTransition();
   const [confirmBubble, setConfirmBubble] = useState<BubbleInfo | null>(null);
   const [contentClue, setContentClue] = useState<ContentClue | null>(null);
   const [currentPoints, setCurrentPoints] = useState(totalPoints);
+  // Le dernier indice (solution) peut terminer la chasse côté parent. On diffère
+  // le refresh parent à la fermeture de la modale de réponse pour qu'elle reste
+  // visible avant la transition vers l'écran "Chasse terminée".
+  const [refreshOnClose, setRefreshOnClose] = useState(false);
 
   const loadClues = () => {
     startTransition(async () => {
       try {
         const result = await getProgressCluesAction(progressId);
-        console.log("RESULT -> ", result)
         setData(result);
       } catch {
         // indices optionnels — silencieux
@@ -54,7 +59,7 @@ export default function HintBubbles({ progressId, totalPoints, participationPoin
   const handleBubbleClick = (bubble: BubbleInfo) => {
     if (bubble.state === 'DISABLED') return;
     if (bubble.state === 'USED') {
-      setContentClue({ orderNumber: bubble.orderNumber, message: bubble.message!, penaltyCost: bubble.penaltyCost, isLast: bubble.isLast });
+      setContentClue({ orderNumber: bubble.orderNumber, message: bubble.message!, penaltyCost: bubble.penaltyCost, isLast: bubble.isLast, isLastStep });
     }
     if (bubble.state === 'ENABLED') {
       setConfirmBubble(bubble);
@@ -72,16 +77,28 @@ export default function HintBubbles({ progressId, totalPoints, participationPoin
           message: result.clue.message,
           penaltyCost: result.clue.penaltyCost,
           isLast: result.isLastClue,
+          isLastStep,
         });
         setCurrentPoints((prev) => Math.max(0, prev - result.clue.penaltyCost));
-        onProgressChanged();
-        if (!result.isLastClue) {
+        if (result.isLastClue) {
+          // Solution révélée : refresh parent différé à la fermeture de la modale.
+          setRefreshOnClose(true);
+        } else {
           loadClues();
+          onProgressChanged();
         }
       } catch {
         setConfirmBubble(null);
       }
     });
+  };
+
+  const handleContentClose = () => {
+    setContentClue(null);
+    if (refreshOnClose) {
+      setRefreshOnClose(false);
+      onProgressChanged();
+    }
   };
 
   return (
@@ -109,7 +126,7 @@ export default function HintBubbles({ progressId, totalPoints, participationPoin
       )}
 
       {contentClue && (
-        <HintContentModal clue={contentClue} onClose={() => setContentClue(null)} />
+        <HintContentModal clue={contentClue} onClose={handleContentClose} />
       )}
     </>
   );

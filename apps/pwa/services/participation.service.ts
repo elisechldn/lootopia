@@ -3,6 +3,8 @@ export type GameProgress = {
   statut: 'IN_PROGRESS' | 'COMPLETED' | 'SKIPPED';
   refStep: number;
   totalPoints: number;
+  /** Bonus de temps de cette étape, figé à sa validation. */
+  timeBonus: number;
   completedAt: string | null;
 };
 
@@ -19,6 +21,7 @@ export type GameStep = {
 export type GameParticipation = {
   id: number;
   status: 'IN_PROGRESS' | 'COMPLETED' | 'ABANDONED';
+  /** Score final (base + bonus de temps), figé à la dernière étape. */
   totalPoints: number;
   progresses: GameProgress[];
   hunt?: {
@@ -30,6 +33,7 @@ export type GameParticipation = {
 
 export type LeaderboardEntry = {
   id: number;
+  /** Score final (base + bonus de temps), base du tri du classement. */
   totalPoints: number;
   startTime: string;
   endTime: string;

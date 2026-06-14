@@ -254,7 +254,7 @@ export type ParticipationWhereInput = {
   id?: Prisma.IntFilter<"Participation"> | number
   startTime?: Prisma.DateTimeFilter<"Participation"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"Participation"> | Date | string | null
-  totalPoints?: Prisma.IntFilter<"Participation"> | number
+  totalPoints?: Prisma.FloatFilter<"Participation"> | number
   status?: Prisma.EnumParticipationStatusFilter<"Participation"> | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
@@ -288,7 +288,7 @@ export type ParticipationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ParticipationWhereInput | Prisma.ParticipationWhereInput[]
   startTime?: Prisma.DateTimeFilter<"Participation"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"Participation"> | Date | string | null
-  totalPoints?: Prisma.IntFilter<"Participation"> | number
+  totalPoints?: Prisma.FloatFilter<"Participation"> | number
   status?: Prisma.EnumParticipationStatusFilter<"Participation"> | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
@@ -323,7 +323,7 @@ export type ParticipationScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Participation"> | number
   startTime?: Prisma.DateTimeWithAggregatesFilter<"Participation"> | Date | string
   endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"Participation"> | Date | string | null
-  totalPoints?: Prisma.IntWithAggregatesFilter<"Participation"> | number
+  totalPoints?: Prisma.FloatWithAggregatesFilter<"Participation"> | number
   status?: Prisma.EnumParticipationStatusWithAggregatesFilter<"Participation"> | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Participation"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Participation"> | Date | string
@@ -359,7 +359,7 @@ export type ParticipationUncheckedCreateInput = {
 export type ParticipationUpdateInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -372,7 +372,7 @@ export type ParticipationUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -396,7 +396,7 @@ export type ParticipationCreateManyInput = {
 export type ParticipationUpdateManyMutationInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -406,7 +406,7 @@ export type ParticipationUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -526,6 +526,14 @@ export type ParticipationUncheckedUpdateManyWithoutHuntNestedInput = {
   deleteMany?: Prisma.ParticipationScalarWhereInput | Prisma.ParticipationScalarWhereInput[]
 }
 
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type EnumParticipationStatusFieldUpdateOperationsInput = {
   set?: $Enums.ParticipationStatus
 }
@@ -642,7 +650,7 @@ export type ParticipationScalarWhereInput = {
   id?: Prisma.IntFilter<"Participation"> | number
   startTime?: Prisma.DateTimeFilter<"Participation"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"Participation"> | Date | string | null
-  totalPoints?: Prisma.IntFilter<"Participation"> | number
+  totalPoints?: Prisma.FloatFilter<"Participation"> | number
   status?: Prisma.EnumParticipationStatusFilter<"Participation"> | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
@@ -692,7 +700,7 @@ export type ParticipationUpdateToOneWithWhereWithoutProgressesInput = {
 export type ParticipationUpdateWithoutProgressesInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -704,7 +712,7 @@ export type ParticipationUncheckedUpdateWithoutProgressesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -775,7 +783,7 @@ export type ParticipationCreateManyHuntInput = {
 export type ParticipationUpdateWithoutHuntInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -787,7 +795,7 @@ export type ParticipationUncheckedUpdateWithoutHuntInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -799,7 +807,7 @@ export type ParticipationUncheckedUpdateManyWithoutHuntInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -820,7 +828,7 @@ export type ParticipationCreateManyUserInput = {
 export type ParticipationUpdateWithoutUserInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -832,7 +840,7 @@ export type ParticipationUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -844,7 +852,7 @@ export type ParticipationUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPoints?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumParticipationStatusFieldUpdateOperationsInput | $Enums.ParticipationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1400,7 +1408,7 @@ export interface ParticipationFieldRefs {
   readonly id: Prisma.FieldRef<"Participation", 'Int'>
   readonly startTime: Prisma.FieldRef<"Participation", 'DateTime'>
   readonly endTime: Prisma.FieldRef<"Participation", 'DateTime'>
-  readonly totalPoints: Prisma.FieldRef<"Participation", 'Int'>
+  readonly totalPoints: Prisma.FieldRef<"Participation", 'Float'>
   readonly status: Prisma.FieldRef<"Participation", 'ParticipationStatus'>
   readonly createdAt: Prisma.FieldRef<"Participation", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Participation", 'DateTime'>

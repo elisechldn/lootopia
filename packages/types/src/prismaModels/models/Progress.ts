@@ -29,6 +29,7 @@ export type AggregateProgress = {
 export type ProgressAvgAggregateOutputType = {
   id: number | null
   totalPoints: number | null
+  timeBonus: number | null
   refParticipation: number | null
   refStep: number | null
 }
@@ -36,6 +37,7 @@ export type ProgressAvgAggregateOutputType = {
 export type ProgressSumAggregateOutputType = {
   id: number | null
   totalPoints: number | null
+  timeBonus: number | null
   refParticipation: number | null
   refStep: number | null
 }
@@ -44,6 +46,7 @@ export type ProgressMinAggregateOutputType = {
   id: number | null
   statut: $Enums.ProgressStatus | null
   totalPoints: number | null
+  timeBonus: number | null
   startedAt: Date | null
   completedAt: Date | null
   createdAt: Date | null
@@ -56,6 +59,7 @@ export type ProgressMaxAggregateOutputType = {
   id: number | null
   statut: $Enums.ProgressStatus | null
   totalPoints: number | null
+  timeBonus: number | null
   startedAt: Date | null
   completedAt: Date | null
   createdAt: Date | null
@@ -68,6 +72,7 @@ export type ProgressCountAggregateOutputType = {
   id: number
   statut: number
   totalPoints: number
+  timeBonus: number
   startedAt: number
   completedAt: number
   createdAt: number
@@ -81,6 +86,7 @@ export type ProgressCountAggregateOutputType = {
 export type ProgressAvgAggregateInputType = {
   id?: true
   totalPoints?: true
+  timeBonus?: true
   refParticipation?: true
   refStep?: true
 }
@@ -88,6 +94,7 @@ export type ProgressAvgAggregateInputType = {
 export type ProgressSumAggregateInputType = {
   id?: true
   totalPoints?: true
+  timeBonus?: true
   refParticipation?: true
   refStep?: true
 }
@@ -96,6 +103,7 @@ export type ProgressMinAggregateInputType = {
   id?: true
   statut?: true
   totalPoints?: true
+  timeBonus?: true
   startedAt?: true
   completedAt?: true
   createdAt?: true
@@ -108,6 +116,7 @@ export type ProgressMaxAggregateInputType = {
   id?: true
   statut?: true
   totalPoints?: true
+  timeBonus?: true
   startedAt?: true
   completedAt?: true
   createdAt?: true
@@ -120,6 +129,7 @@ export type ProgressCountAggregateInputType = {
   id?: true
   statut?: true
   totalPoints?: true
+  timeBonus?: true
   startedAt?: true
   completedAt?: true
   createdAt?: true
@@ -219,6 +229,7 @@ export type ProgressGroupByOutputType = {
   id: number
   statut: $Enums.ProgressStatus
   totalPoints: number
+  timeBonus: number
   startedAt: Date
   completedAt: Date | null
   createdAt: Date
@@ -254,6 +265,7 @@ export type ProgressWhereInput = {
   id?: Prisma.IntFilter<"Progress"> | number
   statut?: Prisma.EnumProgressStatusFilter<"Progress"> | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFilter<"Progress"> | number
+  timeBonus?: Prisma.FloatFilter<"Progress"> | number
   startedAt?: Prisma.DateTimeFilter<"Progress"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Progress"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Progress"> | Date | string
@@ -269,6 +281,7 @@ export type ProgressOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   totalPoints?: Prisma.SortOrder
+  timeBonus?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -288,6 +301,7 @@ export type ProgressWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProgressWhereInput | Prisma.ProgressWhereInput[]
   statut?: Prisma.EnumProgressStatusFilter<"Progress"> | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFilter<"Progress"> | number
+  timeBonus?: Prisma.FloatFilter<"Progress"> | number
   startedAt?: Prisma.DateTimeFilter<"Progress"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Progress"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Progress"> | Date | string
@@ -303,6 +317,7 @@ export type ProgressOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   totalPoints?: Prisma.SortOrder
+  timeBonus?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -323,6 +338,7 @@ export type ProgressScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Progress"> | number
   statut?: Prisma.EnumProgressStatusWithAggregatesFilter<"Progress"> | $Enums.ProgressStatus
   totalPoints?: Prisma.IntWithAggregatesFilter<"Progress"> | number
+  timeBonus?: Prisma.FloatWithAggregatesFilter<"Progress"> | number
   startedAt?: Prisma.DateTimeWithAggregatesFilter<"Progress"> | Date | string
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Progress"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Progress"> | Date | string
@@ -334,6 +350,7 @@ export type ProgressScalarWhereWithAggregatesInput = {
 export type ProgressCreateInput = {
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -347,6 +364,7 @@ export type ProgressUncheckedCreateInput = {
   id?: number
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -359,6 +377,7 @@ export type ProgressUncheckedCreateInput = {
 export type ProgressUpdateInput = {
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -372,6 +391,7 @@ export type ProgressUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -385,6 +405,7 @@ export type ProgressCreateManyInput = {
   id?: number
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -396,6 +417,7 @@ export type ProgressCreateManyInput = {
 export type ProgressUpdateManyMutationInput = {
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -406,6 +428,7 @@ export type ProgressUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -438,6 +461,7 @@ export type ProgressCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   totalPoints?: Prisma.SortOrder
+  timeBonus?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -449,6 +473,7 @@ export type ProgressCountOrderByAggregateInput = {
 export type ProgressAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   totalPoints?: Prisma.SortOrder
+  timeBonus?: Prisma.SortOrder
   refParticipation?: Prisma.SortOrder
   refStep?: Prisma.SortOrder
 }
@@ -457,6 +482,7 @@ export type ProgressMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   totalPoints?: Prisma.SortOrder
+  timeBonus?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -469,6 +495,7 @@ export type ProgressMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   totalPoints?: Prisma.SortOrder
+  timeBonus?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -480,6 +507,7 @@ export type ProgressMinOrderByAggregateInput = {
 export type ProgressSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   totalPoints?: Prisma.SortOrder
+  timeBonus?: Prisma.SortOrder
   refParticipation?: Prisma.SortOrder
   refStep?: Prisma.SortOrder
 }
@@ -589,6 +617,7 @@ export type ProgressUncheckedUpdateManyWithoutStepNestedInput = {
 export type ProgressCreateWithoutClueUsagesInput = {
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -601,6 +630,7 @@ export type ProgressUncheckedCreateWithoutClueUsagesInput = {
   id?: number
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -628,6 +658,7 @@ export type ProgressUpdateToOneWithWhereWithoutClueUsagesInput = {
 export type ProgressUpdateWithoutClueUsagesInput = {
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -640,6 +671,7 @@ export type ProgressUncheckedUpdateWithoutClueUsagesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -651,6 +683,7 @@ export type ProgressUncheckedUpdateWithoutClueUsagesInput = {
 export type ProgressCreateWithoutParticipationInput = {
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -663,6 +696,7 @@ export type ProgressUncheckedCreateWithoutParticipationInput = {
   id?: number
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -704,6 +738,7 @@ export type ProgressScalarWhereInput = {
   id?: Prisma.IntFilter<"Progress"> | number
   statut?: Prisma.EnumProgressStatusFilter<"Progress"> | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFilter<"Progress"> | number
+  timeBonus?: Prisma.FloatFilter<"Progress"> | number
   startedAt?: Prisma.DateTimeFilter<"Progress"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Progress"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Progress"> | Date | string
@@ -715,6 +750,7 @@ export type ProgressScalarWhereInput = {
 export type ProgressCreateWithoutStepInput = {
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -727,6 +763,7 @@ export type ProgressUncheckedCreateWithoutStepInput = {
   id?: number
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -765,6 +802,7 @@ export type ProgressCreateManyParticipationInput = {
   id?: number
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -775,6 +813,7 @@ export type ProgressCreateManyParticipationInput = {
 export type ProgressUpdateWithoutParticipationInput = {
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -787,6 +826,7 @@ export type ProgressUncheckedUpdateWithoutParticipationInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -799,6 +839,7 @@ export type ProgressUncheckedUpdateManyWithoutParticipationInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -810,6 +851,7 @@ export type ProgressCreateManyStepInput = {
   id?: number
   statut?: $Enums.ProgressStatus
   totalPoints?: number
+  timeBonus?: number
   startedAt?: Date | string
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -820,6 +862,7 @@ export type ProgressCreateManyStepInput = {
 export type ProgressUpdateWithoutStepInput = {
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -832,6 +875,7 @@ export type ProgressUncheckedUpdateWithoutStepInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -844,6 +888,7 @@ export type ProgressUncheckedUpdateManyWithoutStepInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   statut?: Prisma.EnumProgressStatusFieldUpdateOperationsInput | $Enums.ProgressStatus
   totalPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  timeBonus?: Prisma.FloatFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -886,6 +931,7 @@ export type ProgressSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   statut?: boolean
   totalPoints?: boolean
+  timeBonus?: boolean
   startedAt?: boolean
   completedAt?: boolean
   createdAt?: boolean
@@ -902,6 +948,7 @@ export type ProgressSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   statut?: boolean
   totalPoints?: boolean
+  timeBonus?: boolean
   startedAt?: boolean
   completedAt?: boolean
   createdAt?: boolean
@@ -916,6 +963,7 @@ export type ProgressSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   statut?: boolean
   totalPoints?: boolean
+  timeBonus?: boolean
   startedAt?: boolean
   completedAt?: boolean
   createdAt?: boolean
@@ -930,6 +978,7 @@ export type ProgressSelectScalar = {
   id?: boolean
   statut?: boolean
   totalPoints?: boolean
+  timeBonus?: boolean
   startedAt?: boolean
   completedAt?: boolean
   createdAt?: boolean
@@ -938,7 +987,7 @@ export type ProgressSelectScalar = {
   refStep?: boolean
 }
 
-export type ProgressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "statut" | "totalPoints" | "startedAt" | "completedAt" | "createdAt" | "updatedAt" | "refParticipation" | "refStep", ExtArgs["result"]["progress"]>
+export type ProgressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "statut" | "totalPoints" | "timeBonus" | "startedAt" | "completedAt" | "createdAt" | "updatedAt" | "refParticipation" | "refStep", ExtArgs["result"]["progress"]>
 export type ProgressInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   participation?: boolean | Prisma.ParticipationDefaultArgs<ExtArgs>
   step?: boolean | Prisma.StepDefaultArgs<ExtArgs>
@@ -965,6 +1014,7 @@ export type $ProgressPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: number
     statut: $Enums.ProgressStatus
     totalPoints: number
+    timeBonus: number
     startedAt: Date
     completedAt: Date | null
     createdAt: Date
@@ -1400,6 +1450,7 @@ export interface ProgressFieldRefs {
   readonly id: Prisma.FieldRef<"Progress", 'Int'>
   readonly statut: Prisma.FieldRef<"Progress", 'ProgressStatus'>
   readonly totalPoints: Prisma.FieldRef<"Progress", 'Int'>
+  readonly timeBonus: Prisma.FieldRef<"Progress", 'Float'>
   readonly startedAt: Prisma.FieldRef<"Progress", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"Progress", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Progress", 'DateTime'>

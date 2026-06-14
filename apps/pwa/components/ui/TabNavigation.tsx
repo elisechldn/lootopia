@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, User, Trophy } from 'lucide-react';
+import { Home, User, Trophy, Settings } from 'lucide-react';
 import styles from './TabNavigation.module.css';
 
 const TABS = [
   { label: 'Accueil', href: '/', icon: Home },
-  { label: 'Profil', href: '/profile', icon: User },
   { label: 'Classement', href: '/leaderboard', icon: Trophy },
+  { label: 'Profil', href: '/profile', icon: User },
+  { label: 'Réglages', href: '/settings', icon: Settings },
 ];
 
 export default function TabNavigation() {

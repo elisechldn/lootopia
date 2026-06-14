@@ -19,12 +19,23 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(new TransformInterceptor());
   logInfo('info', 'API server started');
+  // Allowlist des origines autorisées : domaines des fronts (web + pwa).
+  // En l'absence de configuration (dev local), on réfléchit toute origine.
+  const allowedOrigins = [
+    process.env.APP_URL_WEB,
+    process.env.APP_URL_PWA,
+  ].filter((origin): origin is string => Boolean(origin));
   app.enableCors({
-    origin: true,
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
-  logInfo('info', 'CORS enabled for all origins');
+  logInfo(
+    'info',
+    allowedOrigins.length > 0
+      ? `CORS enabled for: ${allowedOrigins.join(', ')}`
+      : 'CORS enabled for all origins',
+  );
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

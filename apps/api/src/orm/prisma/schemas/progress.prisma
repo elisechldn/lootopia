@@ -2,6 +2,7 @@ model Progress {
   id           Int            @id @default(autoincrement())
   statut       ProgressStatus @default(IN_PROGRESS)
   totalPoints  Int            @default(0) @map("total_points")
+  timeBonus    Float          @default(0) @map("time_bonus")
   startedAt    DateTime       @default(now()) @map("started_at")
   completedAt  DateTime?      @map("completed_at")
   createdAt    DateTime       @default(now()) @map("created_at")

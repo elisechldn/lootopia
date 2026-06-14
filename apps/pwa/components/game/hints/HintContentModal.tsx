@@ -27,7 +27,7 @@ export default function HintContentModal({ clue, onClose }: Props) {
         </div>
         <div>
           <p className="mb-0.5 text-xs font-semibold text-muted-foreground">
-            {isSolution ? '🏁 Solution' : `💡 Indice ${clue.orderNumber}`}
+            {isSolution ? 'Solution' : `Indice ${clue.orderNumber}`}
           </p>
           <p className="text-[15px] font-bold text-foreground">
             {isSolution ? 'Réponse révélée' : 'Un petit coup de pouce'}
@@ -55,7 +55,11 @@ export default function HintContentModal({ clue, onClose }: Props) {
         onClick={onClose}
         className="h-12 w-full rounded-3xl bg-green-500 text-sm font-bold text-white active:opacity-90"
       >
-        {isSolution ? "✓ Passer à l'étape suivante" : "OK, j'ai compris !"}
+        {isSolution
+          ? clue.isLastStep
+            ? 'Terminer la chasse'
+            : "✓ Passer à l'étape suivante"
+          : "OK, j'ai compris !"}
       </button>
     </HintModal>
   );

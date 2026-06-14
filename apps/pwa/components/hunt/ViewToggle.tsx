@@ -9,9 +9,9 @@ type Props = {
   className?: string;
 };
 
-export default function ViewToggle({ value, onChange }: Props) {
+export default function ViewToggle({ value, onChange, className }: Props) {
   return (
-    <>
+    <div className={className}>
       <ToggleGroup
         value={[value]}
         onValueChange={(values) => {
@@ -22,17 +22,17 @@ export default function ViewToggle({ value, onChange }: Props) {
       >
         <ToggleGroupItem
           value="list"
-          className="flex-1 border-none data-[state=on]:bg-white data-[state=on]:shadow-md"
+          className="flex-1 border-none data-[state=on]:bg-card dark:data-[state=on]:bg-white/20 data-[state=on]:shadow-md"
         >
           <List /> Liste
         </ToggleGroupItem>
         <ToggleGroupItem
           value="map"
-          className="flex-1 border-none data-[state=on]:bg-white data-[state=on]:shadow-md"
+          className="flex-1 border-none data-[state=on]:bg-card dark:data-[state=on]:bg-white/20 data-[state=on]:shadow-md"
         >
           <Map /> Carte
         </ToggleGroupItem>
       </ToggleGroup>
-    </>
+    </div>
   );
 }

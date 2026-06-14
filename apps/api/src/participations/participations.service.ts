@@ -11,6 +11,7 @@ import { StartHuntDto } from './dto/start-hunt.dto';
 import { ValidateStepDto } from './dto/validate-step.dto';
 import { logInfo } from '../loggeur';
 import { assertOwns, type Requester } from '../auth/ownership';
+import { stepTimeBonus, round2 } from './score';
 
 @Injectable()
 export class ParticipationsService {
@@ -147,7 +148,12 @@ export class ParticipationsService {
           `Récupération de ${participations.length} participations pour l'utilisateur ${userId}`,
           'ParticipationsService',
         );
-        return participations;
+
+        return participations.map((p) =>
+          p.totalPoints > 0
+            ? p
+            : { ...p, hunt: { ...p.hunt, rewardType: null, rewardValue: null } },
+        );
       });
   }
 
@@ -346,13 +352,23 @@ export class ParticipationsService {
 
     try {
       return await this.prisma.$transaction(async (tx) => {
+        // Bonus de temps de cette étape, figé à sa validation (0 si étape sans
+        // point → anti-abus indices).
+        const completedAt = new Date();
+        const stepBonus = stepTimeBonus(
+          step.estimatedDuration,
+          pointsEarned,
+          currentProgress.startedAt,
+          completedAt,
+        );
         // Verrou optimiste : P2025 si déjà COMPLETED par une requête concurrente
         await tx.progress.update({
           where: { id: currentProgress.id, statut: 'IN_PROGRESS' },
           data: {
             statut: 'COMPLETED',
             totalPoints: pointsEarned,
-            completedAt: new Date(),
+            timeBonus: stepBonus,
+            completedAt,
           },
         });
 
@@ -375,17 +391,17 @@ export class ParticipationsService {
           });
         }
 
-        // Dernière étape : chasse terminée
+        // Dernière étape : chasse terminée. Score final figé =
+        // Σ points de base + Σ bonus de temps de chaque étape.
         const allProgresses = await tx.progress.findMany({
           where: { refParticipation: participationId, statut: 'COMPLETED' },
         });
-        const totalPoints = allProgresses.reduce(
-          (sum, p) => sum + p.totalPoints,
-          0,
+        const finalScore = round2(
+          allProgresses.reduce((sum, p) => sum + p.totalPoints + p.timeBonus, 0),
         );
         const updated = await tx.participation.update({
           where: { id: participationId },
-          data: { status: 'COMPLETED', endTime: new Date(), totalPoints },
+          data: { status: 'COMPLETED', endTime: completedAt, totalPoints: finalScore },
           include: {
             hunt: {
               select: { title: true, rewardType: true, rewardValue: true },
@@ -394,7 +410,7 @@ export class ParticipationsService {
         });
         logInfo(
           'info',
-          `Participation ${participationId} complétée avec ${totalPoints} points`,
+          `Participation ${participationId} complétée avec un score final de ${finalScore} (base + bonus temps)`,
           'ParticipationsService',
         );
         return updated;
@@ -499,6 +515,7 @@ export class ParticipationsService {
   }
 
   async leaderboard(huntId: number) {
+    // totalPoints est déjà le score final (base + bonus) → tri direct par Prisma.
     return this.prisma.participation
       .findMany({
         where: { refHunt: huntId, status: 'COMPLETED' },

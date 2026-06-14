@@ -1,0 +1,16 @@
+# Reverse proxy dédié à l'app PWA — terminaison TLS dynamique.
+# tls internal : Caddy émet lui-même un cert auto-signé pour {$LAN_IP}, à la
+# volée (CA interne, persistée dans /data). Aucun fichier .crt/.key à gérer.
+# L'utilisateur approuve l'origine au 1er accès (getUserMedia / géoloc OK ;
+# pas de Service Worker / push avec un cert non trusté).
+#
+# {$LAN_IP} : substitué au parsing depuis la variable d'env du conteneur.
+# default_sni : connexion par IP littérale => pas de SNI envoyé par le client.
+{
+	default_sni {$LAN_IP}
+}
+
+https://{$LAN_IP}:3001, https://localhost:3001 {
+	tls internal
+	reverse_proxy pwa:3001
+}

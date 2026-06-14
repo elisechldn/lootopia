@@ -126,6 +126,16 @@ const StepItem = memo(function StepItem({
                                     className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
                                 />
                             </div>
+                            <div>
+                                <label className="block text-xs font-medium text-muted-foreground mb-1">Durée estimée (min)</label>
+                                <input
+                                    value={step.estimatedDuration}
+                                    type={"number"}
+                                    min={1}
+                                    onChange={(e) => onUpdate(index, "estimatedDuration", Number(e.target.value))}
+                                    className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+                                />
+                            </div>
                         </div>
 
                         {/* Item 3D + Mode AR */}

@@ -109,9 +109,6 @@ services:
         - NEXT_PUBLIC_ASSETS_BASE_URL=/assets
         - MINIO_INTERNAL_URL=http://minio:9000
         - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
-        - NEXT_PUBLIC_LAN_IP=${NEXT_PUBLIC_LAN_IP}
-    ports:
-      - "3000:3000"
     environment:
       - API_URL=http://api:8000
       - HOSTNAME=0.0.0.0
@@ -133,14 +130,47 @@ services:
         - API_URL=http://api:8000
         - MINIO_INTERNAL_URL=http://minio:9000
         - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
-    ports:
-      - "3001:3001"
     environment:
       - API_URL=http://api:8000
       - HOSTNAME=0.0.0.0
       - PORT=3001
     depends_on:
       - api
+    networks:
+      - lootopia-network
+    restart: unless-stopped
+
+  # Reverse proxy par app (Option A) — cert auto-signé émis à la volée par
+  # Caddy (tls internal) pour l'IP LAN détectée dynamiquement (${LAN_IP}).
+  # L'utilisateur approuve chaque origine au 1er accès (caméra/géoloc OK).
+  proxy-web:
+    container_name: lootopia_proxy_web
+    image: caddy:2
+    ports:
+      - "3000:3000"
+    environment:
+      - LAN_IP=${LAN_IP}
+    volumes:
+      - ./apps/web_proxy/Caddyfile.web:/etc/caddy/Caddyfile:ro
+      - caddy-web-data:/data
+    depends_on:
+      - web
+    networks:
+      - lootopia-network
+    restart: unless-stopped
+
+  proxy-pwa:
+    container_name: lootopia_proxy_pwa
+    image: caddy:2
+    ports:
+      - "3001:3001"
+    environment:
+      - LAN_IP=${LAN_IP}
+    volumes:
+      - ./apps/pwa_proxy/Caddyfile.pwa:/etc/caddy/Caddyfile:ro
+      - caddy-pwa-data:/data
+    depends_on:
+      - pwa
     networks:
       - lootopia-network
     restart: unless-stopped
@@ -178,4 +208,8 @@ volumes:
   lootopia-data:
     driver: local
   lootopia-minio:
+    driver: local
+  caddy-web-data:
+    driver: local
+  caddy-pwa-data:
     driver: local

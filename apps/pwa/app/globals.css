@@ -22,6 +22,14 @@ a {
 }
 
 :root {
+    /* Safe area pour iPhones avec encoche / Dynamic Island */
+    --safe-top: env(safe-area-inset-top);
+    --topbar-height: calc(50px + env(safe-area-inset-top));
+    --tabbar-height: calc(67px + env(safe-area-inset-bottom));
+    --safe-bottom: env(safe-area-inset-bottom);
+    --safe-left: env(safe-area-inset-left);
+    --safe-right: env(safe-area-inset-right);
+
     --background: #E4D9BF;
     --foreground: #3A2A1C;
     --card: #FBF5E6;                 /* $surface : Cartes crème */
@@ -59,15 +67,37 @@ a {
 }
 
 .dark {
-    --background: #E4D9BF;
-    --foreground: #3A2A1C;
-    --card: #FBF5E6;
-    --card-foreground: #3A2A1C;
-    --border: #3A2A1C;
+    /* Variante nocturne du thème rétro : surfaces espresso sombres, marques
+       (rouge fil / teal dossier / jaune post-it) conservées mais éclaircies
+       pour le contraste sur fond sombre. Les vars non listées héritent de
+       :root (ex. sidebar, déjà en tons nuit). */
+    --background: #211913;           /* Nuit espresso */
+    --foreground: #ECE0C9;           /* Crème chaude */
+    --card: #2C2118;                 /* Surface sombre */
+    --card-foreground: #ECE0C9;
+    --popover: #2C2118;
+    --popover-foreground: #ECE0C9;
+
+    --primary: #D14B3D;              /* $thread-red éclairci */
+    --primary-foreground: #FBF5E6;
+
+    --secondary: #5BA295;            /* $folder-teal éclairci */
+    --secondary-foreground: #14201E;
+
+    --muted: #3A2C20;                /* Distinct de --card pour que les fills muted (slider, inputs) restent visibles */
+    --muted-foreground: #B3A488;     /* Texte secondaire chaud */
+
+    --accent: #EAC34E;               /* $postit inchangé (pop sur sombre) */
+    --accent-foreground: #3A2A1C;
+
+    --destructive: #E2604F;          /* Rouge éclairci pour lisibilité */
+
+    --border: #4A3A2C;               /* Bordure chaude visible sur fond sombre */
+    --input: #4A3A2C;
+    --ring: #D14B3D;
 }
 
 @theme inline {
-    --font-sans: var(--font-sans);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -102,8 +132,6 @@ a {
     --color-cork: #C49A5E;
     --color-wood-frame: #6E4426;
     --font-sans: var(--font-body), serif;
-    --font-stamp: var(--font-stamp), serif;
-    --font-hand: var(--font-hand), cursive;
     --shadow-retro: 4px 4px 0px 0px #3A2A1C;
     --shadow-retro-sm: 2px 2px 0px 0px #3A2A1C;
 }
@@ -137,4 +165,73 @@ a {
 
 @utility tilt-pin {
     transform: rotate(-1deg);
+}
+
+/* Safe-area padding utilities — utilisés partout où du contenu longe le bord de l'écran */
+@utility pt-topbar {
+  padding-top: var(--topbar-height);
+}
+/* À poser sur un conteneur NON-scrollable (Safari ignore le padding-bottom
+   des conteneurs overflow en fin de scroll — bug WebKit) */
+@utility pb-tabbar {
+  padding-bottom: var(--tabbar-height);
+}
+@utility h-topbar {
+  height: var(--topbar-height);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility px-safe {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+@utility top-safe-4 {
+  top: calc(1rem + env(safe-area-inset-top));
+}
+@utility pb-safe-3 {
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+}
+
+/* Slider <input type="range"> : course visible (rempli = primary, reste = muted)
+   via gradient piloté par --range-progress, + curseur primary contrasté.
+   Theme-aware (light/dark) car basé sur les tokens --color-*. */
+@layer components {
+  .range-retro {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 0.5rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    background: linear-gradient(
+      to right,
+      var(--color-primary) var(--range-progress, 0%),
+      var(--color-muted) var(--range-progress, 0%)
+    );
+  }
+  .range-retro::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1.1rem;
+    width: 1.1rem;
+    border-radius: 9999px;
+    background: var(--color-primary);
+    border: 2px solid var(--color-background);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  }
+  .range-retro::-moz-range-thumb {
+    height: 1.1rem;
+    width: 1.1rem;
+    border: 2px solid var(--color-background);
+    border-radius: 9999px;
+    background: var(--color-primary);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  }
+  .range-retro::-moz-range-track {
+    background: transparent;
+  }
 }

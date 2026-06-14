@@ -50,7 +50,6 @@ export default function GameMapPage({ params }: Props) {
       getParticipationByIdAction(+participationId),
     ]).then(([huntRes, participationRes]) => {
       setHunt(huntRes.data as HuntWithSteps);
-      console.log("participationRes => ", participationRes)
       setParticipation(participationRes);
       setLoading(false);
     });
@@ -58,15 +57,10 @@ export default function GameMapPage({ params }: Props) {
 
   // Continuous GPS watch
   useEffect(() => {
-    console.log("navigator.geolocation -> ", navigator.geolocation)
     if (!navigator.geolocation) return;
-    console.log(1)
     const watchId = navigator.geolocation.watchPosition(
-      (pos) => {
-        console.log("POSITION -> ", pos.coords);
-        setUserCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude })
-      },
-      () => {console.log("ERROR")},
+      (pos) => setUserCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+      () => {},
       { enableHighAccuracy: true, maximumAge: 2000 },
     );
     return () => navigator.geolocation.clearWatch(watchId);
@@ -74,16 +68,19 @@ export default function GameMapPage({ params }: Props) {
 
   // Current step: the one whose progress is IN_PROGRESS
   const currentStep = useMemo<StepWithCoords | null>(() => {
-    console.log("HUNT => ", hunt);
-    console.log("PARTICIPATION => ", participation);
     if (!hunt || !participation) return null;
     const active = participation.progresses.find((p) => p.statut === 'IN_PROGRESS');
-    console.log("ACTIVE -> ", active)
     if (!active) return null;
     const step = hunt.steps.find((s) => s.id === active.refStep);
-    console.log("CURRENT STEP : ", step)
     return step as StepWithCoords ?? null;
   }, [hunt, participation]);
+
+  // L'étape courante est-elle la dernière de la chasse ?
+  const isLastStep = useMemo(() => {
+    if (!hunt || !currentStep) return false;
+    const maxOrder = Math.max(...hunt.steps.map((s) => s.orderNumber));
+    return currentStep.orderNumber === maxOrder;
+  }, [hunt, currentStep]);
 
   // Current active progress
   const currentProgress = useMemo(() => {
@@ -169,15 +166,47 @@ export default function GameMapPage({ params }: Props) {
   }
 
   if (isCompleted) {
+    // Détail dérivé des étapes complétées ; le score final est figé sur la participation.
+    const completed = participation?.progresses.filter((p) => p.statut === 'COMPLETED') ?? [];
+    const basePoints = completed.reduce((s, p) => s + p.totalPoints, 0);
+    const timeBonus = Math.round(completed.reduce((s, p) => s + p.timeBonus, 0) * 100) / 100;
+    const finalScore = participation?.totalPoints ?? 0;
+    // Règle : terminer avec 0 point de base ne débloque aucune récompense.
+    const hasReward = basePoints > 0;
     return (
       <div className="flex h-screen flex-col items-center justify-center gap-4 px-6 text-center">
-        <Trophy size={56} className="text-amber-500" />
+        <Trophy size={56} className={hasReward ? 'text-amber-500' : 'text-muted-foreground/50'} />
         <h1 className="text-2xl font-bold">Chasse terminée !</h1>
         <p className="text-muted-foreground">
           Vous avez terminé{' '}
-          <span className="font-semibold text-foreground">{hunt?.title}</span> avec{' '}
-          <span className="font-semibold text-foreground">{participation?.totalPoints} pts</span>.
+          <span className="font-semibold text-foreground">{hunt?.title}</span>.
         </p>
+
+        <div className="rounded-xl border border-border bg-card px-5 py-3 text-sm text-muted-foreground">
+          <div className="flex justify-between gap-6">
+            <span>Points</span>
+            <span className="font-semibold text-foreground tabular-nums">{basePoints}</span>
+          </div>
+          <div className="flex justify-between gap-6">
+            <span>Bonus de temps</span>
+            <span className="font-semibold text-foreground tabular-nums">+{timeBonus}</span>
+          </div>
+          <div className="mt-1 flex justify-between gap-6 border-t border-border pt-1 text-base">
+            <span className="text-foreground">Score final</span>
+            <span className="font-bold text-foreground tabular-nums">{finalScore} pts</span>
+          </div>
+        </div>
+
+        {hasReward ? (
+          <p className="text-sm text-amber-600 dark:text-amber-400">
+            La récompense est disponible depuis votre profil.
+          </p>
+        ) : (
+          <p className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+            Vous terminez avec 0 point : aucune récompense n&apos;est débloquée.
+          </p>
+        )}
+
         <button
           onClick={() => router.replace('/')}
           className="mt-4 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground active:opacity-90"
@@ -210,6 +239,7 @@ export default function GameMapPage({ params }: Props) {
             progressId={currentProgress.id}
             totalPoints={currentProgress.totalPoints}
             participationPoints={livePoints}
+            isLastStep={isLastStep}
             onProgressChanged={handleProgressChanged}
           />
         </div>

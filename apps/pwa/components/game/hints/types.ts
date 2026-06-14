@@ -13,5 +13,8 @@ export interface ContentClue {
   orderNumber: number;
   message: string;
   penaltyCost: number;
+  /** Dernier indice de l'étape (= solution). */
   isLast: boolean;
+  /** L'étape courante est la dernière de la chasse (CTA "Terminer la chasse"). */
+  isLastStep: boolean;
 }

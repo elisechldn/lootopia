@@ -155,6 +155,8 @@ function SettingSlider({
 }) {
   const { label, description, min, max, step, unit, decimals = 2, scale = 1 } = config;
   const displayValue = (value * scale).toFixed(decimals) + (unit ? ` ${unit}` : '');
+  // Portion remplie de la course, exposée en CSS var pour le gradient du track.
+  const progress = max > min ? ((value - min) / (max - min)) * 100 : 0;
 
   return (
     <div className="px-4 py-4 space-y-2">
@@ -174,7 +176,8 @@ function SettingSlider({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-1.5 rounded-full appearance-none bg-muted accent-primary cursor-pointer"
+        style={{ '--range-progress': `${progress}%` } as React.CSSProperties}
+        className="range-retro w-full"
       />
       <p className="text-xs text-muted-foreground">{description}</p>
     </div>

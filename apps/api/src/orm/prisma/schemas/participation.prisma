@@ -2,7 +2,7 @@ model Participation {
   id          Int                 @id @default(autoincrement())
   startTime   DateTime            @default(now()) @map("start_time")
   endTime     DateTime?           @map("end_time")
-  totalPoints Int                 @default(0) @map("total_points")
+  totalPoints Float               @default(0) @map("total_points")
   status      ParticipationStatus @default(IN_PROGRESS)
   createdAt   DateTime            @default(now()) @map("created_at")
   updatedAt   DateTime            @updatedAt @map("updated_at")

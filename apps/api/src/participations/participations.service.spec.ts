@@ -89,3 +89,85 @@ describe('ParticipationsService.findOne', () => {
     });
   });
 });
+
+describe('ParticipationsService.validateStep (complétion + bonus temps)', () => {
+  const MIN = 60_000;
+  const at = (m: number) => new Date(m * MIN);
+
+  // Étape unique (donc dernière) → la validation termine la chasse.
+  const lastStepParticipation = {
+    id: 1,
+    status: 'IN_PROGRESS',
+    refUser: 42,
+    hunt: { id: 10, steps: [{ id: 1, orderNumber: 1 }] },
+    progresses: [{ id: 5, statut: 'IN_PROGRESS', refStep: 1, startedAt: at(0) }],
+  };
+
+  const updateSpy = jest.fn().mockResolvedValue({});
+  const tx = {
+    progress: {
+      update: jest.fn().mockResolvedValue({}),
+      create: jest.fn().mockResolvedValue({}),
+      findMany: jest.fn().mockResolvedValue([
+        // 100 points de base + bonus 200 (déjà figé sur le progress) → score final 300
+        { totalPoints: 100, timeBonus: 200 },
+      ]),
+    },
+    participation: {
+      update: updateSpy,
+      findUnique: jest.fn().mockResolvedValue({}),
+    },
+  };
+
+  const mockPrismaCompletion = {
+    participation: { findUnique: jest.fn() },
+    step: { findUnique: jest.fn() },
+    clueUsage: { count: jest.fn() },
+    clue: { findMany: jest.fn() },
+    $queryRaw: jest.fn(),
+    $transaction: jest.fn(
+      (cb: (t: typeof tx) => unknown) => cb(tx) as unknown,
+    ),
+  };
+
+  let service: ParticipationsService;
+
+  beforeEach(async () => {
+    jest.clearAllMocks();
+    mockPrismaCompletion.participation.findUnique.mockResolvedValue(
+      lastStepParticipation,
+    );
+    mockPrismaCompletion.step.findUnique.mockResolvedValue({
+      id: 1,
+      orderNumber: 1,
+      points: 100,
+      radius: 50,
+      estimatedDuration: 120,
+    });
+    mockPrismaCompletion.$queryRaw.mockResolvedValue([{ hasLocation: false }]);
+    mockPrismaCompletion.clueUsage.count.mockResolvedValue(0);
+    mockPrismaCompletion.clue.findMany.mockResolvedValue([]);
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        ParticipationsService,
+        { provide: PrismaService, useValue: mockPrismaCompletion },
+      ],
+    }).compile();
+    service = module.get<ParticipationsService>(ParticipationsService);
+  });
+
+  it('persiste le score final (base + bonus) à la complétion de la dernière étape', async () => {
+    await service.validateStep(1, 1, 42, { latitude: 0, longitude: 0 });
+
+    expect(updateSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          status: 'COMPLETED',
+          totalPoints: 300, // 100 base + 200 bonus
+          endTime: expect.any(Date),
+        }),
+      }),
+    );
+  });
+});
