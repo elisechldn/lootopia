@@ -22,31 +22,61 @@ Le projet est un monorepo [Turborepo](https://turborepo.dev/).
 - `@repo/eslint-config` : configurations ESLint
 - `@repo/typescript-config` : presets `tsconfig.json`
 
-## Démarrage
+## 🚀 Démarrage rapide — tout en Docker
 
-Le projet peut être lancé de deux manières : **tout en Docker** via `docker compose`, ou **en local** via `npm run dev` (avec les services d'infrastructure en Docker).
+> **Tu découvres le projet ?** C'est la voie recommandée. Seul **Docker** (Desktop ou Engine + Compose v2) est requis — pas besoin d'installer Node, Postgres ni MinIO sur ta machine.
 
-### Option 1 — Tout en Docker (`docker compose`)
+L'ensemble de la stack (API, web, PWA, base de données, MinIO, Mailpit, pgAdmin) est orchestré par `compose.yml` à la racine. La base est **créée et seedée automatiquement** par le conteneur API à son démarrage ; le bucket d'assets MinIO est créé par le service d'init.
 
-L'ensemble de la stack (API, web, PWA, base de données, MinIO, Mailpit, pgAdmin) est orchestré par `compose.yml` à la racine.
+**1. Cloner puis configurer les variables d'environnement.** Un seul fichier à remplir : le `.env` racine (consommé par `compose.yml`). Toutes les valeurs sont à `changeMe`, chaque variable a un exemple en commentaire.
 
-1. Copier le fichier d'exemple et **définir les variables d'environnement** (elles sont toutes à `changeMe` par défaut — voir les exemples de valeurs en commentaire de chaque variable) :
+```sh
+cp .env.example .env
+# puis éditer .env : renseigner les changeMe (au minimum JWT_SECRET, sinon l'API plante au boot)
+```
 
-   ```sh
-   cp .env.example .env
-   ```
+> Les `.env` des apps (`apps/*/.env`) ne sont **pas** lus en Docker : `compose.yml` injecte lui-même la config de chaque service (`environment` + `build.args`). Le seul fichier à remplir est le `.env` racine.
 
-2. Lancer la stack :
+**2. Lancer toute la stack** (le `--profile init` crée le bucket MinIO public — indispensable pour les uploads d'assets) :
 
-   ```sh
-   docker compose up --build
-   ```
+```sh
+docker compose --profile init up --build
+```
 
-Dans ce mode, les `.env` des apps ne sont pas utilisés : `compose.yml` injecte directement la configuration de chaque service (via `environment` et `build.args`).
+**3. Accéder aux apps** (certificat auto-signé → accepter l'avertissement au 1er accès) :
 
-### Option 2 — En local (`npm run dev`)
+| App | URL |
+|-----|-----|
+| Portail web (partenaires / admin) | <https://localhost:3000> |
+| PWA joueurs | <https://localhost:3001> |
 
-Les apps tournent directement sous Node.js ; seule l'infrastructure (Postgres, MinIO, Mailpit) tourne en Docker.
+C'est tout : l'API (interne), Postgres, MinIO, Mailpit et pgAdmin tournent aussi. Voir [Services annexes](#services-annexes-docker) pour leurs URLs.
+
+### Variante pratique : `make setup`
+
+Le `Makefile` enveloppe la procédure ci-dessus et **auto-détecte l'IP LAN** (`LAN_IP`) pour permettre l'accès depuis un **smartphone** sur le même réseau (test caméra / géoloc AR) — voir la note `LAN_IP` plus bas. Nécessite `make` + Node installés (l'étape de reset relance Prisma côté hôte).
+
+```sh
+make setup     # build + démarrage (avec bucket) + reset/seed
+make stop      # arrêt + suppression des volumes
+make help      # liste des cibles (reset-db, reset-bucket, seed…)
+```
+
+### Note `LAN_IP` (accès mobile)
+
+Les reverse proxies Caddy (`proxy-web`/`proxy-pwa`) servent `https://localhost:3000/3001` **sans configuration**. Pour ouvrir l'app depuis un **téléphone** via l'IP LAN de ta machine (nécessaire pour tester caméra/GPS sur mobile), il faut fournir `LAN_IP` :
+
+```sh
+# macOS
+LAN_IP=$(ipconfig getifaddr en0) docker compose --profile init up --build
+# …ou simplement `make setup`, qui le détecte tout seul.
+```
+
+L'app est alors aussi joignable sur `https://<IP_LAN>:3000` / `:3001`.
+
+## Démarrage en local (`npm run dev`)
+
+Alternative pour le développement des apps : elles tournent directement sous Node.js ; seule l'infrastructure (Postgres, MinIO, Mailpit) tourne en Docker.
 
 1. **Définir les variables d'environnement dédiées dans chaque app**, à partir de leur `.env.example` respectif :
 
