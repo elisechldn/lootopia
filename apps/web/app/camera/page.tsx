@@ -81,7 +81,9 @@ function CameraPage() {
 }
 
 export default function SuspenseCameraPage() {
-    <Suspense fallback={<p className="text-center text-sm text-muted-foreground">Chargement...</p>}>
-        <CameraPage/>
-    </Suspense>
+    return (
+        <Suspense fallback={<p className="text-center text-sm text-muted-foreground">Chargement...</p>}>
+            <CameraPage />
+        </Suspense>
+    );
 }
