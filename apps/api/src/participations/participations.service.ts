@@ -147,7 +147,13 @@ export class ParticipationsService {
           `Récupération de ${participations.length} participations pour l'utilisateur ${userId}`,
           'ParticipationsService',
         );
-        return participations;
+        // Verrou : terminer une chasse avec 0 point ne débloque pas la
+        // récompense — on n'expose jamais ses détails dans ce cas.
+        return participations.map((p) =>
+          p.totalPoints > 0
+            ? p
+            : { ...p, hunt: { ...p.hunt, rewardType: null, rewardValue: null } },
+        );
       });
   }
 
