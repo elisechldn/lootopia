@@ -111,24 +111,12 @@ export default function LeaderBoardPage() {
               {hunts.map((h) => (
                 <li key={h.refHunt}>
                   <Link
-                    href={`/hunts/${h.refHunt}`}
+                    href={`/hunts/${h.refHunt}/leaderboard`}
                     className="flex items-center gap-3 rounded-[15px] border border-border bg-card p-3 shadow-sm transition-colors active:bg-foreground/5"
                   >
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center">
                       <RankBadge rank={h.rank} />
                     </div>
-
-                    {h.coverImage && (
-                      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-muted">
-                        <Image
-                          src={assetUrl(h.coverImage)!}
-                          alt={h.title}
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                    )}
 
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{h.title}</p>
