@@ -198,3 +198,43 @@ a {
 @utility pb-safe-3 {
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
 }
+
+/* Slider <input type="range"> : course visible (rempli = primary, reste = muted)
+   via gradient piloté par --range-progress, + curseur primary contrasté.
+   Theme-aware (light/dark) car basé sur les tokens --color-*. */
+@layer components {
+  .range-retro {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 0.5rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    background: linear-gradient(
+      to right,
+      var(--color-primary) var(--range-progress, 0%),
+      var(--color-muted) var(--range-progress, 0%)
+    );
+  }
+  .range-retro::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1.1rem;
+    width: 1.1rem;
+    border-radius: 9999px;
+    background: var(--color-primary);
+    border: 2px solid var(--color-background);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  }
+  .range-retro::-moz-range-thumb {
+    height: 1.1rem;
+    width: 1.1rem;
+    border: 2px solid var(--color-background);
+    border-radius: 9999px;
+    background: var(--color-primary);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  }
+  .range-retro::-moz-range-track {
+    background: transparent;
+  }
+}
