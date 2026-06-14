@@ -71,7 +71,7 @@ function HomeContent() {
       <div className="flex flex-col flex-1 pt-topbar overflow-hidden">
         {/* Toggle Liste / Carte */}
         <div className="px-4 py-2 border-b border-border flex items-center justify-between">
-          <ViewToggle value={view} onChange={setView} className="flex w-full rounded-lg p-1 bg-gray-200 dark:bg-white/10" />
+          <ViewToggle value={view} onChange={setView} className="flex w-full rounded-lg p-1 bg-foreground/10" />
           {status === 'geoerror' && (
             <span className="text-xs text-muted-foreground">
               Géolocalisation indisponible

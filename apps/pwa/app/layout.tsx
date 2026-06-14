@@ -41,8 +41,8 @@ export const viewport: Viewport = {
   // Couleur de la barre de statut au premier paint (suit l'OS) — alignée sur --background.
   // Après hydratation, ThemeColorSync impose la couleur du thème résolu (override manuel inclus).
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#E4D9BF" },
+    { media: "(prefers-color-scheme: dark)", color: "#211913" },
   ],
 };
 
@@ -54,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bitter.variable} ${bitter.variable}`}
+      className={bitter.variable}
       suppressHydrationWarning
     >
       <body className="antialiased">
