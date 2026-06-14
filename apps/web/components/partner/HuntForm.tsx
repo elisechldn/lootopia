@@ -43,7 +43,7 @@ export default function HuntForm({ initialData }: Props) {
     const user = useAuthStore((s) => s.user);
     const [activeTab, setActiveTab] = useState<Tab>("metadata");
     const [status, setStatus] = useState<Status>((initialData?.status as Status) ?? "DRAFT");
-    const [tags, setTags] = useState<string[]>(["futuriste", "Historique", "Piraterie"]);
+    // const [tags, setTags] = useState<string[]>(["futuriste", "Historique", "Piraterie"]);
     const [tagInput, setTagInput] = useState("");
     const [coverImage, setCoverImage] = useState<string | null>(assetUrl(initialData?.coverImage));
     const [coverImageKey, setCoverImageKey] = useState<string | null>(initialData?.coverImage ?? null);
@@ -68,15 +68,15 @@ export default function HuntForm({ initialData }: Props) {
 
     const set = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
 
-    const addTag = () => {
-        const trimmed = tagInput.trim();
-        if (trimmed && !tags.includes(trimmed)) {
-            setTags((prev) => [...prev, trimmed]);
-        }
-        setTagInput("");
-    };
+    // const addTag = () => {
+    //     const trimmed = tagInput.trim();
+    //     if (trimmed && !tags.includes(trimmed)) {
+    //         setTags((prev) => [...prev, trimmed]);
+    //     }
+    //     setTagInput("");
+    // };
 
-    const removeTag = (tag: string) => setTags((prev) => prev.filter((t) => t !== tag));
+    // const removeTag = (tag: string) => setTags((prev) => prev.filter((t) => t !== tag));
 
     const handleSave = async (nextStatus?: Status) => {
         setError(null);
@@ -457,36 +457,36 @@ export default function HuntForm({ initialData }: Props) {
                     </div>
 
                     {/* Tags */}
-                    <div>
-                        <h3 className="text-sm font-semibold text-foreground/80 mb-3 flex items-center gap-2">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z"/>
-                            </svg>
-                            Tags
-                        </h3>
-                        <div className="h-0.5 bg-gray-200 mb-4" />
-                        <div className="flex flex-wrap gap-2 mb-3">
-                            {tags.map((tag) => (
-                                <span key={tag}
-                                      className="inline-flex items-center gap-1.5 px-3 py-1 text-sm border border-gray-300 rounded-full text-muted-foreground">
-                                    {tag}
-                                    <button onClick={() => removeTag(tag)}
-                                            className="text-muted-foreground/70 hover:text-muted-foreground leading-none">×</button>
-                                </span>
-                            ))}
-                        </div>
-                        <div className="flex gap-2">
-                            <input value={tagInput} onChange={(e) => setTagInput(e.target.value)}
-                                   onKeyDown={(e) => e.key === "Enter" && addTag()}
-                                   placeholder="Nouveau tag..."
-                                   className="px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                            <button onClick={addTag}
-                                    className="px-3 py-1.5 text-sm bg-gray-900 text-white rounded-lg hover:bg-gray-800">
-                                + Ajouter
-                            </button>
-                        </div>
-                    </div>
+                    {/*<div>*/}
+                    {/*    <h3 className="text-sm font-semibold text-foreground/80 mb-3 flex items-center gap-2">*/}
+                    {/*        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">*/}
+                    {/*            <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/>*/}
+                    {/*            <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z"/>*/}
+                    {/*        </svg>*/}
+                    {/*        Tags*/}
+                    {/*    </h3>*/}
+                    {/*    <div className="h-0.5 bg-gray-200 mb-4" />*/}
+                    {/*    <div className="flex flex-wrap gap-2 mb-3">*/}
+                    {/*        {tags.map((tag) => (*/}
+                    {/*            <span key={tag}*/}
+                    {/*                  className="inline-flex items-center gap-1.5 px-3 py-1 text-sm border border-gray-300 rounded-full text-muted-foreground">*/}
+                    {/*                {tag}*/}
+                    {/*                <button onClick={() => removeTag(tag)}*/}
+                    {/*                        className="text-muted-foreground/70 hover:text-muted-foreground leading-none">×</button>*/}
+                    {/*            </span>*/}
+                    {/*        ))}*/}
+                    {/*    </div>*/}
+                    {/*    <div className="flex gap-2">*/}
+                    {/*        <input value={tagInput} onChange={(e) => setTagInput(e.target.value)}*/}
+                    {/*               onKeyDown={(e) => e.key === "Enter" && addTag()}*/}
+                    {/*               placeholder="Nouveau tag..."*/}
+                    {/*               className="px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />*/}
+                    {/*        <button onClick={addTag}*/}
+                    {/*                className="px-3 py-1.5 text-sm bg-gray-900 text-white rounded-lg hover:bg-gray-800">*/}
+                    {/*            + Ajouter*/}
+                    {/*        </button>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
 
                     {/* Récompense */}
                     <div>
