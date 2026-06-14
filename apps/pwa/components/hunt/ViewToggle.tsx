@@ -9,9 +9,9 @@ type Props = {
   className?: string;
 };
 
-export default function ViewToggle({ value, onChange }: Props) {
+export default function ViewToggle({ value, onChange, className }: Props) {
   return (
-    <>
+    <div className={className}>
       <ToggleGroup
         value={[value]}
         onValueChange={(values) => {
@@ -33,6 +33,6 @@ export default function ViewToggle({ value, onChange }: Props) {
           <Map /> Carte
         </ToggleGroupItem>
       </ToggleGroup>
-    </>
+    </div>
   );
 }
