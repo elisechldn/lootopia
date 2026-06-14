@@ -1,4 +1,12 @@
 API_DIR := apps/api
+
+# Détection de l'IP LAN de l'hôte (macOS: ipconfig ; Linux: route puis hostname).
+# Utilisée par les reverse proxies au runtime (LAN_IP, cert tls internal) et
+# inlinée au build Next.js (NEXT_PUBLIC_LAN_IP). Recalculée à chaque `make`.
+LAN_IP := $(shell ipconfig getifaddr en0 2>/dev/null || ip route get 1.1.1.1 2>/dev/null | grep -oP 'src \K\S+' || hostname -I 2>/dev/null | awk '{print $$1}')
+# Exporté aux invocations docker compose (priorité sur le .env).
+COMPOSE_ENV := LAN_IP=$(LAN_IP) NEXT_PUBLIC_LAN_IP=$(LAN_IP)
+
 # Variables pour MinIO (évite la répétition et facilite la maintenance)
 MINIO_CONTAINER := lootopia_minio
 MINIO_BUCKET := lootopia-public
@@ -7,19 +15,29 @@ MINIO_USER := minioadmin
 MINIO_PASS := minioadmin
 MAILPIT_URL := http://localhost:8025
 
-.PHONY: setup build start stop reset reset-db reset-bucket reset-mailpit seed help
+.PHONY: setup build start stop reset reset-db reset-bucket reset-mailpit seed help check-ip
+
+## Échoue tôt si l'IP LAN n'a pas pu être détectée (VPN, interface non en0, etc.)
+check-ip:
+	@test -n "$(LAN_IP)" || { echo "❌ IP LAN introuvable. Renseigne-la : make start LAN_IP=192.168.x.x"; exit 1; }
 
 ## Initialise l'environnement complet
 setup: build start reset
 
 ## Construit les images Docker
-build:
-	docker compose build
+build: check-ip
+	@echo "🌐 IP LAN détectée : $(LAN_IP)"
+	$(COMPOSE_ENV) docker compose build
 
 ## Lance les conteneurs
-start:
-	docker compose --profile init up -d --build minio-init
-	docker compose up -d --build --wait
+start: check-ip
+	@echo "🌐 IP LAN détectée : $(LAN_IP)"
+	$(COMPOSE_ENV) docker compose --profile init up -d --build minio-init
+	$(COMPOSE_ENV) docker compose up -d --build --wait
+	@echo ""
+	@echo "✅ Lootopia prêt — accès HTTPS (accepter l'avertissement cert au 1er accès) :"
+	@echo "   web → https://$(LAN_IP)"
+	@echo "   pwa → https://$(LAN_IP):3001"
 
 ## Arrête et nettoie tout
 stop:
