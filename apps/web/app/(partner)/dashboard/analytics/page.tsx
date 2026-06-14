@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import AnalyticsDashboard from "@/components/partner/AnalyticsDashboard";
-
-const API_URL = process.env.API_URL ?? 'http://localhost:8000';
+import { API_URL } from "@/lib/api";
 
 async function getAnalytics() {
     const token = (await cookies()).get('auth_token')?.value;

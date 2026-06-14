@@ -1,10 +1,11 @@
 import { cookies } from "next/headers";
 import ParticipantsDashboard from "@/components/partner/ParticipantsDashboard";
+import { API_URL } from "@/lib/api";
 
 async function getParticipants() {
     const token = (await cookies()).get("auth_token")?.value;
     const res = await fetch(
-        `${process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL}/participations/partner`,
+        `${API_URL}/participations/partner`,
         {
             cache: 'no-store',
             headers: token ? { Authorization: `Bearer ${token}` } : {},

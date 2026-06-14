@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers';
-
-const API_URL = process.env.API_URL ?? 'http://localhost:8000';
+import { API_URL } from '@/lib/api';
 
 export async function getSession() {
     const token = (await cookies()).get('auth_token')?.value;

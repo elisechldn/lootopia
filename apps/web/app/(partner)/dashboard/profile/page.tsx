@@ -1,8 +1,7 @@
 import ProfileForm from "@/components/partner/ProfileForm";
 import { cookies } from "next/headers";
 import { logoutAction } from "@/lib/actions/auth.actions";
-
-const API_URL = process.env.API_URL ?? 'http://localhost:8000';
+import { API_URL } from "@/lib/api";
 
 async function getCurrentUser() {
     const token = (await cookies()).get('auth_token')?.value;

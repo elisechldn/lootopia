@@ -4,8 +4,7 @@ import { getSession } from '@/lib/auth';
 import PartnerSidebar from "@/components/partner/PartnerSidebar";
 import AuthProvider from "@/components/partner/AuthProvider";
 import ThemeWrapper from "@/components/partner/ThemeWrapper";
-
-const API_URL = process.env.API_URL ?? 'http://localhost:8000';
+import { API_URL } from "@/lib/api";
 
 async function getAdminSessionWithProfile() {
     const session = await getSession();

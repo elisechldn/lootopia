@@ -109,14 +109,13 @@ services:
         - NEXT_PUBLIC_ASSETS_BASE_URL=/assets
         - MINIO_INTERNAL_URL=http://minio:9000
         - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
+        - NEXT_PUBLIC_LAN_IP=${NEXT_PUBLIC_LAN_IP}
     ports:
       - "3000:3000"
     environment:
       - API_URL=http://api:8000
       - HOSTNAME=0.0.0.0
       - PORT=3000
-      - MINIO_INTERNAL_URL=http://minio:9000
-      - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
     depends_on:
       - api
     networks:
@@ -140,8 +139,6 @@ services:
       - API_URL=http://api:8000
       - HOSTNAME=0.0.0.0
       - PORT=3001
-      - MINIO_INTERNAL_URL=http://minio:9000
-      - S3_BUCKET=${MINIO_BUCKET:-lootopia-public}
     depends_on:
       - api
     networks:

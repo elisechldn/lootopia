@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-
-const API_URL = process.env.API_URL ?? 'http://localhost:8000';
+import { API_URL } from '@/lib/api';
 
 export async function GET() {
   const token = (await cookies()).get('auth_token')?.value;

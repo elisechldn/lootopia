@@ -3,11 +3,12 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import PlayerStatsDashboard, { type PlayerParticipation } from "@/components/partner/PlayerStatsDashboard";
+import { API_URL } from "@/lib/api";
 
 async function getPlayerParticipations(userId: string): Promise<PlayerParticipation[]> {
     const token = (await cookies()).get("auth_token")?.value;
     const res = await fetch(
-        `${process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL}/participations/player/${userId}`,
+        `${API_URL}/participations/player/${userId}`,
         {
             cache: "no-store",
             headers: token ? { Authorization: `Bearer ${token}` } : {},

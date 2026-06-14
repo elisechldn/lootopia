@@ -2,8 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import StatsView, { type StatsData } from "./StatsView";
-
-const API_URL = process.env.API_URL ?? "http://localhost:8000";
+import { API_URL } from "@/lib/api";
 
 export default async function StatsPage() {
     const session = await getSession();

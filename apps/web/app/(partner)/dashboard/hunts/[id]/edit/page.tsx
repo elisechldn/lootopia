@@ -1,8 +1,9 @@
 import HuntForm from "@/components/partner/HuntForm";
 import { Hunt } from "@/components/partner/types";
+import { API_URL } from "@/lib/api";
 
 async function getHunt(id: string): Promise<Hunt | null> {
-    const res = await fetch(`${process.env.API_URL}/hunts/${id}`, { cache: "no-store" });
+    const res = await fetch(`${API_URL}/hunts/${id}`, { cache: "no-store" });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data ?? null;
