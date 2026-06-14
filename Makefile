@@ -36,8 +36,8 @@ start: check-ip
 	$(COMPOSE_ENV) docker compose up -d --build --wait
 	@echo ""
 	@echo "✅ Lootopia prêt — accès HTTPS (accepter l'avertissement cert au 1er accès) :"
-	@echo "   web → https://$(LAN_IP)"
-	@echo "   pwa → https://$(LAN_IP):3001"
+	@echo "   web → https://$(LAN_IP):3000  (ou https://localhost:3000)"
+	@echo "   pwa → https://$(LAN_IP):3001  (ou https://localhost:3001)"
 
 ## Arrête et nettoie tout
 stop:

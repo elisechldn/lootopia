@@ -10,7 +10,7 @@
 	default_sni {$LAN_IP}
 }
 
-https://{$LAN_IP}:3001 {
+https://{$LAN_IP}:3001, https://localhost:3001 {
 	tls internal
 	reverse_proxy pwa:3001
 }

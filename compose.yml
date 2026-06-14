@@ -147,7 +147,7 @@ services:
     container_name: lootopia_proxy_web
     image: caddy:2
     ports:
-      - "443:443"
+      - "3000:3000"
     environment:
       - LAN_IP=${LAN_IP}
     volumes:

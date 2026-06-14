@@ -10,7 +10,7 @@
 	default_sni {$LAN_IP}
 }
 
-https://{$LAN_IP}:443 {
+https://{$LAN_IP}:3000, https://localhost:3000 {
 	tls internal
 	reverse_proxy web:3000
 }
