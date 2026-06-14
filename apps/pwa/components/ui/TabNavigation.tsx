@@ -7,8 +7,8 @@ import styles from './TabNavigation.module.css';
 
 const TABS = [
   { label: 'Accueil', href: '/', icon: Home },
-  { label: 'Profil', href: '/profile', icon: User },
   { label: 'Classement', href: '/leaderboard', icon: Trophy },
+  { label: 'Profil', href: '/profile', icon: User },
   { label: 'Réglages', href: '/settings', icon: Settings },
 ];
 
