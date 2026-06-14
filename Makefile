@@ -1,11 +1,11 @@
 API_DIR := apps/api
 
 # Détection de l'IP LAN de l'hôte (macOS: ipconfig ; Linux: route puis hostname).
-# Utilisée par les reverse proxies au runtime (LAN_IP, cert tls internal) et
-# inlinée au build Next.js (NEXT_PUBLIC_LAN_IP). Recalculée à chaque `make`.
+# Utilisée par les reverse proxies au runtime (LAN_IP, cert tls internal).
+# Les images web/pwa sont IP-agnostiques : pas besoin de rebuild si l'IP change.
 LAN_IP := $(shell ipconfig getifaddr en0 2>/dev/null || ip route get 1.1.1.1 2>/dev/null | grep -oP 'src \K\S+' || hostname -I 2>/dev/null | awk '{print $$1}')
 # Exporté aux invocations docker compose (priorité sur le .env).
-COMPOSE_ENV := LAN_IP=$(LAN_IP) NEXT_PUBLIC_LAN_IP=$(LAN_IP)
+COMPOSE_ENV := LAN_IP=$(LAN_IP)
 
 # Variables pour MinIO (évite la répétition et facilite la maintenance)
 MINIO_CONTAINER := lootopia_minio
