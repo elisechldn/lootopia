@@ -79,8 +79,9 @@ export default function ProfilePage() {
 
   if (!user) return null;
 
-  // Une chasse terminée = une récompense débloquée.
-  const rewards = participations.filter((p) => p.status === 'COMPLETED');
+  // Une chasse terminée avec au moins 1 point = une récompense débloquée
+  // (terminer à 0 point ne donne pas accès à la récompense).
+  const rewards = participations.filter((p) => p.status === 'COMPLETED' && p.totalPoints > 0);
 
   return (
     <div className="flex flex-col h-screen pb-tabbar">
