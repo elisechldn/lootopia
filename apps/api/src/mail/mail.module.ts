@@ -18,9 +18,7 @@ function resolveTemplatesDir(): string {
 // En local : SMTP en clair vers Mailpit. Le templating Handlebars reste identique.
 function resolveTransport() {
   const acsConnectionString = process.env.ACS_CONNECTION_STRING;
-  if (acsConnectionString) {
-    return createAcsTransport(acsConnectionString);
-  }
+  if (acsConnectionString) return createAcsTransport(acsConnectionString);
   return {
     host: process.env.MAIL_HOST ?? 'mailpit',
     port: parseInt(process.env.MAIL_PORT ?? '1025'),
