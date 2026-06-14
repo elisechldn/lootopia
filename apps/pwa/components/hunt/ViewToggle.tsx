@@ -22,13 +22,13 @@ export default function ViewToggle({ value, onChange, className }: Props) {
       >
         <ToggleGroupItem
           value="list"
-          className="flex-1 border-none data-[state=on]:bg-white data-[state=on]:shadow-md"
+          className="flex-1 border-none data-[state=on]:bg-white dark:data-[state=on]:bg-white/20 data-[state=on]:shadow-md"
         >
           <List /> Liste
         </ToggleGroupItem>
         <ToggleGroupItem
           value="map"
-          className="flex-1 border-none data-[state=on]:bg-white data-[state=on]:shadow-md"
+          className="flex-1 border-none data-[state=on]:bg-white dark:data-[state=on]:bg-white/20 data-[state=on]:shadow-md"
         >
           <Map /> Carte
         </ToggleGroupItem>

@@ -3,10 +3,10 @@
 import { useEffect } from "react";
 import { useTheme } from "next-themes";
 
-/** Couleurs alignées sur --background de globals.css (light: oklch(1 0 0), dark: oklch(0.145 0 0)) */
+/** Couleurs alignées sur --background de globals.css (thème rétro). */
 const THEME_COLORS: Record<"light" | "dark", string> = {
-  light: "#ffffff",
-  dark: "#0a0a0a",
+  light: "#E4D9BF",
+  dark: "#211913",
 };
 
 /**
