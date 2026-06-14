@@ -31,6 +31,7 @@ export type StepAvgAggregateOutputType = {
   orderNumber: number | null
   radius: number | null
   points: number | null
+  estimatedDuration: number | null
   refHunt: number | null
 }
 
@@ -39,6 +40,7 @@ export type StepSumAggregateOutputType = {
   orderNumber: number | null
   radius: number | null
   points: number | null
+  estimatedDuration: number | null
   refHunt: number | null
 }
 
@@ -48,6 +50,7 @@ export type StepMinAggregateOutputType = {
   title: string | null
   radius: number | null
   points: number | null
+  estimatedDuration: number | null
   createdAt: Date | null
   updatedAt: Date | null
   refHunt: number | null
@@ -63,6 +66,7 @@ export type StepMaxAggregateOutputType = {
   title: string | null
   radius: number | null
   points: number | null
+  estimatedDuration: number | null
   createdAt: Date | null
   updatedAt: Date | null
   refHunt: number | null
@@ -78,6 +82,7 @@ export type StepCountAggregateOutputType = {
   title: number
   radius: number
   points: number
+  estimatedDuration: number
   createdAt: number
   updatedAt: number
   refHunt: number
@@ -94,6 +99,7 @@ export type StepAvgAggregateInputType = {
   orderNumber?: true
   radius?: true
   points?: true
+  estimatedDuration?: true
   refHunt?: true
 }
 
@@ -102,6 +108,7 @@ export type StepSumAggregateInputType = {
   orderNumber?: true
   radius?: true
   points?: true
+  estimatedDuration?: true
   refHunt?: true
 }
 
@@ -111,6 +118,7 @@ export type StepMinAggregateInputType = {
   title?: true
   radius?: true
   points?: true
+  estimatedDuration?: true
   createdAt?: true
   updatedAt?: true
   refHunt?: true
@@ -126,6 +134,7 @@ export type StepMaxAggregateInputType = {
   title?: true
   radius?: true
   points?: true
+  estimatedDuration?: true
   createdAt?: true
   updatedAt?: true
   refHunt?: true
@@ -141,6 +150,7 @@ export type StepCountAggregateInputType = {
   title?: true
   radius?: true
   points?: true
+  estimatedDuration?: true
   createdAt?: true
   updatedAt?: true
   refHunt?: true
@@ -243,6 +253,7 @@ export type StepGroupByOutputType = {
   title: string
   radius: number
   points: number
+  estimatedDuration: number
   createdAt: Date
   updatedAt: Date
   refHunt: number
@@ -281,6 +292,7 @@ export type StepWhereInput = {
   title?: Prisma.StringFilter<"Step"> | string
   radius?: Prisma.IntFilter<"Step"> | number
   points?: Prisma.IntFilter<"Step"> | number
+  estimatedDuration?: Prisma.IntFilter<"Step"> | number
   createdAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   refHunt?: Prisma.IntFilter<"Step"> | number
@@ -300,6 +312,7 @@ export type StepOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
   points?: Prisma.SortOrder
+  estimatedDuration?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
@@ -323,6 +336,7 @@ export type StepWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Step"> | string
   radius?: Prisma.IntFilter<"Step"> | number
   points?: Prisma.IntFilter<"Step"> | number
+  estimatedDuration?: Prisma.IntFilter<"Step"> | number
   createdAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   refHunt?: Prisma.IntFilter<"Step"> | number
@@ -342,6 +356,7 @@ export type StepOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
   points?: Prisma.SortOrder
+  estimatedDuration?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
@@ -365,6 +380,7 @@ export type StepScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Step"> | string
   radius?: Prisma.IntWithAggregatesFilter<"Step"> | number
   points?: Prisma.IntWithAggregatesFilter<"Step"> | number
+  estimatedDuration?: Prisma.IntWithAggregatesFilter<"Step"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Step"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Step"> | Date | string
   refHunt?: Prisma.IntWithAggregatesFilter<"Step"> | number
@@ -379,6 +395,7 @@ export type StepCreateInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   arMode?: $Enums.ArMode
@@ -396,6 +413,7 @@ export type StepUncheckedCreateInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
@@ -412,6 +430,7 @@ export type StepUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
@@ -429,6 +448,7 @@ export type StepUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
@@ -446,6 +466,7 @@ export type StepCreateManyInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
@@ -460,6 +481,7 @@ export type StepUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
@@ -473,6 +495,7 @@ export type StepUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
@@ -508,6 +531,7 @@ export type StepCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
   points?: Prisma.SortOrder
+  estimatedDuration?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
@@ -522,6 +546,7 @@ export type StepAvgOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   radius?: Prisma.SortOrder
   points?: Prisma.SortOrder
+  estimatedDuration?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
 }
 
@@ -531,6 +556,7 @@ export type StepMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
   points?: Prisma.SortOrder
+  estimatedDuration?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
@@ -546,6 +572,7 @@ export type StepMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   radius?: Prisma.SortOrder
   points?: Prisma.SortOrder
+  estimatedDuration?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
@@ -560,6 +587,7 @@ export type StepSumOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   radius?: Prisma.SortOrder
   points?: Prisma.SortOrder
+  estimatedDuration?: Prisma.SortOrder
   refHunt?: Prisma.SortOrder
 }
 
@@ -684,6 +712,7 @@ export type StepCreateWithoutArItemInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   arMode?: $Enums.ArMode
@@ -700,6 +729,7 @@ export type StepUncheckedCreateWithoutArItemInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
@@ -745,6 +775,7 @@ export type StepScalarWhereInput = {
   title?: Prisma.StringFilter<"Step"> | string
   radius?: Prisma.IntFilter<"Step"> | number
   points?: Prisma.IntFilter<"Step"> | number
+  estimatedDuration?: Prisma.IntFilter<"Step"> | number
   createdAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Step"> | Date | string
   refHunt?: Prisma.IntFilter<"Step"> | number
@@ -759,6 +790,7 @@ export type StepCreateWithoutCluesInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   arMode?: $Enums.ArMode
@@ -775,6 +807,7 @@ export type StepUncheckedCreateWithoutCluesInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
@@ -806,6 +839,7 @@ export type StepUpdateWithoutCluesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
@@ -822,6 +856,7 @@ export type StepUncheckedUpdateWithoutCluesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
@@ -837,6 +872,7 @@ export type StepCreateWithoutHuntInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   arMode?: $Enums.ArMode
@@ -853,6 +889,7 @@ export type StepUncheckedCreateWithoutHuntInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refArItem?: string | null
@@ -894,6 +931,7 @@ export type StepCreateWithoutProgressesInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   arMode?: $Enums.ArMode
@@ -910,6 +948,7 @@ export type StepUncheckedCreateWithoutProgressesInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
@@ -941,6 +980,7 @@ export type StepUpdateWithoutProgressesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
@@ -957,6 +997,7 @@ export type StepUncheckedUpdateWithoutProgressesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
@@ -973,6 +1014,7 @@ export type StepCreateManyArItemInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refHunt: number
@@ -986,6 +1028,7 @@ export type StepUpdateWithoutArItemInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
@@ -1002,6 +1045,7 @@ export type StepUncheckedUpdateWithoutArItemInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1018,6 +1062,7 @@ export type StepUncheckedUpdateManyWithoutArItemInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refHunt?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1032,6 +1077,7 @@ export type StepCreateManyHuntInput = {
   title: string
   radius?: number
   points?: number
+  estimatedDuration: number
   createdAt?: Date | string
   updatedAt?: Date | string
   refArItem?: string | null
@@ -1045,6 +1091,7 @@ export type StepUpdateWithoutHuntInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arMode?: Prisma.EnumArModeFieldUpdateOperationsInput | $Enums.ArMode
@@ -1061,6 +1108,7 @@ export type StepUncheckedUpdateWithoutHuntInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refArItem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1077,6 +1125,7 @@ export type StepUncheckedUpdateManyWithoutHuntInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   radius?: Prisma.IntFieldUpdateOperationsInput | number
   points?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedDuration?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refArItem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1131,6 +1180,7 @@ export type StepSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   title?: boolean
   radius?: boolean
   points?: boolean
+  estimatedDuration?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   refHunt?: boolean
@@ -1151,6 +1201,7 @@ export type StepSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   title?: boolean
   radius?: boolean
   points?: boolean
+  estimatedDuration?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   refHunt?: boolean
@@ -1168,6 +1219,7 @@ export type StepSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   title?: boolean
   radius?: boolean
   points?: boolean
+  estimatedDuration?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   refHunt?: boolean
@@ -1185,6 +1237,7 @@ export type StepSelectScalar = {
   title?: boolean
   radius?: boolean
   points?: boolean
+  estimatedDuration?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   refHunt?: boolean
@@ -1194,7 +1247,7 @@ export type StepSelectScalar = {
   markerPatternUrl?: boolean
 }
 
-export type StepOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "title" | "radius" | "points" | "createdAt" | "updatedAt" | "refHunt" | "refArItem" | "arMode" | "markerImageUrl" | "markerPatternUrl", ExtArgs["result"]["step"]>
+export type StepOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "title" | "radius" | "points" | "estimatedDuration" | "createdAt" | "updatedAt" | "refHunt" | "refArItem" | "arMode" | "markerImageUrl" | "markerPatternUrl", ExtArgs["result"]["step"]>
 export type StepInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   arItem?: boolean | Prisma.Step$arItemArgs<ExtArgs>
   hunt?: boolean | Prisma.HuntDefaultArgs<ExtArgs>
@@ -1225,6 +1278,7 @@ export type $StepPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     title: string
     radius: number
     points: number
+    estimatedDuration: number
     createdAt: Date
     updatedAt: Date
     refHunt: number
@@ -1664,6 +1718,7 @@ export interface StepFieldRefs {
   readonly title: Prisma.FieldRef<"Step", 'String'>
   readonly radius: Prisma.FieldRef<"Step", 'Int'>
   readonly points: Prisma.FieldRef<"Step", 'Int'>
+  readonly estimatedDuration: Prisma.FieldRef<"Step", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Step", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Step", 'DateTime'>
   readonly refHunt: Prisma.FieldRef<"Step", 'Int'>

@@ -166,21 +166,38 @@ export default function GameMapPage({ params }: Props) {
   }
 
   if (isCompleted) {
-    // Règle : terminer avec 0 point ne débloque aucune récompense.
-    const hasReward = (participation?.totalPoints ?? 0) > 0;
+    // Règle : terminer avec 0 point de base ne débloque aucune récompense.
+    const basePoints = participation?.totalPoints ?? 0;
+    const timeBonus = participation?.timeBonus ?? 0;
+    const finalScore = Math.round((basePoints + timeBonus) * 100) / 100;
+    const hasReward = basePoints > 0;
     return (
       <div className="flex h-screen flex-col items-center justify-center gap-4 px-6 text-center">
         <Trophy size={56} className={hasReward ? 'text-amber-500' : 'text-muted-foreground/50'} />
         <h1 className="text-2xl font-bold">Chasse terminée !</h1>
         <p className="text-muted-foreground">
           Vous avez terminé{' '}
-          <span className="font-semibold text-foreground">{hunt?.title}</span> avec{' '}
-          <span className="font-semibold text-foreground">{participation?.totalPoints} pts</span>.
+          <span className="font-semibold text-foreground">{hunt?.title}</span>.
         </p>
+
+        <div className="rounded-xl border border-border bg-card px-5 py-3 text-sm text-muted-foreground">
+          <div className="flex justify-between gap-6">
+            <span>Points</span>
+            <span className="font-semibold text-foreground tabular-nums">{basePoints}</span>
+          </div>
+          <div className="flex justify-between gap-6">
+            <span>Bonus de temps</span>
+            <span className="font-semibold text-foreground tabular-nums">+{timeBonus}</span>
+          </div>
+          <div className="mt-1 flex justify-between gap-6 border-t border-border pt-1 text-base">
+            <span className="text-foreground">Score final</span>
+            <span className="font-bold text-foreground tabular-nums">{finalScore} pts</span>
+          </div>
+        </div>
 
         {hasReward ? (
           <p className="text-sm text-amber-600 dark:text-amber-400">
-            🎁 Votre récompense est disponible depuis votre profil.
+            La récompense est disponible depuis votre profil.
           </p>
         ) : (
           <p className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">

@@ -31,6 +31,7 @@ function emptyStep(orderNumber: number): Step {
         arItemFilename: null,
         qrCode: null,
         points: 0,
+        estimatedDuration: 10,
         arMode: "GPS",
         _markerFile: null,
         _markerPatternFile: null,

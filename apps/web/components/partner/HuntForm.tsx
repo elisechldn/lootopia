@@ -30,6 +30,7 @@ export default function HuntForm({ initialData }: Props) {
             arItemFilename: s.arItem?.filename ?? null,
             qrCode: s.qrCode ?? null,
             points: s.points,
+            estimatedDuration: s.estimatedDuration ?? 10,
             arMode: (s as { arMode?: "GPS" | "MARKER" }).arMode ?? "GPS",
             _markerFile: null,
             _markerPatternFile: null,
@@ -93,6 +94,16 @@ export default function HuntForm({ initialData }: Props) {
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : "Échec de l'upload de l'image");
+            setSaving(false);
+            return;
+        }
+
+        // Chaque étape doit avoir une durée estimée strictement positive.
+        const invalidStep = steps.findIndex(
+            (s) => !Number.isInteger(Number(s.estimatedDuration)) || Number(s.estimatedDuration) < 1,
+        );
+        if (invalidStep !== -1) {
+            setError(`L'étape ${invalidStep + 1} doit avoir une durée estimée strictement positive (en minutes).`);
             setSaving(false);
             return;
         }
@@ -360,18 +371,6 @@ export default function HuntForm({ initialData }: Props) {
                         </h3>
                         <div className="h-0.5 bg-gray-200 mb-4" />
                         <div className="grid grid-cols-3 gap-4">
-                            {/*<div>*/}
-                            {/*    <label className="block text-xs text-muted-foreground mb-1 flex items-center gap-1">*/}
-                            {/*        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">*/}
-                            {/*            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>*/}
-                            {/*        </svg>*/}
-                            {/*        Durée estimée*/}
-                            {/*    </label>*/}
-                            {/*    <input value={form.estimatedDuration}*/}
-                            {/*           onChange={(e) => set("estimatedDuration", e.target.value)}*/}
-                            {/*           placeholder="Durée approximative..."*/}
-                            {/*           className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900" />*/}
-                            {/*</div>*/}
                             <div>
                                 <label className="block text-xs text-muted-foreground mb-1 flex items-center gap-1">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">

@@ -5,6 +5,7 @@ model Step {
   location         Unsupported("GEOGRAPHY(Point, 4326)")?
   radius           Int          @default(50)
   points           Int          @default(0)
+  estimatedDuration Int         @map("estimated_duration")
   createdAt        DateTime     @default(now()) @map("created_at")
   updatedAt        DateTime     @updatedAt @map("updated_at")
   refHunt          Int          @map("ref_hunt")

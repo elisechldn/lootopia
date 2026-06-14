@@ -704,6 +704,8 @@ async function main() {
     refHunt: number;
     lat: number;
     lon: number;
+    /** Durée estimée de l'étape en minutes (défaut 10 si non précisé). */
+    estimatedDuration?: number;
   };
 
   const stepSeeds: StepSeed[] = [
@@ -1050,6 +1052,7 @@ async function main() {
       title: s.title,
       radius: s.radius,
       points: s.points,
+      estimatedDuration: s.estimatedDuration ?? 10,
       refHunt: s.refHunt,
     })),
   });

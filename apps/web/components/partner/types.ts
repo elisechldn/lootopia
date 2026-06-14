@@ -19,7 +19,7 @@ export interface HuntStats {
     players: number;
 }
 
-export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "points"> & {
+export type Step = Pick<StepModel, "orderNumber" | "title" | "radius" | "points" | "estimatedDuration"> & {
     id?: number;
     clues: Clue[];
     latitude?: number | null;

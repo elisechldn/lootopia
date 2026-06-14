@@ -17,6 +17,7 @@ import { assetUrl } from '@/lib/assets';
 type MyParticipation = {
   refHunt: number;
   totalPoints: number;
+  timeBonus: number;
   hunt: { title: string; coverImage: string | null };
 };
 
@@ -64,7 +65,8 @@ export default function LeaderBoardPage() {
             refHunt: p.refHunt,
             title: p.hunt.title,
             coverImage: p.hunt.coverImage,
-            points: p.totalPoints,
+            // Score final = points de base + bonus de temps.
+            points: Math.round((p.totalPoints + p.timeBonus) * 100) / 100,
             rank: index >= 0 ? index + 1 : null,
             total: entries.length,
           };

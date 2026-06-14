@@ -20,6 +20,8 @@ export type GameParticipation = {
   id: number;
   status: 'IN_PROGRESS' | 'COMPLETED' | 'ABANDONED';
   totalPoints: number;
+  /** Bonus de temps (sommé sur les étapes). scoreFinal = totalPoints + timeBonus. */
+  timeBonus: number;
   progresses: GameProgress[];
   hunt?: {
     id: number;
@@ -31,6 +33,8 @@ export type GameParticipation = {
 export type LeaderboardEntry = {
   id: number;
   totalPoints: number;
+  /** Bonus de temps. scoreFinal = totalPoints + timeBonus (tri du classement). */
+  timeBonus: number;
   startTime: string;
   endTime: string;
   user: { id: number; firstname: string; lastname: string };

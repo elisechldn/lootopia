@@ -11,6 +11,7 @@ import { StartHuntDto } from './dto/start-hunt.dto';
 import { ValidateStepDto } from './dto/validate-step.dto';
 import { logInfo } from '../loggeur';
 import { assertOwns, type Requester } from '../auth/ownership';
+import { sumTimeBonus } from './score';
 
 @Injectable()
 export class ParticipationsService {
@@ -147,8 +148,7 @@ export class ParticipationsService {
           `Récupération de ${participations.length} participations pour l'utilisateur ${userId}`,
           'ParticipationsService',
         );
-        // Verrou : terminer une chasse avec 0 point ne débloque pas la
-        // récompense — on n'expose jamais ses détails dans ce cas.
+
         return participations.map((p) =>
           p.totalPoints > 0
             ? p
@@ -384,14 +384,25 @@ export class ParticipationsService {
         // Dernière étape : chasse terminée
         const allProgresses = await tx.progress.findMany({
           where: { refParticipation: participationId, statut: 'COMPLETED' },
+          include: { step: { select: { estimatedDuration: true } } },
         });
         const totalPoints = allProgresses.reduce(
           (sum, p) => sum + p.totalPoints,
           0,
         );
+        const now = new Date();
+        // Bonus de temps par étape (0 sur les étapes sans points → anti-abus indices).
+        const timeBonus = sumTimeBonus(
+          allProgresses.map((p) => ({
+            totalPoints: p.totalPoints,
+            startedAt: p.startedAt,
+            completedAt: p.completedAt ?? now,
+            step: { estimatedDuration: p.step.estimatedDuration },
+          })),
+        );
         const updated = await tx.participation.update({
           where: { id: participationId },
-          data: { status: 'COMPLETED', endTime: new Date(), totalPoints },
+          data: { status: 'COMPLETED', endTime: now, totalPoints, timeBonus },
           include: {
             hunt: {
               select: { title: true, rewardType: true, rewardValue: true },
@@ -400,7 +411,7 @@ export class ParticipationsService {
         });
         logInfo(
           'info',
-          `Participation ${participationId} complétée avec ${totalPoints} points`,
+          `Participation ${participationId} complétée avec ${totalPoints} points (+${timeBonus} bonus temps)`,
           'ParticipationsService',
         );
         return updated;
@@ -511,11 +522,11 @@ export class ParticipationsService {
         select: {
           id: true,
           totalPoints: true,
+          timeBonus: true,
           startTime: true,
           endTime: true,
           user: { select: { id: true, firstname: true, lastname: true } },
         },
-        orderBy: [{ totalPoints: 'desc' }, { endTime: 'asc' }],
       })
       .then((results) => {
         logInfo(
@@ -523,7 +534,15 @@ export class ParticipationsService {
           `Récupération du leaderboard pour la chasse ${huntId} avec ${results.length} participations`,
           'ParticipationsService',
         );
-        return results;
+        // Classement par score final (points + bonus de temps) décroissant,
+        // puis par date de fin croissante. Prisma ne peut pas trier sur la
+        // somme de deux colonnes, on trie donc en mémoire.
+        return results.sort((a, b) => {
+          const scoreA = a.totalPoints + a.timeBonus;
+          const scoreB = b.totalPoints + b.timeBonus;
+          if (scoreB !== scoreA) return scoreB - scoreA;
+          return (a.endTime?.getTime() ?? 0) - (b.endTime?.getTime() ?? 0);
+        });
       });
   }
 }
