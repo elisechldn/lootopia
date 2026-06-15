@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import { useAuthStore } from "@/lib/stores/auth.store";
+import { assetUrl } from "@/lib/assets";
 
 interface User {
     sub: number;
@@ -126,7 +127,7 @@ export default function PartnerSidebar({ user: initialUser }: Props) {
                     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shrink-0">
                         {user?.profilePicture ? (
                             // biome-ignore lint/performance/noImgElement: avatar URL from trusted MinIO bucket
-                            <img src={user.profilePicture} alt="Avatar" className="w-full h-full object-cover" />
+                            <img src={assetUrl(user.profilePicture) ?? undefined} alt="Avatar" className="w-full h-full object-cover" />
                         ) : (
                             <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-muted-foreground">
                                 <path fillRule="evenodd"

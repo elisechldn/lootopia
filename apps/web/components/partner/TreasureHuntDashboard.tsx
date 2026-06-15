@@ -122,14 +122,14 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
                     <p className="text-sm text-muted-foreground mt-0.5">Gérez vos expériences de chasse au trésor</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button variant="outline" size="sm" className="gap-2">
-                        <Download className="w-4 h-4" />
-                        Export
-                    </Button>
+                    {/*<Button variant="outline" size="sm" className="gap-2">*/}
+                    {/*    <Download className="w-4 h-4" />*/}
+                    {/*    Export*/}
+                    {/*</Button>*/}
                     <Link href="/dashboard/hunts/new">
                         <Button size="sm" className="gap-2">
                             <Plus className="w-4 h-4" />
-                            Create Hunt
+                            Créer une nouvelle chasse
                         </Button>
                     </Link>
                 </div>
@@ -237,9 +237,9 @@ export default function TreasureHuntDashboard({ hunts, stats }: Props) {
                                                     onClick={() => router.push(`/dashboard/hunts/${hunt.id}/edit`)}>
                                                 <Pencil className="w-4 h-4" />
                                             </Button>
-                                            <Button variant="ghost" size="icon" className="w-8 h-8 text-muted-foreground/70 hover:text-foreground/80">
-                                                <Eye className="w-4 h-4" />
-                                            </Button>
+                                            {/*<Button variant="ghost" size="icon" className="w-8 h-8 text-muted-foreground/70 hover:text-foreground/80">*/}
+                                            {/*    <Eye className="w-4 h-4" />*/}
+                                            {/*</Button>*/}
                                             <Button variant="ghost" size="icon" className="w-8 h-8 text-muted-foreground/70 hover:text-red-500"
                                                     onClick={() => setHuntToDelete(hunt)}>
                                                 <Trash2 className="w-4 h-4" />

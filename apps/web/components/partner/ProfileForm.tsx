@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/lib/stores/auth.store";
+import { assetUrl } from "@/lib/assets";
 import { Camera } from "lucide-react";
 
 interface User {
@@ -127,7 +128,7 @@ export default function ProfileForm({ user }: Props) {
                     <div className="w-20 h-20 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary flex-shrink-0">
                         {avatarUrl ? (
                             // biome-ignore lint/performance/noImgElement: avatar URL from trusted MinIO bucket
-                            <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                            <img src={assetUrl(avatarUrl) ?? undefined} alt="Avatar" className="w-full h-full object-cover" />
                         ) : (
                             <span>{(user?.firstname?.[0] ?? "").toUpperCase()}{(user?.lastname?.[0] ?? "").toUpperCase()}</span>
                         )}
