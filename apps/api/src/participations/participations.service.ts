@@ -152,7 +152,10 @@ export class ParticipationsService {
         return participations.map((p) =>
           p.totalPoints > 0
             ? p
-            : { ...p, hunt: { ...p.hunt, rewardType: null, rewardValue: null } },
+            : {
+                ...p,
+                hunt: { ...p.hunt, rewardType: null, rewardValue: null },
+              },
         );
       });
   }
@@ -242,7 +245,36 @@ export class ParticipationsService {
       throw new NotFoundException('Participation introuvable');
     }
     assertOwns(participation.refUser, requester);
-    return participation;
+
+    // PostGIS : Prisma ne projette pas la colonne `location` (GEOGRAPHY).
+    // On récupère les coordonnées des étapes via une requête brute et on les
+    // fusionne dans le payload — la PWA (carte + AR) en a besoin pour le
+    // géofence. Ces coords ne sont exposées qu'au propriétaire de la
+    // participation (assertOwns ci-dessus), jamais via /hunts/:id.
+    const coords = await this.prisma.$queryRaw<
+      Array<{ id: number; latitude: number | null; longitude: number | null }>
+    >(
+      Prisma.sql`
+        SELECT id,
+               ST_Y("location"::geometry) AS latitude,
+               ST_X("location"::geometry) AS longitude
+        FROM "steps"
+        WHERE "ref_hunt" = ${participation.refHunt}
+      `,
+    );
+    const coordsByStep = new Map(coords.map((c) => [c.id, c]));
+
+    return {
+      ...participation,
+      hunt: {
+        ...participation.hunt,
+        steps: participation.hunt.steps.map((step) => ({
+          ...step,
+          latitude: coordsByStep.get(step.id)?.latitude ?? null,
+          longitude: coordsByStep.get(step.id)?.longitude ?? null,
+        })),
+      },
+    };
   }
 
   async validateStep(
@@ -397,11 +429,18 @@ export class ParticipationsService {
           where: { refParticipation: participationId, statut: 'COMPLETED' },
         });
         const finalScore = round2(
-          allProgresses.reduce((sum, p) => sum + p.totalPoints + p.timeBonus, 0),
+          allProgresses.reduce(
+            (sum, p) => sum + p.totalPoints + p.timeBonus,
+            0,
+          ),
         );
         const updated = await tx.participation.update({
           where: { id: participationId },
-          data: { status: 'COMPLETED', endTime: completedAt, totalPoints: finalScore },
+          data: {
+            status: 'COMPLETED',
+            endTime: completedAt,
+            totalPoints: finalScore,
+          },
           include: {
             hunt: {
               select: { title: true, rewardType: true, rewardValue: true },

@@ -4,26 +4,15 @@ import { use, useEffect, useMemo, useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Navigation, Trophy, Loader2, MapPin, ScanLine, ArrowLeft, AlertTriangle } from 'lucide-react';
-import { getHuntById } from '@/services/hunt.service';
-import { type GameParticipation } from '@/services/participation.service';
+import { type GameParticipation, type GameStep } from '@/services/participation.service';
 import { getParticipationByIdAction } from '@/lib/actions/participation.actions';
 import { haversineDistance, formatDistance } from '@/lib/geo';
 import { assetUrl } from '@/lib/assets';
-import type { HuntGetPayload } from '@repo/types';
 import HintBubbles from '@/components/game/hints/HintBubbles';
 import HintModal from '@/components/game/hints/HintModal';
 import Image from 'next/image';
 
 const GameLeafletMap = dynamic(() => import('@/components/game/GameLeafletMap'), { ssr: false });
-
-type StepWithCoords = HuntGetPayload<{ include: { steps: true } }>['steps'][number] & {
-  latitude: number | null;
-  longitude: number | null;
-};
-
-type HuntWithSteps = HuntGetPayload<{ include: { steps: true } }> & {
-  steps: StepWithCoords[];
-};
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -33,7 +22,6 @@ export default function GameMapPage({ params }: Props) {
   const searchParams = useSearchParams();
   const participationId = searchParams.get('participationId');
 
-  const [hunt, setHunt] = useState<HuntWithSteps | null>(null);
   const [participation, setParticipation] = useState<GameParticipation | null>(null);
   const [userCoords, setUserCoords] = useState<{ lat: number; lon: number } | null>(null);
   const [inZone, setInZone] = useState(false);
@@ -42,18 +30,16 @@ export default function GameMapPage({ params }: Props) {
   const [showExitModal, setShowExitModal] = useState(false);
   const [, startClueTransition] = useTransition();
 
-  // Fetch hunt + participation
+  // Fetch participation (inclut la chasse + ses étapes avec coordonnées).
   useEffect(() => {
     if (!participationId) return;
-    Promise.all([
-      getHuntById(+huntId),
-      getParticipationByIdAction(+participationId),
-    ]).then(([huntRes, participationRes]) => {
-      setHunt(huntRes.data as HuntWithSteps);
+    getParticipationByIdAction(+participationId).then((participationRes) => {
       setParticipation(participationRes);
       setLoading(false);
     });
-  }, [huntId, participationId]);
+  }, [participationId]);
+
+  const hunt = participation?.hunt ?? null;
 
   // Continuous GPS watch
   useEffect(() => {
@@ -67,12 +53,11 @@ export default function GameMapPage({ params }: Props) {
   }, []);
 
   // Current step: the one whose progress is IN_PROGRESS
-  const currentStep = useMemo<StepWithCoords | null>(() => {
+  const currentStep = useMemo<GameStep | null>(() => {
     if (!hunt || !participation) return null;
     const active = participation.progresses.find((p) => p.statut === 'IN_PROGRESS');
     if (!active) return null;
-    const step = hunt.steps.find((s) => s.id === active.refStep);
-    return step as StepWithCoords ?? null;
+    return hunt.steps.find((s) => s.id === active.refStep) ?? null;
   }, [hunt, participation]);
 
   // L'étape courante est-elle la dernière de la chasse ?

@@ -5,8 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import ARCameraLoader from "./ARCameraLoader";
 import BackButton from "@/components/ui/BackButton";
+import type { SingleResult } from "@repo/types";
 import { getParticipationByIdAction, validateStepAction } from "@/lib/actions/participation.actions";
-import { getHuntById } from "@/services/hunt.service";
+import { type GameHunt } from "@/services/participation.service";
 import { useUserStore } from "@/store/userStore";
 import StepValidationOverlay, { type StepValidationResult } from "./StepValidationOverlay";
 
@@ -29,7 +30,18 @@ export default function ARPageContent({ huntId }: Props) {
   const [isValidating, setIsValidating] = useState(false);
   const [stepResult, setStepResult] = useState<StepValidationResult | null>(null);
 
-  const hunt = useMemo(() => getHuntById(huntId), [huntId]);
+  // L'AR GPS (ARScene) a besoin des étapes + coordonnées : on les tient de la
+  // participation (que le joueur possède), jamais de /hunts/:id.
+  const hunt = useMemo<Promise<SingleResult<GameHunt>>>(() => {
+    if (!participationId) {
+      return Promise.resolve({
+        data: { id: huntId, title: "", steps: [] },
+      } as unknown as SingleResult<GameHunt>);
+    }
+    return getParticipationByIdAction(+participationId).then(
+      (p) => ({ data: p.hunt }) as unknown as SingleResult<GameHunt>,
+    );
+  }, [participationId, huntId]);
 
   useEffect(() => {
     if (!participationId || !stepId) {

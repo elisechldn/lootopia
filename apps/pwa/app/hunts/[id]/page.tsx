@@ -3,14 +3,14 @@ import { Briefcase, Clock, Award, Trophy, Store } from "lucide-react";
 import HuntHero from "../../../components/hunt/HuntHero";
 import HuntInfoSection from "../../../components/hunt/HuntInfoSection";
 import PlayButton from "../../../components/hunt/PlayButton";
-import { getHuntById } from "../../../services/hunt.service";
+import { getHuntByIdAction } from "@/lib/actions/hunt.actions";
 import { assetUrl } from "@/lib/assets";
 import { formatRewardType } from "@/lib/reward";
 
 export default async function HuntOnBoardingPage({ params }: { params: Promise<{ id: string }> }) {
 
   const { id } = await params;
-  const { data: hunt } = await getHuntById(Number(id));
+  const { data: hunt } = await getHuntByIdAction(Number(id));
   return (
     <main className="flex flex-col min-h-screen bg-background pt-safe">
       <HuntHero

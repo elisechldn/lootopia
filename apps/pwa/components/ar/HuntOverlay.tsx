@@ -1,14 +1,11 @@
 "use client";
 
-import type { HuntGetPayload, SingleResult } from "@repo/types";
+import type { SingleResult } from "@repo/types";
 import { use } from "react";
-
-type HuntWithSteps = HuntGetPayload<{
-    include: { steps: true };
-}>;
+import { type GameHunt } from "@/services/participation.service";
 
 type Props = {
-    hunt: Promise<SingleResult<HuntWithSteps>>;
+    hunt: Promise<SingleResult<GameHunt>>;
     stepId?: number;
 };
 

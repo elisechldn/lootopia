@@ -2,12 +2,11 @@ import {
   type HuntGetPayload,
   HuntModel,
   PaginatedResult,
-  SingleResult,
 } from '@repo/types';
 
 import { API_URL } from '@/lib/api';
 
-type HuntWithSteps = HuntGetPayload<{
+export type HuntWithSteps = HuntGetPayload<{
   include: { steps: true };
 }> & {
   partner?: { id: number; username: string } | null;
@@ -31,12 +30,6 @@ export async function getAllHunts() {
   const response = await fetch(`${API_URL}/hunts`);
   if (!response.ok) throw new Error('No Hunt found');
   return response.json() as Promise<PaginatedResult<HuntModel>>;
-}
-
-export async function getHuntById(id: number) {
-  const response = await fetch(`${API_URL}/hunts/${id}`);
-  if (!response.ok) throw new Error('No Hunt found');
-  return response.json() as Promise<SingleResult<HuntWithSteps>>;
 }
 
 export async function getNearbyHunts(

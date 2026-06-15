@@ -8,6 +8,27 @@ import { PrismaService } from '../orm/prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
 import { CreateHuntDto } from './dto/create-hunt.dto';
 import { logInfo } from '../loggeur';
+import { isOwnerOrAdmin, type Requester } from '../auth/ownership';
+
+/** Sous-ensemble de la chasse nécessaire pour décider/produire la vue joueur. */
+export interface FullHunt {
+  id: number;
+  title: string;
+  shortDescription: string | null;
+  description: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  radius: number;
+  coverImage: string | null;
+  status: string;
+  rewardType: string | null;
+  refUser: number;
+  partner: { id: number; username: string } | null;
+  latitude: number | null;
+  longitude: number | null;
+  _count: { participations: number };
+}
+
 @Injectable()
 export class HuntsService {
   constructor(
@@ -102,6 +123,33 @@ export class HuntsService {
     );
     logInfo('info', `Récupération de la chasse ${id}`, 'HuntsService');
     return rows[0]?.hunt ?? null;
+  }
+
+  /**
+   * Variante exposée par l'API : l'owner (PARTNER propriétaire) et l'ADMIN
+   * reçoivent le détail complet (édition web) ; tout autre utilisateur
+   * authentifié reçoit un payload réduit sans indices ni rewardValue.
+   */
+  async findOneForViewer(id: number, requester: Requester) {
+    const hunt = (await this.findOne(id)) as FullHunt | null;
+    if (!hunt) return null;
+    if (isOwnerOrAdmin(hunt.refUser, requester)) return hunt;
+    return {
+      id: hunt.id,
+      title: hunt.title,
+      shortDescription: hunt.shortDescription,
+      description: hunt.description,
+      startDate: hunt.startDate,
+      endDate: hunt.endDate,
+      radius: hunt.radius,
+      coverImage: hunt.coverImage,
+      status: hunt.status,
+      rewardType: hunt.rewardType,
+      partner: hunt.partner,
+      latitude: hunt.latitude,
+      longitude: hunt.longitude,
+      _count: hunt._count,
+    };
   }
 
   async findByPartner(userId: number | null) {
@@ -280,6 +328,7 @@ export class HuntsService {
     });
 
     if (dto.locationLat != null && dto.locationLon != null) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       await this.prisma.$executeRaw(
         Prisma.sql`
                     UPDATE "hunts"
@@ -331,6 +380,7 @@ export class HuntsService {
     });
 
     if (dto.locationLat != null && dto.locationLon != null) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       await this.prisma.$executeRaw(
         Prisma.sql`
                     UPDATE "hunts"

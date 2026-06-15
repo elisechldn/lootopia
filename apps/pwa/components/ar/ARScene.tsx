@@ -5,7 +5,8 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { Suspense, useCallback, useEffect, useRef } from "react";
 import { useARScene } from "../../hooks/useARScene";
 import { useARStore } from "@/store/arStore";
-import type { HuntGetPayload, SingleResult } from "@repo/types";
+import type { SingleResult } from "@repo/types";
+import { type GameHunt } from "@/services/participation.service";
 import { HuntOverlay } from "@/components/ar/HuntOverlay";
 import { assetUrl } from "@/lib/assets";
 import { haversineDistance } from "@/lib/geo";
@@ -58,18 +59,8 @@ function wrapWithHitTarget(object: THREE.Object3D): THREE.Mesh {
   return hit;
 }
 
-type StepWithCoords = HuntGetPayload<{ include: { steps: true }; }>['steps'][number] & {
-  latitude?: number | null;
-  longitude?: number | null;
-  arItem?: { id: string; filepath: string; filename: string; hasAnimations: boolean } | null;
-};
-
-type HuntWithSteps = Omit<HuntGetPayload<{ include: { steps: true } }>, 'steps'> & {
-  steps: StepWithCoords[];
-};
-
 type Props = {
-  hunt: Promise<SingleResult<HuntWithSteps>>;
+  hunt: Promise<SingleResult<GameHunt>>;
   huntId?: number;
   participationId?: number;
   stepId?: number;

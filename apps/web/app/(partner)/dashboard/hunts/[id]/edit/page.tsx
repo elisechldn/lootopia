@@ -1,9 +1,14 @@
+import { cookies } from "next/headers";
 import HuntForm from "@/components/partner/HuntForm";
 import { Hunt } from "@/components/partner/types";
 import { API_URL } from "@/lib/api";
 
 async function getHunt(id: string): Promise<Hunt | null> {
-    const res = await fetch(`${API_URL}/hunts/${id}`, { cache: "no-store" });
+    const token = (await cookies()).get("auth_token")?.value;
+    const res = await fetch(`${API_URL}/hunts/${id}`, {
+        cache: "no-store",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data ?? null;
@@ -13,7 +18,6 @@ export default async function EditHuntPage({ params }: { params: Promise<{ id: s
 
     const { id } = await params;
     const hunt = await getHunt(id);
-    console.log("HUNT", hunt)
 
     if (!hunt) {
         return (

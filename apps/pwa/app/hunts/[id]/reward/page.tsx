@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Gift, Compass } from 'lucide-react';
 import { getHuntRewardAction } from '@/lib/actions/participation.actions';
-import { getHuntById } from '@/services/hunt.service';
+import { getHuntByIdAction } from '@/lib/actions/hunt.actions';
 import { formatRewardType } from '@/lib/reward';
 import BackButton from '@/components/ui/BackButton';
 
@@ -12,7 +12,7 @@ export default async function RewardPage({ params }: Props) {
   const { id } = await params;
   const [reward, { data: hunt }] = await Promise.all([
     getHuntRewardAction(Number(id)),
-    getHuntById(Number(id)),
+    getHuntByIdAction(Number(id)),
   ]);
 
   if (!reward) notFound();

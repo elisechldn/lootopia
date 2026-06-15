@@ -12,10 +12,15 @@ export type GameStep = {
   id: number;
   orderNumber: number;
   title: string;
+  radius: number;
+  points: number;
   arMode: 'GPS' | 'MARKER';
   markerImageUrl: string | null;
   markerPatternUrl: string | null;
   arItem?: { id: string; filepath: string; filename: string; hasAnimations: boolean } | null;
+  /** Coordonnées projetées par l'API (PostGIS) — requises pour le géofence. */
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export type GameParticipation = {
@@ -30,6 +35,9 @@ export type GameParticipation = {
     steps: GameStep[];
   };
 };
+
+/** Chasse telle que renvoyée dans une participation (gameplay : steps + coords). */
+export type GameHunt = NonNullable<GameParticipation['hunt']>;
 
 export type LeaderboardEntry = {
   id: number;

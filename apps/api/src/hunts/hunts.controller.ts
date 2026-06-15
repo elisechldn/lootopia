@@ -89,8 +89,12 @@ export class HuntsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.huntsService.findOne(Number(id));
+  @UseGuards(AuthGuard('jwt'))
+  findOne(
+    @Request() req: { user: { sub: number; role: string } },
+    @Param('id') id: string,
+  ) {
+    return this.huntsService.findOneForViewer(Number(id), req.user);
   }
 
   @Post()

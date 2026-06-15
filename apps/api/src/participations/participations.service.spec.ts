@@ -26,6 +26,7 @@ const mockParticipation = {
   status: 'IN_PROGRESS',
   totalPoints: 0,
   refUser: 42,
+  refHunt: 10,
   hunt: {
     id: 10,
     title: 'Ma chasse',
@@ -34,10 +35,17 @@ const mockParticipation = {
   progresses: [],
 };
 
+// Coordonnées des étapes projetées via PostGIS ($queryRaw) puis fusionnées.
+const mockStepCoords = [
+  { id: 1, latitude: 48.8566, longitude: 2.3522 },
+  { id: 2, latitude: 48.857, longitude: 2.353 },
+];
+
 const mockPrisma = {
   participation: {
     findUnique: jest.fn(),
   },
+  $queryRaw: jest.fn(),
 };
 
 describe('ParticipationsService.findOne', () => {
@@ -45,6 +53,7 @@ describe('ParticipationsService.findOne', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    mockPrisma.$queryRaw.mockResolvedValue(mockStepCoords);
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ParticipationsService,
@@ -73,6 +82,9 @@ describe('ParticipationsService.findOne', () => {
       arMode: 'MARKER',
       markerImageUrl: 'http://minio/bucket/image.png',
       markerPatternUrl: 'http://minio/bucket/pattern.patt',
+      // Coordonnées PostGIS fusionnées dans le payload.
+      latitude: 48.8566,
+      longitude: 2.3522,
     });
   });
 
@@ -100,7 +112,9 @@ describe('ParticipationsService.validateStep (complétion + bonus temps)', () =>
     status: 'IN_PROGRESS',
     refUser: 42,
     hunt: { id: 10, steps: [{ id: 1, orderNumber: 1 }] },
-    progresses: [{ id: 5, statut: 'IN_PROGRESS', refStep: 1, startedAt: at(0) }],
+    progresses: [
+      { id: 5, statut: 'IN_PROGRESS', refStep: 1, startedAt: at(0) },
+    ],
   };
 
   const updateSpy = jest.fn().mockResolvedValue({});
@@ -125,9 +139,7 @@ describe('ParticipationsService.validateStep (complétion + bonus temps)', () =>
     clueUsage: { count: jest.fn() },
     clue: { findMany: jest.fn() },
     $queryRaw: jest.fn(),
-    $transaction: jest.fn(
-      (cb: (t: typeof tx) => unknown) => cb(tx) as unknown,
-    ),
+    $transaction: jest.fn((cb: (t: typeof tx) => unknown) => cb(tx)),
   };
 
   let service: ParticipationsService;

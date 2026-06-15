@@ -41,16 +41,27 @@ export function createAcsTransport(connectionString: string): Transport {
     name: 'azure-communication-email',
     version: '1.0.0',
 
-    send(mail: MailMessage, callback: (err: Error | null, info?: unknown) => void): void {
+    send(
+      mail: MailMessage,
+      callback: (err: Error | null, info?: unknown) => void,
+    ): void {
       const data = mail.data;
 
       const senderAddress = extractAddresses(data.from as Addressable)[0];
-      const to = extractAddresses(data.to as Addressable).map((address) => ({ address }));
-      const cc = extractAddresses(data.cc as Addressable).map((address) => ({ address }));
-      const bcc = extractAddresses(data.bcc as Addressable).map((address) => ({ address }));
+      const to = extractAddresses(data.to as Addressable).map((address) => ({
+        address,
+      }));
+      const cc = extractAddresses(data.cc as Addressable).map((address) => ({
+        address,
+      }));
+      const bcc = extractAddresses(data.bcc as Addressable).map((address) => ({
+        address,
+      }));
 
       if (!senderAddress) {
-        callback(new Error('ACS transport: adresse expéditeur (from) manquante'));
+        callback(
+          new Error('ACS transport: adresse expéditeur (from) manquante'),
+        );
         return;
       }
       if (to.length === 0) {
@@ -77,7 +88,9 @@ export function createAcsTransport(connectionString: string): Transport {
           },
         })
         .then((poller) => poller.pollUntilDone())
-        .then((result) => callback(null, { messageId: result.id, response: result.status }))
+        .then((result) =>
+          callback(null, { messageId: result.id, response: result.status }),
+        )
         .catch((err: unknown) =>
           callback(err instanceof Error ? err : new Error(String(err))),
         );
