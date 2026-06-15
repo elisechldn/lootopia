@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Camera, LogOut, Trophy, CheckCircle, Clock, Gift, ChevronRight } from 'lucide-react';
+import { Camera, LogOut, CheckCircle, Clock, Gift, ChevronRight } from 'lucide-react';
 import TopBar           from '@/components/ui/TopBar';
 import TabNavigation    from '@/components/ui/TabNavigation';
 import { useUserStore } from '@/store/userStore';
@@ -151,9 +151,9 @@ export default function ProfilePage() {
               icon={<CheckCircle size={16} />}
             />
             <Stat
-              label="Points"
-              value={participations.reduce((s, p) => s + p.totalPoints, 0)}
-              icon={<Trophy size={16} />}
+              label="Récompenses"
+              value={rewards.length}
+              icon={<Gift size={16} />}
             />
           </div>
         )}
