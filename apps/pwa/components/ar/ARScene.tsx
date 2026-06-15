@@ -8,11 +8,25 @@ import { useARStore } from "@/store/arStore";
 import type { HuntGetPayload, SingleResult } from "@repo/types";
 import { HuntOverlay } from "@/components/ar/HuntOverlay";
 import { assetUrl } from "@/lib/assets";
+import { haversineDistance } from "@/lib/geo";
 
 function tagWithProperties(object: THREE.Object3D, properties: { name: string }) {
   object.traverse((child) => {
     (child as unknown as { properties: { name: string } }).properties = properties;
   });
+}
+
+// Pilote la visibilité de l'objet AR par la même règle métier que l'UI carte :
+// l'objet (placeholder ou wrapper .glb) n'est rendu que dans le rayon de l'étape.
+// visible=false sur le wrapper masque tout son sous-arbre, donc le GLB inclus.
+function applyZoneVisibility(
+  obj: THREE.Object3D | null,
+  target: { lat: number; lon: number; radius: number } | null,
+  coords: { lat: number; long: number } | null,
+) {
+  if (!obj || !target || !coords) return;
+  const d = haversineDistance(coords.lat, coords.long, target.lat, target.lon);
+  obj.visible = d <= target.radius;
 }
 
 function buildPlaceholderMesh(): THREE.Mesh {
@@ -71,6 +85,9 @@ export default function ARScene({ hunt, huntId, participationId, stepId, onItemH
   // Garde synchrone — isValidating est du state React (update asynchrone),
   // il ne bloque pas les appels de l'animation loop entre deux renders.
   const pendingRef = useRef(false);
+  // Objet AR courant + cible (coords + rayon de l'étape) pour piloter la visibilité.
+  const addedObjectRef = useRef<THREE.Object3D | null>(null);
+  const targetRef = useRef<{ lat: number; lon: number; radius: number } | null>(null);
 
   // Réinitialise la garde quand le parent signale la fin de la validation.
   useEffect(() => {
@@ -88,6 +105,9 @@ export default function ARScene({ hunt, huntId, participationId, stepId, onItemH
   }, [coords]);
 
   const handleItemHit = useCallback(async () => {
+    // Mesh masqué (hors zone) : LocAR raycaste quand même un objet invisible,
+    // on bloque ici pour éviter une validation serveur à l'aveugle.
+    if (!addedObjectRef.current?.visible) return;
     if (isValidating || pendingRef.current) return;
     pendingRef.current = true;
     const { lat, long } = await getFreshCoords();
@@ -120,6 +140,12 @@ export default function ARScene({ hunt, huntId, participationId, stepId, onItemH
         : steps[0];
 
       if (!targetStep || targetStep.longitude == null || targetStep.latitude == null) return;
+
+      targetRef.current = {
+        lat: targetStep.latitude,
+        lon: targetStep.longitude,
+        radius: targetStep.radius,
+      };
 
       const properties = { name: targetStep.title };
       let object3d: THREE.Object3D;
@@ -160,8 +186,14 @@ export default function ARScene({ hunt, huntId, participationId, stepId, onItemH
 
       if (cancelled) return;
       tagWithProperties(object3d, properties);
+      // Démarre masqué : ne s'affiche qu'une fois le joueur dans le rayon de l'étape.
+      object3d.visible = false;
       addedObject = object3d;
       locar.add(object3d, targetStep.longitude, targetStep.latitude, 0, properties);
+      addedObjectRef.current = object3d;
+      // Applique la visibilité avec les coords courantes : l'effet [coords] ne se
+      // re-déclenche pas si la position est déjà stable au moment du chargement.
+      applyZoneVisibility(object3d, targetRef.current, useARStore.getState().coords);
     });
 
     return () => {
@@ -170,8 +202,15 @@ export default function ARScene({ hunt, huntId, participationId, stepId, onItemH
       if (addedObject && scene) {
         scene.remove(addedObject);
       }
+      addedObjectRef.current = null;
+      targetRef.current = null;
     };
   }, [hunt, locar, scene, camera, stepId]);
+
+  // Met à jour la visibilité de l'objet AR à chaque mise à jour GPS.
+  useEffect(() => {
+    applyZoneVisibility(addedObjectRef.current, targetRef.current, coords);
+  }, [coords]);
 
   return (
     <div style={{ position: "relative", width: "100dvw", height: "100dvh", overflow: "hidden", background: "#000" }}>
