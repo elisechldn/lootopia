@@ -94,7 +94,7 @@ export default function PartnerSidebar({ user: initialUser }: Props) {
                         </svg>
                     </div>
                     <div>
-                        <p className="text-sm font-bold text-muted leading-none">Chasse au Trésor</p>
+                        <p className="text-sm font-bold text-sidebar-foreground leading-none">Chasse au Trésor</p>
                         <p className="text-xs text-sidebar-foreground mt-0.5">Portail des partenaires</p>
                     </div>
                 </div>
@@ -137,7 +137,7 @@ export default function PartnerSidebar({ user: initialUser }: Props) {
                         )}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-muted truncate">
+                        <p className="text-sm font-medium text-sidebar-foreground truncate">
                             {user ? `${user.firstname ?? ''} ${user.lastname ?? ''}`.trim() || user.email : 'Partenaire'}
                         </p>
                         <p className="text-xs text-sidebar-foreground truncate">

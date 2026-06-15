@@ -59,11 +59,24 @@ a {
 }
 
 .dark {
-    --background: #E4D9BF;
-    --foreground: #3A2A1C;
-    --card: #FBF5E6;
-    --card-foreground: #3A2A1C;
-    --border: #3A2A1C;
+    --background: #211913;
+    --foreground: #ECE0C9;
+    --card: #2C2118;
+    --card-foreground: #ECE0C9;
+    --popover: #2C2118;
+    --popover-foreground: #ECE0C9;
+    --primary: #D14B3D;            /* $thread-red éclairci */
+    --primary-foreground: #FBF5E6;
+    --secondary: #5BA295;          /* $folder-teal éclairci */
+    --secondary-foreground: #14201E;
+    --muted: #3A2C20;
+    --muted-foreground: #B3A488;
+    --accent: #EAC34E;             /* $postit inchangé */
+    --accent-foreground: #3A2A1C;
+    --destructive: #E2604F;
+    --border: #4A3A2C;
+    --input: #4A3A2C;
+    --ring: #D14B3D;
 }
 
 @theme inline {
