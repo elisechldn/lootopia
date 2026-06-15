@@ -36,6 +36,7 @@ export class HuntsService {
           'createdAt', h."created_at",
           'updatedAt', h."updated_at",
           'refUser', h."ref_user",
+          'partner', json_build_object('id', u.id, 'username', u.username),
           'latitude', ST_Y(h."location_center"::geometry),
           'longitude', ST_X(h."location_center"::geometry),
           '_count', json_build_object(
@@ -95,6 +96,7 @@ export class HuntsService {
           )
         ) AS hunt
         FROM "hunts" h
+        LEFT JOIN "users" u ON u.id = h."ref_user"
         WHERE h.id = ${id}
       `,
     );

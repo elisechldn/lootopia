@@ -9,7 +9,9 @@ import { API_URL } from '@/lib/api';
 
 type HuntWithSteps = HuntGetPayload<{
   include: { steps: true };
-}>;
+}> & {
+  partner?: { id: number; username: string } | null;
+};
 
 export type NearbyHunt = {
   id: number;

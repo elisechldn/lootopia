@@ -1,6 +1,8 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Gift } from 'lucide-react';
+import { Gift, Compass } from 'lucide-react';
 import { getHuntRewardAction } from '@/lib/actions/participation.actions';
+import { getHuntById } from '@/services/hunt.service';
 import { formatRewardType } from '@/lib/reward';
 import BackButton from '@/components/ui/BackButton';
 
@@ -8,7 +10,10 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function RewardPage({ params }: Props) {
   const { id } = await params;
-  const reward = await getHuntRewardAction(Number(id));
+  const [reward, { data: hunt }] = await Promise.all([
+    getHuntRewardAction(Number(id)),
+    getHuntById(Number(id)),
+  ]);
 
   if (!reward) notFound();
 
@@ -23,6 +28,16 @@ export default async function RewardPage({ params }: Props) {
           {reward.rewardValue ?? '—'}
         </p>
       </div>
+      {hunt?.partner && (
+        <p className="text-sm text-muted-foreground">Organisée par @{hunt.partner.username}</p>
+      )}
+      <Link
+        href={`/hunts/${id}`}
+        className="flex items-center justify-center gap-2 rounded-xl border border-amber-400/40 bg-amber-500/10 px-5 py-3 text-sm font-semibold text-amber-600 dark:text-amber-400 transition-colors hover:bg-amber-500/20 active:bg-amber-500/30"
+      >
+        <Compass size={16} className="text-amber-500" />
+        Voir le détail de la chasse
+      </Link>
     </main>
   );
 }

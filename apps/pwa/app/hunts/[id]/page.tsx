@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Briefcase, Clock, Award, Trophy } from "lucide-react";
+import { Briefcase, Clock, Award, Trophy, Store } from "lucide-react";
 import HuntHero from "../../../components/hunt/HuntHero";
 import HuntInfoSection from "../../../components/hunt/HuntInfoSection";
 import PlayButton from "../../../components/hunt/PlayButton";
@@ -37,6 +37,12 @@ export default async function HuntOnBoardingPage({ params }: { params: Promise<{
             {formatRewardType(hunt.rewardType)}
           </p>
         </HuntInfoSection>
+
+        {hunt.partner && (
+          <HuntInfoSection icon={Store} label="Organisateur">
+            <p className="font-semibold text-base">@{hunt.partner.username}</p>
+          </HuntInfoSection>
+        )}
 
         <div
           className="mt-auto pt-6 pb-safe space-y-3"
