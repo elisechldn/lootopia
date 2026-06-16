@@ -12,17 +12,17 @@ export default function Hero() {
                 </p>
                 <div className="flex flex-row items-center justify-center gap-3">
                     <Link
-                        href="/auth/register?role=partner"
+                        href="/register"
                         className="bg-gray-900 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-gray-800 transition-all"
                     >
                         Devenez partenaire
                     </Link>
-                    <Link
-                        href="/explore"
-                        className="bg-gray-900 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-gray-800 transition-all"
-                    >
-                        Explorez les parcours
-                    </Link>
+                    {/*<Link*/}
+                    {/*    href="/explore"*/}
+                    {/*    className="bg-gray-900 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-gray-800 transition-all"*/}
+                    {/*>*/}
+                    {/*    Explorez les parcours*/}
+                    {/*</Link>*/}
                 </div>
             </div>
         </section>

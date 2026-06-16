@@ -16,7 +16,7 @@ export default function CallToAction() {
                         href="/download"
                         className="inline-flex items-center justify-center gap-2 bg-card text-foreground text-sm font-semibold px-6 py-3 rounded-xl hover:bg-muted active:scale-[0.98] transition-all"
                     >
-                        Télécharger l'application
+                        Accès à l'application mobile
                     </Link>
                     <Link
                         href="/dashboard"

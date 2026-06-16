@@ -10,7 +10,7 @@ export default function Navbar() {
         <header className="sticky top-0 z-50 bg-card border-b border-border">
             <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/apps/web/public" className="flex items-center gap-2 font-bold text-foreground text-lg">
+                <Link href="/" className="flex items-center gap-2 font-bold text-foreground text-lg">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
                          className="w-7 h-7 text-muted-foreground">
                         <path strokeLinecap="round" strokeLinejoin="round"
@@ -27,7 +27,7 @@ export default function Navbar() {
                     <Link href="#features" className="hover:text-foreground transition-colors">
                         Fonctionnalités
                     </Link>
-                    <Link href="#contact" className="hover:text-foreground transition-colors">
+                    <Link href="/contact" className="hover:text-foreground transition-colors">
                         Contact
                     </Link>
                 </nav>
@@ -72,7 +72,7 @@ export default function Navbar() {
                     className="md:hidden border-t border-border bg-card px-6 py-4 flex flex-col gap-4 text-sm font-medium">
                     <Link href="#how-it-works" className="text-foreground/80 hover:text-foreground">Comment ça marche ?</Link>
                     <Link href="#features" className="text-foreground/80 hover:text-foreground">Fonctionnalités</Link>
-                    <Link href="#contact" className="text-foreground/80 hover:text-foreground">Contact</Link>
+                    <Link href="/contact" className="text-foreground/80 hover:text-foreground">Contact</Link>
                     <hr className="border-border"/>
                     <Link href="/auth/login" className="text-foreground/80 hover:text-foreground">Se connecter</Link>
                     <Link

@@ -34,8 +34,8 @@ export default function TermsPage() {
             Lootopia est une plateforme SaaS permettant à des partenaires
             (entreprises, collectivités, organisateurs d&apos;événements) de
             créer et gérer des chasses au trésor géolocalisées en réalité
-            augmentée. Les joueurs participent à ces chasses via des QR codes,
-            progressent d&apos;étape en étape grâce à des indices géolocalisés,
+            augmentée. Les joueurs participent à ces chasses via des marqueurs physique à retrouver et scanner.
+            Ils progressent d&apos;étape en étape grâce à des indices géolocalisés,
             et collectent des récompenses virtuelles en capturant des objets AR.
             Lootopia se positionne en tant qu&apos;intermédiaire technique
             entre les partenaires et les joueurs.

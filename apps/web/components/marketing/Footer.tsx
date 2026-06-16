@@ -10,7 +10,7 @@ export default function Footer() {
             {/* Brand */}
             <div className="col-span-2 md:col-span-1">
               <Link
-                href="/apps/web/public"
+                href="/"
                 className="flex items-center gap-2 text-black font-semibold text-base mb-3"
               >
                 <span className="inline-flex items-center justify-center w-7 h-7 bg-card/10 rounded-lg text-sm">
@@ -71,7 +71,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#contact"
+                    href="/contact"
                     className="hover:text-white transition-colors"
                   >
                     Contact
