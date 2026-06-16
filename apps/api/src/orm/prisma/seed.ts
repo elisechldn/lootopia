@@ -183,7 +183,7 @@ async function main() {
   });
   await setHuntLocationCenter(huntParis.id, ...HUNT_COORDS[1]!);
 
-  // 2 — Lyon (Bob, DRAFT)
+  // 2 — Lyon (Bob, ACTIVE)
   const huntLyon = await prisma.hunt.upsert({
     where: { id: 2 },
     update: {},
@@ -195,7 +195,7 @@ async function main() {
       startDate: startDateHunt,
       endDate: endDateHunt,
       radius: 3500,
-      status: 'DRAFT',
+      status: 'ACTIVE',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'LYON2025-PROMO15',
       coverImage:
@@ -251,7 +251,7 @@ async function main() {
   });
   await setHuntLocationCenter(huntStrasbourg.id, ...HUNT_COORDS[4]!);
 
-  // 5 — Marseille (Alice, FINISHED)
+  // 5 — Marseille (Alice, ACTIVE)
   const huntMarseille = await prisma.hunt.upsert({
     where: { id: 5 },
     update: {},
@@ -263,7 +263,7 @@ async function main() {
       startDate: startDateHunt,
       endDate: endDateHunt,
       radius: 8000,
-      status: 'FINISHED',
+      status: 'ACTIVE',
       rewardType: 'DISCOUNT_CODE',
       rewardValue: 'MER2025-PROMO20',
       coverImage:
@@ -295,7 +295,7 @@ async function main() {
   });
   await setHuntLocationCenter(huntMSM.id, ...HUNT_COORDS[6]!);
 
-  // 7 — Toulouse (Alice, DRAFT)
+  // 7 — Toulouse (Alice, ACTIVE)
   const huntToulouse = await prisma.hunt.upsert({
     where: { id: 7 },
     update: {},
@@ -307,7 +307,7 @@ async function main() {
       startDate: startDateHunt,
       endDate: endDateHunt,
       radius: 3000,
-      status: 'DRAFT',
+      status: 'ACTIVE',
       rewardType: 'BADGE',
       rewardValue: 'Badge Astronaute Toulousain',
       coverImage:
@@ -339,7 +339,7 @@ async function main() {
   });
   await setHuntLocationCenter(huntNice.id, ...HUNT_COORDS[8]!);
 
-  // 9 — Versailles (Alice, FINISHED)
+  // 9 — Versailles (Alice, ACTIVE)
   const huntVersailles = await prisma.hunt.upsert({
     where: { id: 9 },
     update: {},
@@ -351,7 +351,7 @@ async function main() {
       startDate: startDateHunt,
       endDate: endDateHunt,
       radius: 6000,
-      status: 'FINISHED',
+      status: 'ACTIVE',
       rewardType: 'FREE_ITEM',
       rewardValue: 'Accès privatif aux appartements du roi',
       coverImage:
@@ -361,7 +361,7 @@ async function main() {
   });
   await setHuntLocationCenter(huntVersailles.id, ...HUNT_COORDS[9]!);
 
-  // 10 — Nantes (Bob, DRAFT)
+  // 10 — Nantes (Bob, ACTIVE)
   const huntNantes = await prisma.hunt.upsert({
     where: { id: 10 },
     update: {},
@@ -373,7 +373,7 @@ async function main() {
       startDate: startDateHunt,
       endDate: endDateHunt,
       radius: 4000,
-      status: 'DRAFT',
+      status: 'ACTIVE',
       rewardType: 'BADGE',
       rewardValue: 'Badge Mécanicien des Machines',
       coverImage:
@@ -1042,6 +1042,138 @@ async function main() {
       points: 175,
       refHunt: huntNantes.id,
     },
+
+    // Fontainebleau
+    {
+      orderNumber: 1,
+      title: 'Château de Fontainebleau',
+      lat: 48.4021,
+      lon: 2.7,
+      radius: 80,
+      points: 120,
+      refHunt: huntFontainebleau.id,
+    },
+
+    // Saint-Germain-en-Laye
+    {
+      orderNumber: 1,
+      title: 'Château de Saint-Germain-en-Laye',
+      lat: 48.8983,
+      lon: 2.0944,
+      radius: 60,
+      points: 120,
+      refHunt: huntSaintGermain.id,
+    },
+
+    // Vincennes
+    {
+      orderNumber: 1,
+      title: 'Donjon de Vincennes',
+      lat: 48.8434,
+      lon: 2.4347,
+      radius: 50,
+      points: 130,
+      refHunt: huntVincennes.id,
+    },
+
+    // Disneyland Paris
+    {
+      orderNumber: 1,
+      title: 'Esplanade du parc',
+      lat: 48.8722,
+      lon: 2.7808,
+      radius: 80,
+      points: 100,
+      refHunt: huntDisneyland.id,
+    },
+
+    // Giverny
+    {
+      orderNumber: 1,
+      title: 'Jardins de Monet',
+      lat: 49.0758,
+      lon: 1.5339,
+      radius: 40,
+      points: 110,
+      refHunt: huntGiverny.id,
+    },
+
+    // Chantilly
+    {
+      orderNumber: 1,
+      title: 'Château de Chantilly',
+      lat: 49.1936,
+      lon: 2.4869,
+      radius: 70,
+      points: 120,
+      refHunt: huntChantilly.id,
+    },
+
+    // Provins
+    {
+      orderNumber: 1,
+      title: 'Tour César',
+      lat: 48.5598,
+      lon: 3.2998,
+      radius: 50,
+      points: 130,
+      refHunt: huntProvins.id,
+    },
+
+    // Auvers-sur-Oise
+    {
+      orderNumber: 1,
+      title: "Église d'Auvers",
+      lat: 49.0728,
+      lon: 2.1717,
+      radius: 40,
+      points: 110,
+      refHunt: huntAuvers.id,
+    },
+
+    // Meudon
+    {
+      orderNumber: 1,
+      title: 'Observatoire de Meudon',
+      lat: 48.8133,
+      lon: 2.2347,
+      radius: 60,
+      points: 120,
+      refHunt: huntMeudon.id,
+    },
+
+    // Saint-Denis
+    {
+      orderNumber: 1,
+      title: 'Basilique de Saint-Denis',
+      lat: 48.9357,
+      lon: 2.3601,
+      radius: 50,
+      points: 120,
+      refHunt: huntSaintDenis.id,
+    },
+
+    // Rambouillet
+    {
+      orderNumber: 1,
+      title: 'Château de Rambouillet',
+      lat: 48.6444,
+      lon: 1.8307,
+      radius: 70,
+      points: 120,
+      refHunt: huntRambouillet.id,
+    },
+
+    // Sceaux
+    {
+      orderNumber: 1,
+      title: 'Parc de Sceaux',
+      lat: 48.7784,
+      lon: 2.2913,
+      radius: 60,
+      points: 110,
+      refHunt: huntSceaux.id,
+    },
   ];
 
   // Crée les étapes sans coordonnées géographiques (insérées via $executeRaw ensuite)
@@ -1683,17 +1815,6 @@ async function main() {
   // ── Participations ─────────────────────────────────────────────────────────
 
   await prisma.participation.upsert({
-    where: { refUser_refHunt: { refUser: charlie.id, refHunt: huntParis.id } },
-    update: {},
-    create: {
-      refUser: charlie.id,
-      refHunt: huntParis.id,
-      totalPoints: 100,
-      status: 'IN_PROGRESS',
-    },
-  });
-
-  await prisma.participation.upsert({
     where: { refUser_refHunt: { refUser: diana.id, refHunt: huntParis.id } },
     update: {},
     create: {
@@ -1702,19 +1823,6 @@ async function main() {
       totalPoints: 625,
       status: 'COMPLETED',
       endTime: new Date('2025-03-03T12:45:00'),
-    },
-  });
-
-  await prisma.participation.upsert({
-    where: {
-      refUser_refHunt: { refUser: charlie.id, refHunt: huntBordeaux.id },
-    },
-    update: {},
-    create: {
-      refUser: charlie.id,
-      refHunt: huntBordeaux.id,
-      totalPoints: 80,
-      status: 'IN_PROGRESS',
     },
   });
 
