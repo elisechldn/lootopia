@@ -15,7 +15,12 @@ MINIO_USER := minioadmin
 MINIO_PASS := minioadmin
 MAILPIT_URL := http://localhost:8025
 
-.PHONY: setup build start stop reset reset-db reset-bucket reset-mailpit seed help check-ip
+# Reset de l'environnement Azure déployé (secrets sourcés depuis un fichier non commité)
+AZURE_ENV := $(API_DIR)/.env.azure
+AZURE_RG := rg-lootopia
+AZURE_MINIO_APP := lootopia-minio
+
+.PHONY: setup build start stop reset reset-db reset-bucket reset-mailpit seed help check-ip reset-azure reset-azure-db reset-azure-bucket check-azure-env
 
 ## Échoue tôt si l'IP LAN n'a pas pu être détectée (VPN, interface non en0, etc.)
 check-ip:
@@ -72,6 +77,38 @@ reset-mailpit:
 	@echo "📬 Reset de Mailpit..."
 	-curl -s -X DELETE $(MAILPIT_URL)/api/v1/messages
 
+## --- RESET ENVIRONNEMENT AZURE DÉPLOYÉ (DESTRUCTIF, prod) ---
+
+## Échoue tôt si le fichier de secrets Azure est absent
+check-azure-env:
+	@test -f $(AZURE_ENV) || { echo "❌ $(AZURE_ENV) manquant — copier $(API_DIR)/.env.azure.example et le remplir"; exit 1; }
+
+## Réinitialise l'environnement Azure déployé (DB + storage)
+reset-azure: reset-azure-db reset-azure-bucket
+
+## Réinitialise la base de données Azure (force-reset + seed)
+reset-azure-db: check-azure-env
+	@echo "🔄 Reset DB Azure (force-reset + seed)..."
+	@set -a; . ./$(AZURE_ENV); set +a; \
+	cd $(API_DIR) && \
+	DATABASE_URL="$$AZURE_DATABASE_URL" npx prisma db push --force-reset && \
+	npx prisma generate && \
+	cd .. && npm run build --workspace=packages/types && \
+	cd $(API_DIR) && DATABASE_URL="$$AZURE_DATABASE_URL" npx prisma db seed
+
+## Vide le bucket MinIO Azure (exposition externe temporaire + revert interne)
+reset-azure-bucket: check-azure-env
+	@echo "🪣 Reset bucket MinIO Azure (exposition temporaire)..."
+	@set -a; . ./$(AZURE_ENV); set +a; \
+	trap 'echo "↩️  re-bascule MinIO en interne"; az containerapp ingress update -g $(AZURE_RG) -n $(AZURE_MINIO_APP) --type internal >/dev/null' EXIT; \
+	az containerapp ingress update -g $(AZURE_RG) -n $(AZURE_MINIO_APP) --type external >/dev/null; \
+	FQDN=$$(az containerapp show -g $(AZURE_RG) -n $(AZURE_MINIO_APP) --query properties.configuration.ingress.fqdn -o tsv); \
+	echo "MinIO exposé sur https://$$FQDN"; \
+	docker run --rm minio/mc sh -c "\
+	  mc alias set azure https://$$FQDN $$AZURE_MINIO_USER $$AZURE_MINIO_PASS && \
+	  mc rm --recursive --force azure/$$AZURE_MINIO_BUCKET/ || true; \
+	  mc anonymous set download azure/$$AZURE_MINIO_BUCKET"
+
 ## --- ------------------- ---
 
 ## Injecte uniquement les données
@@ -86,4 +123,9 @@ help:
 	@echo "  make reset-bucket  — réinitialise les droits publics sur MinIO"
 	@echo "  make reset-mailpit — vide tous les emails de Mailpit"
 	@echo "  make seed         — injecte uniquement les données de seed"
+	@echo ""
+	@echo "  --- Azure (prod déployé, DESTRUCTIF) ---"
+	@echo "  make reset-azure        — reset-azure-db + reset-azure-bucket"
+	@echo "  make reset-azure-db     — force-reset + seed de la DB Azure"
+	@echo "  make reset-azure-bucket — vide le bucket MinIO Azure (expose puis re-interne)"
 	@echo ""
