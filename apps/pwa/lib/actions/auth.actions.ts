@@ -5,6 +5,7 @@ import { registerPlayer } from '@/services/auth.service';
 import { type UserInfos } from '@/store/userStore';
 import { cookies } from 'next/headers';
 import { redirect } from "next/navigation";
+import { handleUnauthorized } from './utils';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -91,6 +92,7 @@ export async function getMeAction(): Promise<UserInfos | null> {
       cache: 'no-store',
     });
     if (!res.ok) {
+      await handleUnauthorized(res);
       (await cookies()).delete('auth_token');
       return null;
     }

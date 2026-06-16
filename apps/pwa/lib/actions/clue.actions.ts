@@ -1,6 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { handleUnauthorized } from './utils';
 
 const INTERNAL_API = process.env.API_URL ?? 'http://localhost:8000';
 
@@ -43,7 +44,10 @@ export async function getProgressCluesAction(
     headers: token ? { Authorization: `Bearer ${token}` } : {},
     cache: 'no-store',
   });
-  if (!res.ok) throw new Error('Impossible de charger les indices');
+  if (!res.ok) {
+    await handleUnauthorized(res);
+    throw new Error('Impossible de charger les indices');
+  }
   const json = (await res.json()) as { data: CluePlayerData };
   return json.data;
 }
@@ -65,6 +69,7 @@ export async function revealClueAction(
     },
   );
   if (!res.ok) {
+    await handleUnauthorized(res);
     const body = (await res.json().catch(() => ({}))) as { message?: string };
     throw new Error(body.message ?? 'Révélation échouée');
   }

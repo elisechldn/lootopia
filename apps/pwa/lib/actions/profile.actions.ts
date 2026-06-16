@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { API_URL } from '@/lib/api';
+import { handleUnauthorized } from './utils';
 
 export async function uploadAvatarAction(formData: FormData): Promise<{ url: string }> {
   const token = (await cookies()).get('auth_token')?.value;
@@ -14,6 +15,7 @@ export async function uploadAvatarAction(formData: FormData): Promise<{ url: str
   });
 
   if (!res.ok) {
+    await handleUnauthorized(res);
     const body = await res.json().catch(() => ({}));
     throw new Error(body?.message ?? "Échec de l'upload de l'avatar");
   }

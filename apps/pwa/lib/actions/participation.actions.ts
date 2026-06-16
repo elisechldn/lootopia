@@ -7,6 +7,7 @@ import {
   type GameParticipation,
   type LeaderboardEntry,
 } from '@/services/participation.service';
+import { handleUnauthorized } from './utils';
 
 function unwrap(body: unknown) {
   return (body as { data?: unknown })?.data ?? body;
@@ -24,7 +25,10 @@ export async function getParticipationByIdAction(
     headers: await authHeaders(),
     cache: 'no-store',
   });
-  if (!res.ok) throw new Error('Participation introuvable');
+  if (!res.ok) {
+    await handleUnauthorized(res);
+    throw new Error('Participation introuvable');
+  }
   return unwrap(await res.json()) as GameParticipation;
 }
 
@@ -35,6 +39,7 @@ export async function startHuntAction(huntId: number): Promise<GameParticipation
     body: JSON.stringify({ huntId }),
   });
   if (!res.ok) {
+    await handleUnauthorized(res);
     const body = await res.json().catch(() => ({}));
     throw new Error((body as { message?: string })?.message ?? 'Impossible de démarrer la chasse');
   }
@@ -53,6 +58,7 @@ export async function validateStepAction(
     body: JSON.stringify({ latitude: lat, longitude: lon }),
   });
   if (!res.ok) {
+    await handleUnauthorized(res);
     const body = await res.json().catch(() => ({}));
     throw new Error((body as { message?: string })?.message ?? 'Validation échouée');
   }
@@ -64,7 +70,10 @@ export async function getLeaderboardAction(huntId: number): Promise<LeaderboardE
     headers: await authHeaders(),
     cache: 'no-store',
   });
-  if (!res.ok) return [];
+  if (!res.ok) {
+    await handleUnauthorized(res);
+    return [];
+  }
   return unwrap(await res.json()) as LeaderboardEntry[];
 }
 
@@ -76,7 +85,10 @@ export async function getMyParticipationsAction(): Promise<UserInfos['participat
     headers: { Authorization: `Bearer ${token}` },
     cache: 'no-store',
   });
-  if (!res.ok) return [];
+  if (!res.ok) {
+    await handleUnauthorized(res);
+    return [];
+  }
 
   const json = await res.json();
   return (json.data ?? json) as UserInfos['participations'];
@@ -99,7 +111,10 @@ export async function getHuntRewardAction(huntId: number): Promise<{
     headers: { Authorization: `Bearer ${token}` },
     cache: 'no-store',
   });
-  if (!res.ok) return null;
+  if (!res.ok) {
+    await handleUnauthorized(res);
+    return null;
+  }
 
   const json = await res.json();
   const participations = (json.data ?? json) as ParticipationWithReward[];
