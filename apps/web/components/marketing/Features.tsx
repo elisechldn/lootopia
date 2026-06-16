@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 function CheckIcon() {
     return (
         <svg className="w-4 h-4 text-foreground flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
@@ -27,9 +29,15 @@ function FeatureList({items}: { items: FeatureListItem[] }) {
 
 function DemoPlaceholder({label}: { label: string }) {
     return (
-        <div className="w-full aspect-video rounded-2xl bg-gray-300 flex items-center justify-center">
-            <span className="text-sm text-white font-medium">{label}</span>
-        </div>
+
+            <Image
+                alt={"Captures d'écrans de l'application mobile"}
+                className={"w-full h-full"}
+                src={"/mobile_screens.png"}
+                width={1600}
+                height={900}
+            />
+
     );
 }
 
@@ -56,11 +64,23 @@ export default function Features() {
                         <h2 className="text-2xl font-bold text-foreground">Pour les joueurs</h2>
                         <FeatureList items={playerFeatures}/>
                     </div>
-                    <DemoPlaceholder label="Démo de l'expérience joueur"/>
+                    <Image
+                        alt={"Captures d'écrans de l'application mobile"}
+                        className={"w-full h-full"}
+                        src={"/mobile_screens.png"}
+                        width={1600}
+                        height={900}
+                    />
                 </div>
 
                 <div className="grid grid-cols-2 gap-16 items-center">
-                    <DemoPlaceholder label="Aperçu du tableau de bord partenaire"/>
+                    <Image
+                        alt={"Captures d'écrans de l'application web"}
+                        className={"w-full h-full"}
+                        src={"/backoffice_screens.png"}
+                        width={1600}
+                        height={900}
+                    />
                     <div className="flex flex-col gap-6">
                         <h2 className="text-2xl font-bold text-foreground">Pour les partenaires</h2>
                         <FeatureList items={partnerFeatures}/>
