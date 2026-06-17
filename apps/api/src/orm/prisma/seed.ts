@@ -1822,6 +1822,7 @@ async function main() {
       refHunt: huntParis.id,
       totalPoints: 625,
       status: 'COMPLETED',
+      startTime: new Date('2025-03-03T09:00:00'),
       endTime: new Date('2025-03-03T12:45:00'),
     },
   });
@@ -1834,6 +1835,7 @@ async function main() {
       refHunt: huntNice.id,
       totalPoints: 350,
       status: 'COMPLETED',
+      startTime: new Date('2025-08-15T10:00:00'),
       endTime: new Date('2025-08-15T16:30:00'),
     },
   });
@@ -1848,6 +1850,7 @@ async function main() {
       refHunt: huntMarseille.id,
       totalPoints: 470,
       status: 'COMPLETED',
+      startTime: new Date('2025-06-20T08:00:00'),
       endTime: new Date('2025-06-20T11:00:00'),
     },
   });
@@ -1871,13 +1874,25 @@ async function main() {
       }),
     ]);
 
-  // Diana a complété Paris (4 étapes)
+  // Diana a complété Paris (4 étapes, 09:00 → 12:45)
   if (partDianaParis) {
     const stepsP = await prisma.step.findMany({
       where: { refHunt: huntParis.id },
       orderBy: { orderNumber: 'asc' },
     });
     const pointsP = [100, 150, 200, 175];
+    const startTimesP = [
+      new Date('2025-03-03T09:00:00'),
+      new Date('2025-03-03T10:00:00'),
+      new Date('2025-03-03T11:00:00'),
+      new Date('2025-03-03T12:00:00'),
+    ];
+    const completedTimesP = [
+      new Date('2025-03-03T09:50:00'),
+      new Date('2025-03-03T10:45:00'),
+      new Date('2025-03-03T11:40:00'),
+      new Date('2025-03-03T12:45:00'),
+    ];
     await prisma.progress.createMany({
       skipDuplicates: true,
       data: stepsP.map((s, i) => ({
@@ -1885,18 +1900,29 @@ async function main() {
         refStep: s.id,
         statut: 'COMPLETED' as const,
         totalPoints: pointsP[i] ?? 0,
-        completedAt: new Date('2025-03-03T12:45:00'),
+        startedAt: startTimesP[i],
+        completedAt: completedTimesP[i],
       })),
     });
   }
 
-  // Diana a complété Nice (3 étapes)
+  // Diana a complété Nice (3 étapes, 10:00 → 16:30)
   if (partDianaNice) {
     const stepsN = await prisma.step.findMany({
       where: { refHunt: huntNice.id },
       orderBy: { orderNumber: 'asc' },
     });
     const pointsN = [80, 110, 160];
+    const startTimesN = [
+      new Date('2025-08-15T10:00:00'),
+      new Date('2025-08-15T12:00:00'),
+      new Date('2025-08-15T14:30:00'),
+    ];
+    const completedTimesN = [
+      new Date('2025-08-15T11:30:00'),
+      new Date('2025-08-15T14:00:00'),
+      new Date('2025-08-15T16:30:00'),
+    ];
     await prisma.progress.createMany({
       skipDuplicates: true,
       data: stepsN.map((s, i) => ({
@@ -1904,18 +1930,29 @@ async function main() {
         refStep: s.id,
         statut: 'COMPLETED' as const,
         totalPoints: pointsN[i] ?? 0,
-        completedAt: new Date('2025-08-15T16:30:00'),
+        startedAt: startTimesN[i],
+        completedAt: completedTimesN[i],
       })),
     });
   }
 
-  // Charlie a complété Marseille (3 étapes)
+  // Charlie a complété Marseille (3 étapes, 08:00 → 11:00)
   if (partCharlieMarseille) {
     const stepsM = await prisma.step.findMany({
       where: { refHunt: huntMarseille.id },
       orderBy: { orderNumber: 'asc' },
     });
     const pointsM = [90, 200, 180];
+    const startTimesM = [
+      new Date('2025-06-20T08:00:00'),
+      new Date('2025-06-20T09:00:00'),
+      new Date('2025-06-20T10:00:00'),
+    ];
+    const completedTimesM = [
+      new Date('2025-06-20T08:45:00'),
+      new Date('2025-06-20T09:50:00'),
+      new Date('2025-06-20T11:00:00'),
+    ];
     await prisma.progress.createMany({
       skipDuplicates: true,
       data: stepsM.map((s, i) => ({
@@ -1923,7 +1960,8 @@ async function main() {
         refStep: s.id,
         statut: 'COMPLETED' as const,
         totalPoints: pointsM[i] ?? 0,
-        completedAt: new Date('2025-06-20T11:00:00'),
+        startedAt: startTimesM[i],
+        completedAt: completedTimesM[i],
       })),
     });
   }
