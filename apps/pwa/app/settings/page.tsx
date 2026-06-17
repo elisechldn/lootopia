@@ -1,7 +1,8 @@
 'use client';
 
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { HelpCircle, ChevronRight } from 'lucide-react';
+import { HelpCircle, ChevronRight, LocateFixed, Loader2 } from 'lucide-react';
 import TopBar from '@/components/ui/TopBar';
 import TabNavigation from '@/components/ui/TabNavigation';
 import ThemeSelector from '@/components/settings/ThemeSelector';
@@ -109,6 +110,7 @@ export default function SettingsPage() {
           </Section>
 
           <Section title="Géolocalisation">
+            <GeolocationPermission />
             {GPS_SLIDERS.map((config) => (
               <SettingSlider
                 key={config.field}
@@ -153,6 +155,77 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <div className="rounded-xl border border-border bg-card divide-y divide-border">
         {children}
       </div>
+    </div>
+  );
+}
+
+type GeoStatus = 'checking' | 'granted' | 'denied' | 'prompt' | 'unavailable';
+
+function GeolocationPermission() {
+  const [status, setStatus] = useState<GeoStatus>('checking');
+
+  useEffect(() => {
+    if (!navigator.permissions) {
+      setStatus('unavailable');
+      return;
+    }
+    let permStatus: PermissionStatus | null = null;
+    const onChange = () => {
+      if (permStatus) setStatus(permStatus.state as GeoStatus);
+    };
+    navigator.permissions.query({ name: 'geolocation' }).then((ps) => {
+      permStatus = ps;
+      setStatus(ps.state as GeoStatus);
+      ps.addEventListener('change', onChange);
+    }).catch(() => setStatus('unavailable'));
+    return () => {
+      permStatus?.removeEventListener('change', onChange);
+    };
+  }, []);
+
+  const requestPermission = useCallback(() => {
+    setStatus('checking');
+    navigator.geolocation.getCurrentPosition(
+      () => setStatus('granted'),
+      (err) => setStatus(err.code === err.PERMISSION_DENIED ? 'denied' : 'granted'),
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  }, []);
+
+  return (
+    <div className="px-4 py-4 flex items-center justify-between gap-3">
+      <div className="flex items-center gap-3 min-w-0">
+        <LocateFixed size={18} className="shrink-0 text-muted-foreground" />
+        <div className="min-w-0">
+          <span className="text-sm font-medium">Permission</span>
+          {status === 'denied' && (
+            <p className="text-xs text-destructive">
+              Refusée — activez-la dans les réglages du navigateur
+            </p>
+          )}
+          {status === 'unavailable' && (
+            <p className="text-xs text-muted-foreground">Non disponible sur cet appareil</p>
+          )}
+        </div>
+      </div>
+      {status === 'checking' && (
+        <Loader2 size={18} className="shrink-0 animate-spin text-muted-foreground" />
+      )}
+      {status !== 'checking' && status !== 'unavailable' && (
+        <button
+          type="button"
+          onClick={requestPermission}
+          className={`shrink-0 text-xs font-medium px-3 py-1.5 rounded-full active:opacity-70 transition-opacity ${
+            status === 'granted'
+              ? 'text-green-600 bg-green-500/10'
+              : status === 'denied'
+                ? 'text-destructive bg-destructive/10'
+                : 'text-primary bg-primary/10'
+          }`}
+        >
+          {status === 'granted' ? 'Activée ✓' : status === 'denied' ? 'Réessayer' : 'Activer'}
+        </button>
+      )}
     </div>
   );
 }
