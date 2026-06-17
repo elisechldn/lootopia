@@ -186,8 +186,19 @@ function GeolocationPermission() {
   const requestPermission = useCallback(() => {
     setStatus('checking');
     navigator.geolocation.getCurrentPosition(
-      () => setStatus('granted'),
-      (err) => setStatus(err.code === err.PERMISSION_DENIED ? 'denied' : 'granted'),
+      (pos) => {
+        setStatus('granted');
+        alert(`Position obtenue :\nLat ${pos.coords.latitude.toFixed(6)}\nLon ${pos.coords.longitude.toFixed(6)}\nPrécision ±${Math.round(pos.coords.accuracy)} m`);
+      },
+      (err) => {
+        const codes: Record<number, string> = {
+          1: 'PERMISSION_DENIED',
+          2: 'POSITION_UNAVAILABLE',
+          3: 'TIMEOUT',
+        };
+        alert(`Erreur géolocalisation :\nCode ${err.code} (${codes[err.code] ?? 'UNKNOWN'})\n${err.message}`);
+        setStatus(err.code === err.PERMISSION_DENIED ? 'denied' : 'prompt');
+      },
       { enableHighAccuracy: true, timeout: 10000 },
     );
   }, []);
