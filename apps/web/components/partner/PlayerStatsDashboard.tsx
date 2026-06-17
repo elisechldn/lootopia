@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import DeleteParticipationButton from "./DeleteParticipationButton";
 
 interface ClueUsage {
     id: number;
@@ -72,7 +74,8 @@ function formatDuration(start: string, end: string | null): string {
     return `${m}m ${s.toString().padStart(2, "0")}s`;
 }
 
-export default function PlayerStatsDashboard({ participations, user }: Props) {
+export default function PlayerStatsDashboard({ participations: initialParticipations, user }: Props) {
+    const [participations, setParticipations] = useState(initialParticipations);
     const completed = participations.filter((p) => p.status === "COMPLETED");
     const totalPoints = participations.reduce((s, p) => s + p.totalPoints, 0);
     const completionRate = participations.length > 0
@@ -154,12 +157,13 @@ export default function PlayerStatsDashboard({ participations, user }: Props) {
                                 <th className="px-5 text-left text-xs font-medium text-muted-foreground">Points perdus</th>
                                 <th className="px-5 text-left text-xs font-medium text-muted-foreground">Début</th>
                                 <th className="px-5 text-left text-xs font-medium text-muted-foreground">Fin</th>
+                                <th className="px-5 text-left text-xs font-medium text-muted-foreground">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {participations.length === 0 ? (
                                 <tr>
-                                    <td colSpan={9} className="px-5 py-10 text-center text-sm text-muted-foreground/70">
+                                    <td colSpan={10} className="px-5 py-10 text-center text-sm text-muted-foreground/70">
                                         Aucune participation
                                     </td>
                                 </tr>
@@ -218,6 +222,18 @@ export default function PlayerStatsDashboard({ participations, user }: Props) {
                                                 {p.endTime
                                                     ? new Date(p.endTime).toLocaleDateString("fr-FR")
                                                     : "—"}
+                                            </td>
+                                            <td className="px-5">
+                                                <DeleteParticipationButton
+                                                    participationId={p.id}
+                                                    playerName={`${user.firstname} ${user.lastname}`}
+                                                    huntTitle={p.hunt.title}
+                                                    onDeleted={() =>
+                                                        setParticipations((prev) =>
+                                                            prev.filter((x) => x.id !== p.id),
+                                                        )
+                                                    }
+                                                />
                                             </td>
                                         </tr>
                                     );

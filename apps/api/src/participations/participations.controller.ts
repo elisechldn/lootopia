@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -49,6 +50,15 @@ export class ParticipationsController {
   @Get('hunt/:huntId/leaderboard')
   leaderboard(@Param('huntId') huntId: string) {
     return this.participationsService.leaderboard(Number(huntId));
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  remove(
+    @Request() req: { user: { sub: number; role: string } },
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.participationsService.remove(id, req.user);
   }
 
   @Get(':id')

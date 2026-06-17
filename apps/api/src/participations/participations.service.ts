@@ -553,6 +553,23 @@ export class ParticipationsService {
     };
   }
 
+  async remove(id: number, requester: Requester) {
+    const participation = await this.prisma.participation.findUnique({
+      where: { id },
+      include: { hunt: { select: { refUser: true } } },
+    });
+    if (!participation) {
+      throw new NotFoundException('Participation introuvable');
+    }
+    assertOwns(participation.hunt.refUser, requester);
+    await this.prisma.participation.delete({ where: { id } });
+    logInfo(
+      'info',
+      `Participation ${id} supprimée par l'utilisateur ${requester.sub}`,
+      'ParticipationsService',
+    );
+  }
+
   async leaderboard(huntId: number) {
     // totalPoints est déjà le score final (base + bonus) → tri direct par Prisma.
     return this.prisma.participation
