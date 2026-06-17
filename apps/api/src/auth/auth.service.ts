@@ -58,30 +58,57 @@ export class AuthService {
     country: string;
     role?: string;
   }) {
-    const existing = await this.prisma.user.findUnique({
-      where: { email: dto.email },
+    // Pré-vérifie email ET username pour renvoyer un message clair (409).
+    const existing = await this.prisma.user.findFirst({
+      where: { OR: [{ email: dto.email }, { username: dto.username }] },
+      select: { email: true, username: true },
     });
     if (existing) {
+      const field =
+        existing.email === dto.email ? 'Email' : "Nom d'utilisateur";
       logInfo(
         'error',
-        `Tentative d'inscription avec un email déjà utilisé: ${dto.email} (un qui a oublie sont mdp :) )`,
+        `Tentative d'inscription avec un ${field.toLowerCase()} déjà utilisé: ${dto.email} / ${dto.username}`,
         'AuthService',
       );
-      throw new ConflictException('Email déjà utilisé');
+      throw new ConflictException(`${field} déjà utilisé`);
     }
 
     const hash = await bcrypt.hash(dto.password, 10);
     // logInfo('warn', `leak de mot de passe: ${dto.password}`, 'AuthService'); a ne jamais active
     // sauf si on veux la mettre a l'envers SDV :)
 
-    const { password: _pw, ...rest } = dto;
-    const user = await this.prisma.user.create({
-      data: {
-        ...rest,
-        passwordHash: hash,
-        role: (dto.role === 'PLAYER' ? 'PLAYER' : 'PARTNER') as never,
-      },
-    });
+    let user: Awaited<ReturnType<typeof this.prisma.user.create>>;
+    try {
+      user = await this.prisma.user.create({
+        data: {
+          firstname: dto.firstname,
+          lastname: dto.lastname,
+          username: dto.username,
+          email: dto.email,
+          country: dto.country,
+          passwordHash: hash,
+          role: (dto.role === 'PLAYER' ? 'PLAYER' : 'PARTNER') as never,
+        },
+      });
+    } catch (e: unknown) {
+      // Garde anti-concurrence : si un doublon passe entre le check et le create,
+      // la contrainte unique Postgres lève P2002 → renvoyer un 409 propre.
+      const err = e as { code?: string; meta?: { target?: string[] } };
+      if (err.code === 'P2002') {
+        const target = err.meta?.target?.[0] ?? '';
+        const field = target.includes('username')
+          ? "Nom d'utilisateur"
+          : 'Email';
+        logInfo(
+          'error',
+          `Conflit d'unicité à l'inscription (${target}): ${dto.email} / ${dto.username}`,
+          'AuthService',
+        );
+        throw new ConflictException(`${field} déjà utilisé`);
+      }
+      throw e;
+    }
     logInfo(
       'info',
       `Nouvel utilisateur enregistré: ${user.email} (ID: ${user.id})`,
