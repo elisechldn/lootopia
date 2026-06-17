@@ -11,6 +11,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./dist/index.js"
+    },
+    "./auth": {
+      "types": "./src/auth/auth.schemas.ts",
+      "default": "./dist/auth/auth.schemas.js"
     }
   },
   "dependencies": {

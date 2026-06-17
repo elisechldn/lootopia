@@ -1,11 +1,33 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginFormData } from "@repo/types/auth";
 import { loginAction } from "@/lib/actions/auth.actions";
 
 export default function LoginForm() {
-    const [state, action, isPending] = useActionState(loginAction, undefined);
+    const [serverError, setServerError] = useState<string | null>(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema),
+    });
+
+    const onSubmit = async (data: LoginFormData) => {
+        setServerError(null);
+        const formData = new FormData();
+        formData.set("email", data.email);
+        formData.set("password", data.password);
+        const result = await loginAction(undefined, formData);
+        if (result?.error) {
+            setServerError(result.error);
+        }
+    };
 
     return (
         <div className="w-full max-w-sm bg-card rounded-2xl shadow-sm border border-border px-8 py-10">
@@ -16,17 +38,37 @@ export default function LoginForm() {
                 </svg>
             </div>
 
-            {state?.error && (
+            {serverError && (
                 <div className="mb-4 px-4 py-3 rounded-lg bg-red-50 border border-red-100 text-sm text-red-600">
-                    {state.error}
+                    {serverError}
                 </div>
             )}
 
-            <form action={action} className="flex flex-col gap-3 mb-6">
-                <input name="email" type="email" placeholder="Email" required
-                       className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                <input name="password" type="password" placeholder="Mot de passe" required
-                       className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900" />
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 mb-6">
+                <div>
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        autoComplete="email"
+                        {...register("email")}
+                        className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    />
+                    {errors.email && (
+                        <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                    )}
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        placeholder="Mot de passe"
+                        autoComplete="current-password"
+                        {...register("password")}
+                        className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    />
+                    {errors.password && (
+                        <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                    )}
+                </div>
 
                 <div className="flex items-center justify-between">
                     <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
@@ -38,12 +80,12 @@ export default function LoginForm() {
                     </Link>
                 </div>
 
-                <button type="submit" disabled={isPending}
+                <button type="submit" disabled={isSubmitting}
                         className="w-full bg-gray-900 text-white text-sm font-semibold py-3 rounded-xl hover:bg-gray-800 transition-colors disabled:opacity-60 mt-2">
-                    {isPending ? 'Connexion...' : 'Se connecter'}
+                    {isSubmitting ? 'Connexion...' : 'Se connecter'}
                 </button>
-                <div className={" text-sm flex justify-between items-center"}>
-                    <p>Vous n'avez pas de compte ?</p>
+                <div className="text-sm flex justify-between items-center">
+                    <p>Vous n&apos;avez pas de compte ?</p>
                     <Link href="/register" className="text-sm text-foreground underline hover:text-muted-foreground">
                         inscrivez-vous
                     </Link>

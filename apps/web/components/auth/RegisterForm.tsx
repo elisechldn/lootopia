@@ -1,10 +1,41 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerPartnerSchema } from "@repo/types/auth";
 import { registerAction } from "@/lib/actions/auth.actions";
+import { z } from "zod";
+
+type FormValues = z.input<typeof registerPartnerSchema>;
 
 export default function RegisterForm() {
-    const [state, action, isPending] = useActionState(registerAction, undefined);
+    const [serverError, setServerError] = useState<string | null>(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<FormValues>({
+        resolver: zodResolver(registerPartnerSchema),
+        defaultValues: { country: "FR", terms: false },
+    });
+
+    const onSubmit = async (data: FormValues) => {
+        setServerError(null);
+        const formData = new FormData();
+        formData.set("firstname", data.firstname);
+        formData.set("lastname", data.lastname);
+        formData.set("username", data.username);
+        formData.set("email", data.email);
+        formData.set("password", data.password);
+        formData.set("confirmPassword", data.confirmPassword);
+        formData.set("country", data.country ?? "FR");
+        const result = await registerAction(undefined, formData);
+        if (result?.error) {
+            setServerError(result.error);
+        }
+    };
 
     return (
         <div className="w-full max-w-sm bg-card rounded-2xl shadow-sm border border-border px-8 py-10">
@@ -15,34 +46,100 @@ export default function RegisterForm() {
                 </svg>
             </div>
 
-            {state?.error && (
+            {serverError && (
                 <div className="mb-4 px-4 py-3 rounded-lg bg-red-50 border border-red-100 text-sm text-red-600">
-                    {state.error}
+                    {serverError}
                 </div>
             )}
 
-            <form action={action} className="flex flex-col gap-3">
-                <input name="lastname" type="text" placeholder="Nom" required
-                       className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                <input name="firstname" type="text" placeholder="Prénom" required
-                       className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                <input name="username" type="text" placeholder="Nom d'utilisateur" required
-                       className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                <input name="email" type="email" placeholder="Email" required
-                       className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                <input name="password" type="password" placeholder="Mot de passe" required
-                       className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                <input name="confirmPassword" type="password" placeholder="Confirmez le mot de passe" required
-                       className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900" />
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Nom"
+                        {...register("lastname")}
+                        className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    />
+                    {errors.lastname && (
+                        <p className="mt-1 text-sm text-red-600">{errors.lastname.message}</p>
+                    )}
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Prénom"
+                        {...register("firstname")}
+                        className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    />
+                    {errors.firstname && (
+                        <p className="mt-1 text-sm text-red-600">{errors.firstname.message}</p>
+                    )}
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Nom d'utilisateur"
+                        {...register("username")}
+                        className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    />
+                    {errors.username && (
+                        <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>
+                    )}
+                </div>
+                <div>
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        autoComplete="email"
+                        {...register("email")}
+                        className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    />
+                    {errors.email && (
+                        <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                    )}
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        placeholder="Mot de passe"
+                        autoComplete="new-password"
+                        {...register("password")}
+                        className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    />
+                    {errors.password && (
+                        <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                    )}
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        placeholder="Confirmez le mot de passe"
+                        autoComplete="new-password"
+                        {...register("confirmPassword")}
+                        className="w-full px-4 py-3 rounded-lg border border-border text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    />
+                    {errors.confirmPassword && (
+                        <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+                    )}
+                </div>
 
-                <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
-                    <input type="checkbox" required className="w-4 h-4 rounded border-gray-300" />
-                    J&apos;accepte les conditions générales
-                </label>
+                <div>
+                    <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
+                        <input
+                            type="checkbox"
+                            {...register("terms")}
+                            className="w-4 h-4 rounded border-gray-300"
+                        />
+                        J&apos;accepte les conditions générales
+                    </label>
+                    {errors.terms && (
+                        <p className="mt-1 text-sm text-red-600">{errors.terms.message}</p>
+                    )}
+                </div>
 
-                <button type="submit" disabled={isPending}
+                <button type="submit" disabled={isSubmitting}
                         className="w-full bg-gray-900 text-white text-sm font-semibold py-3 rounded-xl hover:bg-gray-800 transition-colors disabled:opacity-60">
-                    {isPending ? 'Création...' : 'Créer un compte'}
+                    {isSubmitting ? 'Création...' : 'Créer un compte'}
                 </button>
             </form>
         </div>

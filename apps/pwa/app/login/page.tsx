@@ -2,30 +2,34 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link                          from 'next/link';
+import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, type LoginFormData } from '@repo/types/auth';
 import { loginAction } from '@/lib/actions/auth.actions';
 import { useUserStore } from '@/store/userStore';
 
 export default function LoginPage() {
   const router = useRouter();
   const { setUser } = useUserStore();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
+    setServerError('');
     try {
-      const { user } = await loginAction(email, password);
+      const { user } = await loginAction(data.email, data.password);
       setUser(user);
       router.replace('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur de connexion');
-    } finally {
-      setLoading(false);
+      setServerError(err instanceof Error ? err.message : 'Erreur de connexion');
     }
   };
 
@@ -37,53 +41,61 @@ export default function LoginPage() {
           Connectez-vous pour jouer
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1">
             <label className="text-sm font-medium">Email</label>
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              {...register('email')}
               autoComplete="email"
               className="w-full px-3 py-2.5 border border-border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
             />
+            {errors.email && (
+              <p className="text-sm text-destructive">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="space-y-1">
             <label className="text-sm font-medium">Mot de passe</label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              {...register('password')}
               autoComplete="current-password"
               className="w-full px-3 py-2.5 border border-border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
             />
+            {errors.password && (
+              <p className="text-sm text-destructive">{errors.password.message}</p>
+            )}
           </div>
 
           <div className="flex justify-end">
-            <Link href="/forgot-password" className="text-sm text-primary underline underline-offset-2 active:opacity-70">
+            <Link
+              href="/forgot-password"
+              className="text-sm text-primary underline underline-offset-2 active:opacity-70"
+            >
               Mot de passe oublié ?
             </Link>
           </div>
 
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
+          {serverError && (
+            <p className="text-sm text-destructive">{serverError}</p>
           )}
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isSubmitting}
             className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm disabled:opacity-50 transition-opacity active:opacity-90"
           >
-            {loading ? 'Connexion...' : 'Se connecter'}
+            {isSubmitting ? 'Connexion...' : 'Se connecter'}
           </button>
         </form>
 
         <p className="text-center text-sm mt-6">
           Pas encore de compte ?{' '}
-          <Link href="/register" className="text-primary font-medium underline underline-offset-2 active:opacity-70">
+          <Link
+            href="/register"
+            className="text-primary font-medium underline underline-offset-2 active:opacity-70"
+          >
             S&apos;inscrire
           </Link>
         </p>
