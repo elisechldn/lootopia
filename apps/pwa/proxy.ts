@@ -2,12 +2,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const PUBLIC_ROUTES = ['/login', '/register', '/forgot-password', '/reset-password', '/verify-email'];
-
-// Rôles autorisés sur la PWA : joueurs et admins. Un PARTNER doit utiliser le portail web.
 const ALLOWED_ROLES = ['PLAYER', 'ADMIN'];
 
-// Décodage optimiste du rôle (sans vérif de signature) : suffisant pour le routing,
-// l'API reste la source de vérité pour l'accès aux données.
 function decodeRole(token: string): string | null {
   try {
     const payload = token.split('.')[1];
@@ -44,6 +40,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|not-mobile|assets/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|patt|dat)$).*)',
+    '/((?!api/|_next/static|_next/image|favicon.ico|manifest.webmanifest|not-mobile|assets/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|patt|dat)$).*)',
   ],
 };
